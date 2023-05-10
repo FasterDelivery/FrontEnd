@@ -2,10 +2,9 @@ import Image from "next/image";
 import styles from "./page.module.css";
 
 export default function Home() {
-  const              si = 'prueba'
-  if(si=='prueba'){
+  const si =                         "prueba";
+  if (si == "prueba") {
     return console.log("khe?");
-    
   }
   return (
     <main className={styles.main}>
