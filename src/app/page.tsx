@@ -4,9 +4,9 @@ import React from "react";
 
 export default function Home() {
   const si = "prueba";
-	if (si === "prueba") {
+  if (si === "prueba") {
     return console.log("khe?");
-	}
+  }
   return (
     <main className={styles.main}>
       <div className={styles.description}>
