@@ -1,5 +1,5 @@
 {
-  "parser": "@babel/eslint-parser",
+  "parser": "@typescript-eslint/parser",
   "settings": {
     "react": {
       "version": "detect"
@@ -12,7 +12,13 @@
     "commonjs": true,
     "cypress/globals": true
   },
-  "extends": ["eslint:recommended", "plugin:react/recommended", "plugin:react-hooks/recommended"],
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:react-hooks/recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:prettier/recommended"
+  ],
   "parserOptions": {
     "ecmaFeatures": {
       "jsx": true
@@ -25,7 +31,6 @@
   "rules": {
     "indent": ["warn", "tab"],
     "linebreak-style": ["warn", "unix"],
-    "quotes": ["warn", "single"],
     "semi": ["warn", "never"],
     "react/prop-types": "off",
     "react/display-name": "off",
@@ -49,12 +54,12 @@
       ],
       "rules": {
         "indent": ["off", "tab"],
-        "@typescript-eslint/indent": ["error", "tab"],
-        "@typescript-eslint/quotes": ["error", "single"],
+        "@typescript-eslint/indent": ["off", "tab"],
+        "@typescript-eslint/quotes": ["off", "single"],
         "@typescript-eslint/no-unused-vars": "error",
         "@typescript-eslint/no-explicit-any": "off",
-        "jsdoc/require-param-type" : "off",
-        "jsdoc/require-returns-type" : "off"
+        "jsdoc/require-param-type": "off",
+        "jsdoc/require-returns-type": "off"
       }
     }
   ]
