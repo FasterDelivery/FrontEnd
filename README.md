@@ -124,7 +124,7 @@ El flujo general de Gitflow es el siguiente:
 - Belen Cécere- cecere3329@gmail.com
 - Mateo Catalano - mate.catalano98@gmail.com
 - Marcelo García- marcelogarcia91@gmail.com
-- Alexis Bermúdez - cecere3329@gmail.com
+- Alexis Bermúdez - edbwinn@gmail.com
 - Gerardo Burgos - gerarburgos1987@gmail.com
 
 
