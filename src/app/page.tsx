@@ -1,11 +1,11 @@
-import Image from 'next/image';
-import styles from './page.module.css';
-import React from 'react';
+import Image from "next/image";
+import styles from "./page.module.css";
+import React from "react";
 
 export default function Home() {
-  const si = 'prueba';
-  if (si === 'prueba') {
-    return console.log('khe?');
+  const si = "prueba";
+  if (si === "prueba") {
+    return console.log("khe?");
   }
   return (
     <main className={styles.main}>
@@ -20,7 +20,7 @@ export default function Home() {
             target="_blank"
             rel="noopener noreferrer"
           >
-            By{' '}
+            By{" "}
             <Image
               src="/vercel.svg"
               alt="Vercel Logo"
