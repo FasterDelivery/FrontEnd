@@ -30,7 +30,6 @@
   "rules": {
     "indent": ["warn", "tab"],
     "linebreak-style": ["warn", "unix"],
-    "quotes": ["off", "single"],
     "semi": ["error", "always"],
     "no-extra-semi": "error",
     "prettier/prettier": "error",
