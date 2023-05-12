@@ -12,7 +12,12 @@
     "commonjs": true,
     "cypress/globals": true
   },
-  "extends": ["eslint:recommended", "plugin:react/recommended", "plugin:react-hooks/recommended"],
+  "extends": [
+    "eslint:recommended",
+    "plugin:prettier/recommended",
+    "plugin:react/recommended",
+    "plugin:react-hooks/recommended"
+  ],
   "parserOptions": {
     "ecmaFeatures": {
       "jsx": true
@@ -26,7 +31,9 @@
     "indent": ["warn", "tab"],
     "linebreak-style": ["warn", "unix"],
     "quotes": ["warn", "single"],
-    "semi": ["warn", "never"],
+    "semi": ["error", "always"],
+    "no-extra-semi": "error",
+    "prettier/prettier": "error",
     "react/prop-types": "off",
     "react/display-name": "off",
     "react-hooks/exhaustive-deps": "off",
@@ -49,8 +56,8 @@
       ],
       "rules": {
         "indent": ["off", "tab"],
-        "@typescript-eslint/indent": ["error", "tab"],
-        "@typescript-eslint/quotes": ["error", "single"],
+        "@typescript-eslint/indent": ["off", "tab"],
+        "@typescript-eslint/quotes": ["off", "single"],
         "@typescript-eslint/no-unused-vars": "error",
         "@typescript-eslint/no-explicit-any": "off",
         "jsdoc/require-param-type" : "off",
