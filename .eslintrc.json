@@ -31,7 +31,9 @@
   "rules": {
     "indent": ["warn", "tab"],
     "linebreak-style": ["warn", "unix"],
-    "semi": ["warn", "never"],
+    "semi": ["error", "always"],
+    "no-extra-semi": "error",
+    "prettier/prettier": "error",
     "react/prop-types": "off",
     "react/display-name": "off",
     "react-hooks/exhaustive-deps": "off",
