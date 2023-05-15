@@ -1,5 +1,5 @@
 {
-  "parser": "@babel/eslint-parser",
+  "parser": "@typescript-eslint/parser",
   "settings": {
     "react": {
       "version": "detect"
@@ -14,9 +14,10 @@
   },
   "extends": [
     "eslint:recommended",
-    "plugin:prettier/recommended",
     "plugin:react/recommended",
-    "plugin:react-hooks/recommended"
+    "plugin:react-hooks/recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:prettier/recommended"
   ],
   "parserOptions": {
     "ecmaFeatures": {
@@ -59,8 +60,8 @@
         "@typescript-eslint/quotes": ["off", "single"],
         "@typescript-eslint/no-unused-vars": "error",
         "@typescript-eslint/no-explicit-any": "off",
-        "jsdoc/require-param-type" : "off",
-        "jsdoc/require-returns-type" : "off"
+        "jsdoc/require-param-type": "off",
+        "jsdoc/require-returns-type": "off"
       }
     }
   ]
