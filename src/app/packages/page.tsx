@@ -1,4 +1,6 @@
 import React from "react";
+import Image from "next/image";
+import logo from "../Assets/logo.png";
 interface Ubicacion {
   id: number;
   nombre: string;
@@ -19,31 +21,31 @@ const GetPackages = () => {
             boxShadow: "0px 2px 4px rgba(0,0,0,0.1)"
           }}
         >
-          {/* <Image
+          <Image
             src={logo}
             alt="logo"
             style={{ width: "51px", height: "32px" }}
-          /> */}
+          />
         </nav>
         <div
           style={{
             backgroundColor: "white",
             height: "100vh",
-            padding: "20px",
+
             width: "100%"
           }}
         >
           <h1 style={{ fontSize: "40px" }}>←</h1>
           <div
+            className="shadow-lg rounded-md w-full my-4 flex flex-col justify-center p-4"
             style={{
-              height: "100%",
               display: "flex",
               flexDirection: "column",
               justifyContent: "center",
               alignItems: "center"
             }}
           >
-            <div style={{ width: "100%", marginBottom: "60px" }}>
+            <div style={{ width: "100%", marginBottom: "30px" }}>
               <h1 style={{ fontSize: "25px" }}>
                 <strong>Obtener paquetes</strong>
               </h1>
@@ -113,7 +115,8 @@ const GetPackages = () => {
 
             <button
               style={{
-                marginTop: "50px",
+                marginTop: "20px",
+                marginBottom: "20px",
                 width: "100%",
                 backgroundColor: "#217BCE",
                 color: "white",
