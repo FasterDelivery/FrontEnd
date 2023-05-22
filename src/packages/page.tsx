@@ -1,13 +1,10 @@
-import React, { JSXElementConstructor, ReactElement } from "react";
+import React from "react";
 interface Ubicacion {
   id: number;
   nombre: string;
 }
 
-const GetPackages = (): ReactElement<
-  any,
-  string | JSXElementConstructor<any>
-> => {
+const GetPackages = () => {
   const ubicaciones: Ubicacion[] = [
     { id: 1, nombre: "Amenabar 2356, CABA" },
     { id: 1, nombre: "AV. Carabobo y Rivadavia, CABA" },
