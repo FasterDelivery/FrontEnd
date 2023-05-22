@@ -83,8 +83,64 @@ Sistema de puntos por paquetes repartidos y penalizaciones por no completar entr
 
 <!-- GITFLOW DOCUMENTATION-->
 ## Git Flow
+### Ramas en Git Flow 
 
-El flujo general de Gitflow es el siguiente:
+<h6>Master/Main:</h6> 
+Contiene las versiones estables del proyecto. Todo lo que se suba a esta rama debe estar preparada para incluirse en producción.
+<h6>Develop: </h6> 
+Contiene el código de desarrollo, cada nueva característica que se desarrolla se va incluyendo en esta rama. Esta rama puede incluirse a la rama master/main o release. 
+<h6>Ramas de Apoyo: </h6> 
+Permiten el desarrollo en paralelo de nuevas caracteristicas o de resolución de errores. Estas ramas tienen un tiempo de vida limitado. 
+<ul> 
+  <li> Feature: Esta rama surge de Develop y se utiliza para nuevos desarrollos </li>
+  <li> Bugfix: Esta rama surge de Develop y se utiliza para resolver errores no importantes </li>
+  <li> Hotfix: Esta rama surge de Master/main se utiliza para resolver errores productivos de alta prioridad </li>
+  <li> Release: Esta rama surge de Master/main y se utiliza para agrupar el código que debe pasar por Develop a Main </li>
+</ul> 
+
+### Nomenclaturas 
+<h6> [type]/[imperative-branch-name] </h6>
+[type]: Si la rama es feature, bugfix, hotfix, release. 
+<br />
+/: separador 
+<br />
+[imperative-branch-name]: nombre de la rama en formato imperativo con las palabras separadas por guines.
+<br />
+
+### Ejemplos de branches
+<h6>Ejemplo de feature</h6>
+feature/create-user-model
+<br />
+feature/register-user
+<br />
+feature/NO-TASK-create-landing-page
+<br />
+feature/ticket-344-send-token-to-email
+
+<h6>Ejemplo bugfix </h6>
+bugfix/fix-user-name-field
+<br />
+bugfix/fix-invalid-credential
+<br />
+bugfix/NO-TASK-remove-typo
+<br />
+bugfix/ticket-099-change-variable-name
+<br />
+<h6> Ejemplo hotfix </h6>
+hotfix/remove-invalid-validation
+<br />
+hotfix/change-product-price-type
+<br />
+hotfix/NO-TASK-catch-request-status
+<br />
+hotfix/ticket-9220-delete-password-from-user-endpoint
+<br />
+<h6> Ejemplo release </h6>
+release/0.0.1
+<br />
+release/12.4.100
+
+### El flujo general de Gitflow es el siguiente:
 
 <ol> 
   <li> Se crea una rama develop a partir de main. </li>
