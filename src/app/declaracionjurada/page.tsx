@@ -1,12 +1,12 @@
 import React from "react";
 import Image from "next/image";
-import logo from "../../../public/logo.png";
-import goBack from "../../../public/goBack.png";
+import logo from "../Assets/logo.png";
+import goBack from "../Assets/goBack.png";
 
 export default function DeclaracionJurada() {
   return (
     <>
-      <div style={{ width: "360px", height: "640px", border: "1px solid" }}>
+      <div className="shadow-lg mx-auto max-w-md h-[640px]">
         <nav
           style={{
             borderBottom: "1px solid gray",
@@ -27,168 +27,62 @@ export default function DeclaracionJurada() {
           ></Image>
         </div>
 
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center"
-          }}
-        >
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              textAlign: "center",
-              justifyContent: "space-around"
-            }}
-          >
-            <h1
-              style={{
-                fontFamily: "inter",
-                fontSize: "25px",
-                fontWeight: "400",
-                marginBottom: "30px",
-                marginTop: "30px"
-              }}
-            >
+        <div className="flex justify-center items-center">
+          <div className="flex flex-col items-center justify-around">
+            <h1 className="font-inter text-xl font-normal mb-8 mt-8">
               Declaración Jurada
             </h1>
-            <div
-              style={{
-                height: "340px",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "space-around"
-              }}
-            >
-              <h2
-                style={{
-                  fontFamily: "sans-serif",
-                  fontWeight: "bold",
-                  width: "340px"
-                }}
-              >
+            <div className="h-96 flex flex-col justify-around items-center">
+              <h2 className="font-sans font-bold w-96 text-center">
                 {" "}
                 ¿Ha consumido bebidas alcohólicas en las últimas 12 horas?
               </h2>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-around",
-                  width: "340px",
-                  margin: "10px"
-                }}
-              >
+              <div className="flex justify-center w-96 m-4 space-x-8">
                 <button
                   type="button"
-                  style={{
-                    borderRadius: "4px",
-                    color: "black",
-                    backgroundColor: "#E5E7EB",
-                    width: "100px",
-                    height: "40px"
-                  }}
+                  className="bg-gray-300 text-black rounded-md w-24 h-10"
                 >
                   SI
                 </button>
                 <button
                   type="button"
-                  style={{
-                    borderRadius: "4px",
-                    color: "black",
-                    backgroundColor: "#E5E7EB",
-                    width: "100px",
-                    height: "40px"
-                  }}
+                  className="bg-gray-300 text-black rounded-md w-24 h-10"
                 >
                   NO
                 </button>
               </div>
 
-              <h2
-                style={{
-                  fontFamily: "sans-serif",
-                  fontWeight: "bold",
-                  width: "340px"
-                }}
-              >
+              <h2 className="font-sans font-bold w-96 text-center">
                 {" "}
                 ¿Usted está haciendo uso de medicamentos psicoactivos?
                 tranquilizantes, antigripales, antialergicos o para insomnio{" "}
               </h2>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-around",
-                  width: "340px",
-                  margin: "10px"
-                }}
-              >
+              <div className="flex justify-center w-96 m-4 space-x-8">
                 <button
                   type="button"
-                  style={{
-                    borderRadius: "4px",
-                    color: "black",
-                    backgroundColor: "#E5E7EB",
-                    width: "100px",
-                    height: "40px"
-                  }}
+                  className="bg-gray-300 text-black rounded-md w-24 h-10"
                 >
                   SI
                 </button>
-                <button
-                  type="button"
-                  style={{
-                    borderRadius: "4px",
-                    color: "black",
-                    backgroundColor: "#E5E7EB",
-                    width: "100px",
-                    height: "40px"
-                  }}
-                >
+                <button className="bg-gray-300 text-black rounded-md w-24 h-10">
                   NO
                 </button>
               </div>
 
-              <h2
-                style={{
-                  fontFamily: "sans-serif",
-                  fontWeight: "bold",
-                  width: "340px"
-                }}
-              >
+              <h2 className="font-sans font-bold w-96 text-center">
                 ¿Tiene usted algún problema familiar emocional o de cualquier
                 tipo que lo distraiga?
               </h2>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-around",
-                  width: "340px",
-                  margin: "10px"
-                }}
-              >
+              <div className="flex justify-center w-96 m-4 space-x-8">
                 <button
                   type="button"
-                  style={{
-                    borderRadius: "4px",
-                    color: "black",
-                    backgroundColor: "#E5E7EB",
-                    width: "100px",
-                    height: "40px"
-                  }}
+                  className="bg-gray-300 text-black rounded-md w-24 h-10"
                 >
                   SI
                 </button>
                 <button
                   type="button"
-                  style={{
-                    borderRadius: "4px",
-                    color: "black",
-                    backgroundColor: "#E5E7EB",
-                    width: "100px",
-                    height: "40px"
-                  }}
+                  className="bg-gray-300 text-black rounded-md w-24 h-10"
                 >
                   NO
                 </button>
@@ -196,19 +90,11 @@ export default function DeclaracionJurada() {
             </div>
           </div>
         </div>
-        <button
-          style={{
-            borderRadius: "4px",
-            color: "white",
-            backgroundColor: "#217BCE",
-            width: "331px",
-            height: "30px",
-            marginTop: "60px",
-            marginLeft: "14px"
-          }}
-        >
-          CONTINUAR
-        </button>
+        <div className="flex justify-center items-center">
+          <button className="bg-blue-500 text-white rounded-md w-80 h-7 mt-8 ml-3">
+            CONTINUAR
+          </button>
+        </div>
       </div>
     </>
   );
