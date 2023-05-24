@@ -41,17 +41,18 @@ export default function ManagePackages() {
           </p>
 
           <div className="divide-y">
-
             <div className="flex justify-between py-4 h-110px w-full">
               <div className="w-[80px] h-[80px] bg-[#E8EFFA] border-sm rounded-sm"></div>
               <div className="">
-                <div className="flex flex-col justify-between h-full">
-                  <div className="flex justify-between">
-                    <p className="font-sans text-sm mr-8">
+                <div>
+                  <div className="flex justify-between items-center">
+                    <p className="font-sans text-sm mr-auto whitespace-normal break-words">
                       {" "}
                       Amenabar 2356, CABA
                     </p>
-                    <Image src={trash} alt="trash" width={16} height={16} />
+                    <div className="ml-2">
+                      <Image src={trash} alt="trash" width={16} height={16} />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -60,13 +61,19 @@ export default function ManagePackages() {
             <div className="flex justify-between py-4 h-110px w-full">
               <div className="w-[80px] h-[80px] bg-[#E8EFFA] border-sm rounded-sm"></div>
               <div className="">
-                <div className="flex flex-col justify-between h-full">
-                  <div className="flex justify-between">
-                    <p className="font-sans text-sm mr-8">
-                      {" "}
-                      Av. Carabobo y Rivadavia, CABA
-                    </p>
-                    <Image src={trash} alt="trash" width={16} height={16} />
+                <div>
+                  <div className="flex flex-col justify-between h-full">
+                    <div className="flex justify-between max-w-[100%]">
+                      <div className="flex justify-end">
+                        <p className="font-sans text-sm mr-auto break-words">
+                          {" "}
+                          Av. Carabobo y Rivadavia, CABA
+                        </p>
+                      </div>
+                      <div className="ml-2">
+                        <Image src={trash} alt="trash" width={16} height={16} />
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -75,17 +82,20 @@ export default function ManagePackages() {
             <div className="flex justify-between py-4 h-110px w-full">
               <div className="w-[80px] h-[80px] bg-[#E8EFFA] border-sm rounded-sm"></div>
               <div className="">
-                <div className="flex flex-col justify-between h-full">
-                  <div className="flex justify-between">
-                    <p className="font-sans text-sm mr-8">
-                      Mendoza 1810, CABA{" "}
-                    </p>
-                    <Image src={trash} alt="trash" width={16} height={16} />
+                <div>
+                  <div className="flex flex-col justify-between h-full">
+                    <div className="flex justify-between">
+                      <p className="font-sans text-sm mr-auto">
+                        Mendoza 1810, CABA{" "}
+                      </p>
+                      <div className="ml-2">
+                        <Image src={trash} alt="trash" width={16} height={16} />
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-
           </div>
         </div>
       </div>
