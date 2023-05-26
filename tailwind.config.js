@@ -22,7 +22,8 @@ module.exports = {
         "60%": "#FCBC11",
         "80%": "#FEBD93",
         "100%":"#96DB76",
-        "black-opaque-50%":"#00000080"
+        "black-opaque-50%":"#00000080",
+        "inactive":"#FF6B6B"
       }
     }
   },
