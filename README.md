@@ -152,6 +152,12 @@ release/12.4.100
   <li> Una vez terminada la rama hotfix, esta se fusiona tanto en develop como en main. </li>
 </ol>
 
+## Iniciar el proyecto con Docker 
+Ejectar los siguientes comando en la raiz del proyecto
+
+<h6> docker-compose build <h6/>
+<h6> docker-compose up </h6> 
+
 ## Roadmap
 
 <!-- WEB -->
