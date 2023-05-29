@@ -1,19 +1,20 @@
 "use client";
 
-import React, {useState} from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import logo from "../Assets/logo.png";
+import { log } from "console";
 
 export default function SignUp() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordError, setPasswordError] = useState("");
 
-  const handlePasswordChange = (event:any) => {
+  const handlePasswordChange = (event: any) => {
     setPassword(event.target.value);
   };
 
-  const handleConfirmPasswordChange = (event:any) => {
+  const handleConfirmPasswordChange = (event: any) => {
     setConfirmPassword(event.target.value);
   };
 
@@ -23,13 +24,16 @@ export default function SignUp() {
     } else if (!/[A-Z]/.test(password)) {
       setPasswordError("La contraseña debe tener al menos una letra mayúscula");
     } else if (!/[\W_]/.test(password)) {
-      setPasswordError("La contraseña debe incluir al menos un caracter especial");
+      setPasswordError(
+        "La contraseña debe incluir al menos un caracter especial"
+      );
     } else if (password !== confirmPassword) {
       setPasswordError("Las contraseñas no coinciden");
     } else {
       // Perform sign-up logic here
       // You can add your own implementation or API call
       setPasswordError("");
+      log(passwordError);
       // Reset form or redirect to success page
     }
   };

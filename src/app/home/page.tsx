@@ -6,7 +6,7 @@ import trash from "../Assets/trash.png";
 export default function Home() {
   return (
     <div className="mx-auto max-w-md">
-      <Navbar/>
+      <Navbar />
       <div className="max-w-md flex flex-col justify-start mx-auto items-center">
         <button
           type="button"

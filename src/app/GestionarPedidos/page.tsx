@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import Image from "next/image";
-import logo from "../../../public/logo.png";
+import logo from "../Assets/logo.png";
 import avatar from "../Assets/Ellipse 10.png";
 import dropdown from "../Assets/dropdown.png";
 import avatar2 from "../Assets/Ellipse 6.png";
@@ -22,7 +22,7 @@ const days: Day[] = [
 
 const Index = () => {
   const percentage = 45;
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState<boolean>(false);
   const handleToggle = () => {
     setIsExpanded(!isExpanded);
   };
