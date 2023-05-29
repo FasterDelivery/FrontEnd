@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "tsc && next dev",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "eslint \"*/**/*.{js,ts,tsx}\" --fix",
@@ -11,11 +11,13 @@
     "tsc": "tsc"
   },
   "dependencies": {
+    "@react-google-maps/api": "^2.18.1",
+    "@types/googlemaps": "^3.43.3",
     "@types/node": "20.1.2",
     "@types/react": "18.2.6",
     "@types/react-dom": "18.2.4",
-    "axios": "^1.4.0",
     "autoprefixer": "10.4.14",
+    "axios": "^1.4.0",
     "eslint-config-next": "13.4.1",
     "flowbite": "^1.6.5",
     "js-cookie": "^3.0.5",
