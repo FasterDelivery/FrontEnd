@@ -2,11 +2,15 @@ version: '3'
 services:
   backend:
     build:
-      context: https://github.com/FasterDelivery/BackEnd
+      context: https://github.com/FasterDelivery/BackEnd.git
     ports:
       - 3001:3001
+    volumes: 
+      - ./BackEnd:/app
   frontend:
     build:
-      context: ./front
+      context: ./
     ports:
       - 3000:3000
+    volumes:
+      - .:/app
