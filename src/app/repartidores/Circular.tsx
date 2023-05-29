@@ -11,15 +11,18 @@ interface Props {
 
 const Circular: React.FC<Props> = ({ percentage, name, state }) => {
   const obj: { [key: string]: string } = {
-    "Inactivo": "#FF6B6B",
-    "Finalizó": "#96DB76",
+    Inactivo: "#FF6B6B",
+    Finalizó: "#96DB76",
     "Viaje en curso": "#217BCE"
   };
 
   const color = obj[state] || "";
 
   return (
-    <div className="flex w-90 py-4 mx-auto items-center">
+    <div
+      id="container"
+      className="flex w-90 py-4 mx-auto items-center sm:justify-between"
+    >
       <section
         className="circular-progress"
         style={{
@@ -30,11 +33,15 @@ const Circular: React.FC<Props> = ({ percentage, name, state }) => {
       >
         <span className="absolute font-bold">{`${percentage}%`}</span>
       </section>
-      <section className="flex flex-col ml-8 w-45">
+      <section id="container-state" className="flex flex-col ml-8 w-45">
         <p className="my-0 mb-2 font-bold">{name}</p>
         <div className="flex items-center">
           <p className="my-0 mr-2 h-2 w-2 rounded-lg bg-cyan-text"></p>
-          <p className="my-0 text-cyan-text font-bold" style={{ color: `${color}` }}>
+          <p
+            id="state"
+            className="my-0 text-cyan-text font-bold"
+            style={{ color: `${color}` }}
+          >
             {state}
           </p>
         </div>
