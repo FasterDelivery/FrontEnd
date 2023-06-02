@@ -7,7 +7,7 @@ import goBack from "../Assets/goBack.png";
 
 export default function ManagePackages() {
   return (
-    <div className="shadow-lg mx-auto max-w-md h-[640px]">
+    <div className="shadow-lg mx-auto w-full h-[640px]">
       <nav
         style={{
           borderBottom: "1px solid gray",
@@ -25,8 +25,8 @@ export default function ManagePackages() {
         alt="goBack"
         style={{ marginTop: "15px", marginLeft: "10px" }}
       ></Image>
-      <div className="max-w-md flex flex-col justify-start mx-auto items-center">
-        <div className="shadow-lg rounded-md w-321 my-4 flex flex-col justify-center p-8">
+      <div className="w-90 flex flex-col justify-start mx-auto items-center">
+        <div className="w-full shadow-lg rounded-md w-321 my-4 flex flex-col justify-center p-8">
           <div className="flex justify-between mx-4">
             <p className="font-bold text-lg font-sans"> Paquetes </p>
             <div>
