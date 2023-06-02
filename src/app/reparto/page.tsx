@@ -1,14 +1,17 @@
 import React from "react";
 import Image from "next/image";
 import dropdown from "../Assets/dropdown.png";
-import back from "../Assets/goBack.png";
+import { BackButton, Navbar } from "app/Components";
+
 
 const pages = () => {
   return (
+    <>
+    <Navbar/>
     <div className="py-6">
       <div className="w-90 mx-auto">
         <button className="">
-          <Image src={back} alt="return" />
+          <BackButton/>
         </button>
       </div>
       <div
@@ -68,6 +71,7 @@ const pages = () => {
         </section>
       </div>
     </div>
+    </>
   );
 };
 

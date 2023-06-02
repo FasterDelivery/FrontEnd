@@ -3,28 +3,13 @@ import Image from "next/image";
 import logo from "../Assets/logo.png";
 import trash from "../Assets/trash.png";
 import polygon from "../Assets/polygon.png";
-import goBack from "../Assets/goBack.png";
+import {BackButton, Navbar} from "../Components"
 
 export default function ManagePackages() {
   return (
     <div className="shadow-lg mx-auto max-w-md h-[640px]">
-      <nav
-        style={{
-          borderBottom: "1px solid gray",
-          boxShadow: "0px 2px 4px rgba(0,0,0,0.1)"
-        }}
-      >
-        <Image
-          src={logo}
-          alt="logo"
-          style={{ width: "51px", height: "32px" }}
-        />
-      </nav>
-      <Image
-        src={goBack}
-        alt="goBack"
-        style={{ marginTop: "15px", marginLeft: "10px" }}
-      ></Image>
+      <Navbar/>
+      <BackButton/>
       <div className="max-w-md flex flex-col justify-start mx-auto items-center">
         <div className="shadow-lg rounded-md w-321 my-4 flex flex-col justify-center p-8">
           <div className="flex justify-between mx-4">
