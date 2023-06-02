@@ -18,6 +18,8 @@ export default function SignUp() {
     setConfirmPassword(event.target.value);
   };
 
+  console.log(passwordError);
+
   const handleSignUp = () => {
     if (password.length < 8) {
       setPasswordError("La contraseña debe tener al menos 8 caracteres");
