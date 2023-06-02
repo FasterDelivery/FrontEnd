@@ -4,9 +4,11 @@ import { BackButton, Navbar } from "app/Components";
 import dropdown from "../Assets/dropdown.png";
 import trash from "../Assets/trash.png";
 import profile from "../Assets/Ellipse 9.png";
+import "./styles.css";
+
 export default function Home() {
   return (
-    <div className="mx-auto max-w-md">
+    <div className="mx-auto">
       <Navbar />
       <BackButton/>
       <div className="max-w-md flex flex-col justify-start mx-auto items-center">
@@ -33,7 +35,7 @@ export default function Home() {
           <div className="shadow-lg rounded-[11px] w-full my-4 flex flex-col justify-center p-4">
             <div className="flex justify-between mx-4">
               <p className="font-bold text-lg font-sans">Repartos Pendientes</p>
-              <Image src={dropdown} alt="dropdown" width={13} height={9} />
+              <Image src={dropdown} alt="dropdown" width={13} className="h-5" />
             </div>
             <p className="ml-4 font-sans text-sm">
               {" "}
@@ -45,7 +47,7 @@ export default function Home() {
               <p className="font-bold text-lg font-sans">
                 Historial de Repartos
               </p>
-              <Image src={dropdown} alt="dropdown" width={13} height={9} />
+              <Image src={dropdown} alt="dropdown" width={13} className="h-5" />
             </div>
             <p className="ml-4 font-sans text-sm"> Ya repartiste 58 paquetes</p>
             <div className="divide-y">
@@ -58,7 +60,12 @@ export default function Home() {
                         {" "}
                         Amenabar 2356, CABA
                       </p>
-                      <Image src={trash} alt="trash" width={16} height={16} />
+                      <Image
+                        src={trash}
+                        alt="trash"
+                        width={16}
+                        className="h-5"
+                      />
                     </div>
                     <p className="font-sans text-sm font-bold self-end">
                       Entregado
@@ -75,7 +82,12 @@ export default function Home() {
                         {" "}
                         Av. Carabobo y Rivadavia, CABA
                       </p>
-                      <Image src={trash} alt="trash" width={16} height={16} />
+                      <Image
+                        src={trash}
+                        alt="trash"
+                        width={16}
+                        className="h-5"
+                      />
                     </div>
                     <p className="font-sans text-sm font-bold self-end">
                       Entregado
@@ -91,7 +103,12 @@ export default function Home() {
                       <p className="font-sans text-sm mr-8">
                         Mendoza 1810, CABA{" "}
                       </p>
-                      <Image src={trash} alt="trash" width={16} height={16} />
+                      <Image
+                        src={trash}
+                        alt="trash"
+                        width={16}
+                        className="h-5"
+                      />
                     </div>
                     <p className="font-sans text-sm font-bold self-end text-yellow-300">
                       En curso

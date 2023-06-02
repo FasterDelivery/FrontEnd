@@ -4,27 +4,27 @@ import logo from "../Assets/logo.png";
 import { Button } from "app/Components";
 export default function Login() {
   return (
-    <div className="max-w-md flex flex-col justify-center m-auto items-center">
+    <div className="flex flex-col justify-center m-auto items-center">
       <div className="mt-8">
         <Image src={logo} alt="logo" />
       </div>
-      <div className="flex flex-col justify-start mt-8 items-center max-w-md">
-        <div>
+      <div className="w-90 mx-auto flex flex-col justify-start mt-8 items-center">
+        <div className="py-2 w-90 mx-auto">
           <h1 className="text-md text-yellow-400">Username</h1>
           <input
             type="text"
             id="username"
-            className="border-b-2 border-blue-500 focus:outline-none max-w-md w-screen"
+            className="border-b-2 border-blue-500 focus:outline-none w-full"
             placeholder="user@email.com"
             required
           />
         </div>
-        <div>
+        <div className="py-2 w-90 mx-auto">
           <h1 className="text-md text-yellow-400">Contraseña</h1>
           <input
             type="password"
             id="password"
-            className="border-b-2 border-blue-500 focus:outline-none max-w-md w-screen"
+            className="border-b-2 border-blue-500 focus:outline-none w-full"
             placeholder="Contraseña"
             required
           />
