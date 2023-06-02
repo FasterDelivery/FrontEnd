@@ -1,6 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import logo from "../Assets/logo.png";
+import { BackButton, Button, Navbar } from "app/Components";
 interface Ubicacion {
   id: number;
   nombre: string;
@@ -14,19 +15,8 @@ const GetPackages = () => {
   ];
   return (
     <>
-      <div className="mx-auto w-90">
-        <nav
-          style={{
-            borderBottom: "1px solid gray",
-            boxShadow: "0px 2px 4px rgba(0,0,0,0.1)"
-          }}
-        >
-          <Image
-            src={logo}
-            alt="logo"
-            style={{ width: "51px", height: "32px" }}
-          />
-        </nav>
+      <div className="mx-auto max-w-md">
+        <Navbar/>
         <div
           style={{
             backgroundColor: "white",
@@ -35,7 +25,7 @@ const GetPackages = () => {
             width: "100%"
           }}
         >
-          <h1 style={{ fontSize: "40px" }}>←</h1>
+          <BackButton/>
           <div
             className="shadow-lg rounded-md w-full my-4 flex flex-col justify-center p-4"
             style={{
@@ -113,18 +103,7 @@ const GetPackages = () => {
               </div>
             ))}
 
-            <button
-              style={{
-                marginTop: "20px",
-                marginBottom: "20px",
-                width: "100%",
-                backgroundColor: "#217BCE",
-                color: "white",
-                borderRadius: "5px"
-              }}
-            >
-              INICIAR JORNADA
-            </button>
+            <Button buttonText="INICIAR JORNADA"/>
           </div>
         </div>
       </div>

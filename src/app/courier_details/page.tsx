@@ -1,6 +1,6 @@
 import React from "react";
 import Image from "next/image";
-import { Navbar } from "app/Components";
+import { BackButton, Navbar } from "app/Components";
 import dropdown from "../Assets/dropdown.png";
 import trash from "../Assets/trash.png";
 import profile from "../Assets/Ellipse 9.png";
@@ -10,10 +10,8 @@ export default function Home() {
   return (
     <div className="mx-auto">
       <Navbar />
-      <div
-        id="container-courier-details"
-        className="w-90 mx-auto flex flex-col justify-start mx-auto items-center"
-      >
+      <BackButton/>
+      <div className="max-w-md flex flex-col justify-start mx-auto items-center">
         <div className="shadow-lg rounded-[4px] w-full my-4 flex flex-col justify-center p-4">
           <div className="flex justify-between items-center p-4">
             <div className="flex">

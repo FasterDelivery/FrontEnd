@@ -1,32 +1,14 @@
 import React from "react";
 import Image from "next/image";
 import logo from "../Assets/logo.png";
-import goBack from "../Assets/goBack.png";
+import { BackButton, Button, Navbar } from "app/Components";
 
 export default function DeclaracionJurada() {
   return (
     <>
-      <div className="w-90 shadow-lg mx-auto h-[640px]">
-        <nav
-          style={{
-            borderBottom: "1px solid gray",
-            boxShadow: "0px 2px 4px rgba(0,0,0,0.1)"
-          }}
-        >
-          <Image
-            src={logo}
-            alt="logo"
-            style={{ width: "51px", height: "32px" }}
-          />
-        </nav>
-        <div>
-          <Image
-            src={goBack}
-            alt="goBack"
-            style={{ marginTop: "15px", marginLeft: "10px" }}
-          ></Image>
-        </div>
-
+      <div className="shadow-lg mx-auto max-w-md h-[640px]">
+        <Navbar/>
+        <BackButton/>
         <div className="flex w-full justify-center items-center">
           <div className="flex w-full flex-col items-center justify-around">
             <h1 className="font-inter text-xl font-normal mb-8 mt-8">
@@ -91,9 +73,7 @@ export default function DeclaracionJurada() {
           </div>
         </div>
         <div className="flex justify-center items-center">
-          <button className="bg-blue-500 text-white rounded-md w-80 h-7 mt-8 ml-3">
-            CONTINUAR
-          </button>
+          <Button buttonText="CONTINUAR"/>
         </div>
       </div>
     </>

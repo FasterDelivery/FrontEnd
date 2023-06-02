@@ -6,6 +6,7 @@ import avatar from "../Assets/Ellipse 10.png";
 import dropdown from "../Assets/dropdown.png";
 import avatar2 from "../Assets/Ellipse 6.png";
 import avatar3 from "../Assets/Ellipse 8.png";
+import { Button, Navbar } from "app/Components";
 import { useState } from "react";
 interface Day {
   id: number;
@@ -32,19 +33,7 @@ const Index = () => {
 
   return (
     <div className="mx-auto max-w-md">
-      <nav
-        style={{
-          borderBottom: "1px solid gray",
-          boxShadow: "0px 2px 4px rgba(0,0,0,0.1)"
-        }}
-      >
-        <Image
-          src={logo}
-          alt="logo"
-          style={{ width: "51px", height: "32px" }}
-        />
-      </nav>
-
+      <Navbar/>
       <div className="shadow-lg rounded-md w-full my-4 flex flex-row items-centerjustify-between  p-4">
         <Image src={avatar} alt="logo" className="w-20 h-20" />
         <div>
@@ -116,23 +105,13 @@ const Index = () => {
                 </div>
               </div>
 
-              <button
-                type="button"
-                className=" my-4 text-white bg-[#217BCE] hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-md text-sm px-5 py-2.5 max-w-md w-screen"
-              >
-                VER REPARTIDORES
-              </button>
+              <Button buttonText="VER REPARTIDORES"/>
             </div>
             <div>
               <h2>Porcentaje 2: 50%</h2>
               <h1>Paquetes</h1>
               <h4>{"{activos / total}"} repartidos</h4>
-              <button
-                type="button"
-                className=" my-4 text-white bg-[#217BCE] hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-md text-sm px-5 py-2.5 max-w-md w-screen"
-              >
-                VER PAQUETES
-              </button>
+              <Button buttonText="VER PAQUETES"/>
             </div>
           </div>
         )}

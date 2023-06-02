@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import logo from "../Assets/logo.png";
-// import { log } from "console";
 
 export default function SignUp() {
   const [password, setPassword] = useState("");
@@ -35,7 +34,8 @@ export default function SignUp() {
       // Perform sign-up logic here
       // You can add your own implementation or API call
       setPasswordError("");
-      // log(passwordError);
+      console.log(passwordError);
+
       // Reset form or redirect to success page
     }
   };

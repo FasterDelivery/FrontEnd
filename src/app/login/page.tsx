@@ -1,6 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import logo from "../Assets/logo.png";
+import { Button } from "app/Components";
 export default function Login() {
   return (
     <div className="flex flex-col justify-center m-auto items-center">
@@ -28,16 +29,11 @@ export default function Login() {
             required
           />
         </div>
-        <button
-          type="button"
-          className="my-6 text-white bg-[#217BCE] hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-md text-sm px-5 py-2.5"
-        >
-          INGRESAR
-        </button>
+        <Button buttonText="INGRESAR"/>
         <a className="text-[#217BCE] my-2 font-sans" href="">
           Recuperar Contraseña
         </a>
-        <a className="text-[#217BCE] my-2 font-sans font-bold" href="">
+        <a className="text-[#217BCE] my-2 font-sans font-bold" href="/register">
           Registrarse
         </a>
       </div>
