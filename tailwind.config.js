@@ -14,6 +14,7 @@ module.exports = {
       },
       width: {
         '90': '90%',
+        '45': '45%'
       },
       borderRadius: {
         'DEFAULT': '4px', // Aplica a todos los elementos
@@ -23,7 +24,7 @@ module.exports = {
       },
       colors: {
         "dark-blue-button": "#217BCE",
-        "cyan text": "#217BCE",
+        "cyan-text": "#217BCE",
         "yellow-label-text": "#FEBC14",
         "gray-paragraphs": "#4F4F4F",
         "yellow-button-weekly": "#FCBC11",
