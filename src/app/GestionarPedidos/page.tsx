@@ -7,9 +7,13 @@ import avatar2 from "../Assets/Ellipse 6.png";
 import avatar3 from "../Assets/Ellipse 8.png";
 import { Button, Navbar } from "app/Components";
 import { useState } from "react";
+import Link from "next/link";
+import BackButton from "app/Components";
+
 interface Day {
   id: number;
   name: string;
+  selected?: boolean;
 }
 
 const days: Day[] = [
@@ -20,19 +24,25 @@ const days: Day[] = [
   { id: 5, name: "Viernes" }
 ];
 
+// interface Item {
+//   percentage: number;
+// }
+
 const Index = () => {
   const percentage = 45;
+  // const angle = percentage * 3.6;
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
   const handleToggle = () => {
     setIsExpanded(!isExpanded);
   };
-
+  // const [items] = useState<Item[]>([{ percentage: 60 }, { percentage: 100 }]);
   // const [color, setColor] = useState("blue");
   // useEffect(() => setColor("yellow"), []);
 
   return (
     <div className="mx-auto max-w-md">
       <Navbar />
+      <BackButton />
       <div className="shadow-lg rounded-md w-full my-4 flex flex-row items-centerjustify-between  p-4">
         <Image src={avatar} alt="logo" className="w-20 h-20" />
         <div>
@@ -68,49 +78,50 @@ const Index = () => {
         </h1>
         {isExpanded && (
           <div className="rounded-md w-full my-4 flex flex-col justify-center p-4 items-center">
-            <div>
+            <div className="flex flex-col justify-center p-4 items-center">
               <div className="w-32 h-32 relative">
-                <div className="absolute top-0 left-0 w-full h-full rounded-full bg-gray-200"></div>
-                <div
-                  className="absolute top-0 left-0 w-full h-full rounded-full bg-blue-500"
+                <section
+                  className="circular-progress"
                   style={{
-                    clipPath: `polygon(0 0, 100% 0, 100% 100%, ${
-                      100 - percentage
-                    }% 100%, ${
-                      100 - percentage
-                    }% ${percentage}%, 0 ${percentage}%)`
+                    background: `conic-gradient(${
+                      percentage === Number(100) ? "#96DB76" : "#FCBC11"
+                    } ${percentage * 3.6}deg, #ededed 0deg)`
                   }}
-                ></div>
-                <p className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center text-white text-xl font-bold">
-                  {percentage}%
-                </p>
-                <div className="flex flex-col justify-between h-full ml-4">
-                  <h1 className="flex justify-between items-center">
-                    Repartidores
-                  </h1>
-                  <h4>{"{activos / total}"} activos</h4>
-                  <div className="flex">
-                    <Image
-                      src={avatar2}
-                      alt="logo"
-                      style={{ width: "51px", height: "32px" }}
-                    />
-                    <Image
-                      src={avatar3}
-                      alt="logo"
-                      style={{ width: "51px", height: "32px" }}
-                    />
-                  </div>
-                </div>
-              </div>
+                >
+                  <span className="absolute font-bold">{`${percentage}%`}</span>
 
-              <Button buttonText="VER REPARTIDORES" />
+                  <div className="flex flex-col justify-between h-full ml-4">
+                    <h1 className="flex justify-between items-center">
+                      Repartidores
+                    </h1>
+                    <h4>{"{activos / total}"} activos</h4>
+                    <div className="flex">
+                      <Image
+                        src={avatar2}
+                        alt="logo"
+                        style={{ width: "51px", height: "32px" }}
+                      />
+                      <Image
+                        src={avatar3}
+                        alt="logo"
+                        style={{ width: "51px", height: "32px" }}
+                      />
+                    </div>
+                  </div>
+                </section>
+              </div>
+              <Link href="repartidores">
+                <Button buttonText="VER REPARTIDORES" />
+              </Link>
+
             </div>
             <div>
               <h2>Porcentaje 2: 50%</h2>
               <h1>Paquetes</h1>
               <h4>{"{activos / total}"} repartidos</h4>
-              <Button buttonText="VER PAQUETES" />
+              <Link href="gestionarpaquetes">
+                <Button buttonText="VER PAQUETES" />
+              </Link>
             </div>
           </div>
         )}

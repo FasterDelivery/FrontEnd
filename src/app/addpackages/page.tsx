@@ -1,6 +1,7 @@
+
 "use client";
 import React, { FormEvent } from "react";
-import { BackButton, Navbar } from "app/Components";
+import { BackButton, Button, Navbar } from "app/Components";
 import useInput from "../hooks/useInput";
 
 const Page = () => {
@@ -16,6 +17,7 @@ const Page = () => {
     console.log(kg.value);
     console.log(date.value);
   };
+
 
   return (
     <div className="mx-auto max-w-md">
@@ -52,6 +54,7 @@ const Page = () => {
               required
             />
           </div>
+
           <div className="w-90 mx-auto" style={{ marginBottom: "15px" }}>
             <h1 className="text-md text-yellow-400">Peso (Kg)</h1>
             <input

@@ -1,5 +1,6 @@
 import React from "react";
 import { BackButton, Button, Navbar } from "app/Components";
+import Link from "next/link";
 interface Ubicacion {
   id: number;
   nombre: string;
@@ -100,8 +101,9 @@ const GetPackages = () => {
                 <hr style={{ width: "100%", marginTop: "20px" }} />
               </div>
             ))}
-
-            <Button buttonText="INICIAR JORNADA" />
+            <Link href="reparto">
+              <Button buttonText="INICIAR JORNADA" />
+            </Link>
           </div>
         </div>
       </div>
