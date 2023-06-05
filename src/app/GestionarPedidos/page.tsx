@@ -58,9 +58,11 @@ const Index = () => {
           {days.map((day) => (
             <li
               key={day.id}
-              className={`bg-${
-                day.name === "Jueves" ? "yellow" : "blue"
-              }-500 rounded-lg m-2 p-4`}
+              className={
+                day.name === "Jueves"
+                  ? "bg-yellow-500 rounded-lg m-2 p-4"
+                  : "bg-blue-500 rounded-lg m-2 p-4"
+              }
             >
               {day.name}
             </li>
@@ -113,7 +115,6 @@ const Index = () => {
               <Link href="repartidores">
                 <Button buttonText="VER REPARTIDORES" />
               </Link>
-
             </div>
             <div>
               <h2>Porcentaje 2: 50%</h2>

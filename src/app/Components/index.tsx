@@ -51,4 +51,3 @@ export const Button: React.FC<ButtonProps> = ({ buttonText }) => {
 };
 
 export default BackButton;
-

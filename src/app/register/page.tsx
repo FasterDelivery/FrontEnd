@@ -4,8 +4,10 @@ import React, { FormEvent } from "react";
 import Image from "next/image";
 import logo from "../Assets/logo.png";
 import useInput from "../hooks/useInput";
+import { useRouter } from "next/navigation";
 
 export default function SignUp() {
+  const router = useRouter();
   const name = useInput();
   const lastName = useInput();
   const password = useInput();
@@ -17,9 +19,12 @@ export default function SignUp() {
     password.validatePassword();
     confirmPassword.validateConfirmPassword(password.value);
     email.validateEmail();
-    console.log(password.passwordErrors);
-    console.log(email.emailErrors);
-    console.log(confirmPassword.value === password.value);
+    console.log(router);
+    password.passwordErrors[0] &&
+    email.emailErrors[0] &&
+    confirmPassword.confirmPasswordErrors[0]
+      ? router.push("/login")
+      : "";
   };
 
   return (

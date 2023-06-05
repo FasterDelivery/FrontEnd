@@ -5,9 +5,10 @@ import logo from "../Assets/logo.png";
 import { Button } from "app/Components";
 import useInput from "../hooks/useInput";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function Login() {
-
+  const router = useRouter();
   // en prop pasar condition
   // let href = "";
   // condition ? (href = "home") : (href = "GestionarPedidos");
@@ -19,6 +20,7 @@ export default function Login() {
     event.preventDefault();
     console.log(email.value);
     console.log(password.value);
+    router.push("/home");
   };
 
   return (
@@ -52,19 +54,21 @@ export default function Login() {
             required
           />
         </div>
-        <Link href="home">
-          {/* <Link href={href}> */}
-          <Button buttonText="INGRESAR" />
-        </Link>
-        <button className="text-[#217BCE] my-2 font-sans">
+
+        <Button buttonText="INGRESAR" />
+
+        <button className="text-[#217BCE] my-2 font-sans" type="button">
           Recuperar Contraseña
         </button>
         <Link href="register">
-          <button className="text-[#217BCE] my-2 font-sans font-bold">
+          <button
+            className="text-[#217BCE] my-2 font-sans font-bold"
+            type="button"
+          >
             Registrarse
           </button>
         </Link>
-      </div>
+      </form>
     </div>
   );
 }
