@@ -2,6 +2,7 @@
   "compilerOptions": {
     "target": "ES2021",
     "lib": ["dom", "dom.iterable", "esnext"],
+    "types": ["cypress", "node"],
     "baseUrl": "src",
     "allowJs": true,
     "skipLibCheck": true,
@@ -30,6 +31,6 @@
       "name": "typescript-plugin-css-modules"
     }
   ],
-  "include": ["src", "*.ts", "*.tsx", ".next/types/**/*.ts"],
+  "include": ["src", "*.ts", "*.tsx", ".next/types/**/*.ts", "**/*.ts"],
   "exclude": ["node_modules"]
 }

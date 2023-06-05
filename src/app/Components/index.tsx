@@ -20,7 +20,6 @@ export function Navbar() {
 }
 
 export function BackButton() {
-
   const router = useRouter();
   const handleBack = () => {
     router.back();
@@ -29,7 +28,6 @@ export function BackButton() {
     <div>
       <Image
         onClick={handleBack}
-
         src={back}
         alt="goBack"
         style={{ marginTop: "15px", marginLeft: "10px" }}
@@ -37,7 +35,6 @@ export function BackButton() {
     </div>
   );
 }
-
 interface ButtonProps {
   buttonText: string;
 }
@@ -45,17 +42,13 @@ interface ButtonProps {
 export const Button: React.FC<ButtonProps> = ({ buttonText }) => {
   return (
     <button
-
-
       type="submit"
-
       className=" my-2 text-white bg-[#217BCE] hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-md text-sm px-5 py-2.5 max-w-md w-screen mx-2"
     >
       {buttonText}
     </button>
   );
 };
-
 
 export default BackButton;
 
