@@ -1,8 +1,13 @@
 import React from "react";
+import Link from "next/link";
 import Image from "next/image";
 import logo from "../Assets/logo.png";
 import { Button } from "app/Components";
 export default function Login() {
+  // en prop pasar condition
+  // let href = "";
+  // condition ? (href = "home") : (href = "GestionarPedidos");
+
   return (
     <div className="flex flex-col justify-center m-auto items-center">
       <div className="mt-8">
@@ -29,13 +34,18 @@ export default function Login() {
             required
           />
         </div>
-        <Button buttonText="INGRESAR"/>
-        <a className="text-[#217BCE] my-2 font-sans" href="">
+        <Link href="home">
+          {/* <Link href={href}> */}
+          <Button buttonText="INGRESAR" />
+        </Link>
+        <button className="text-[#217BCE] my-2 font-sans">
           Recuperar Contraseña
-        </a>
-        <a className="text-[#217BCE] my-2 font-sans font-bold" href="/register">
-          Registrarse
-        </a>
+        </button>
+        <Link href="register">
+          <button className="text-[#217BCE] my-2 font-sans font-bold">
+            Registrarse
+          </button>
+        </Link>
       </div>
     </div>
   );

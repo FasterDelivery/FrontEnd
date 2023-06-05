@@ -1,16 +1,18 @@
 import React from "react";
 import Image from "next/image";
-import { Navbar } from "app/Components";
+import { Navbar, Button } from "app/Components";
 import dropdown from "../Assets/dropdown.png";
 import trash from "../Assets/trash.png";
-import {Button} from "app/Components"
+import Link from "next/link";
 
 export default function Home() {
   return (
     <div className="mx-auto w-90">
       <Navbar />
       <div className="max-w-md flex flex-col justify-start mx-auto items-center">
-        <Button buttonText="OBTENER PAQUETES"/>
+        <Link href="packages">
+          <Button buttonText="OBTENER PAQUETES" />
+        </Link>
         <div className="shadow-lg rounded-md w-full my-4 flex flex-col justify-center p-4">
           <div className="flex justify-between mx-4">
             <p className="font-bold text-lg font-sans">Repartos Pendientes</p>

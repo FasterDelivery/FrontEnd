@@ -1,15 +1,15 @@
 import React from "react";
 import Image from "next/image";
-import logo from "../Assets/logo.png";
 import trash from "../Assets/trash.png";
 import polygon from "../Assets/polygon.png";
-import {BackButton, Navbar} from "../Components"
+import { BackButton, Navbar } from "../Components";
+import Link from "next/link";
 
 export default function ManagePackages() {
   return (
     <div className="shadow-lg mx-auto max-w-md h-[640px]">
-      <Navbar/>
-      <BackButton/>
+      <Navbar />
+      <BackButton />
       <div className="max-w-md flex flex-col justify-start mx-auto items-center">
         <div className="shadow-lg rounded-md w-321 my-4 flex flex-col justify-center p-8">
           <div className="flex justify-between mx-4">
@@ -83,6 +83,15 @@ export default function ManagePackages() {
             </div>
           </div>
         </div>
+        <Link href="addpackages">
+          <button
+            type="button"
+            className="flex items-center justify-center w-10 h-10 bg-[#217BCE] hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 text-white rounded-full text-sm"
+          >
+            {" "}
+            <span className="text-lg font-bold">+</span>
+          </button>
+        </Link>
       </div>
     </div>
   );

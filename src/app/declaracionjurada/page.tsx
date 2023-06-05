@@ -1,14 +1,13 @@
 import React from "react";
-import Image from "next/image";
-import logo from "../Assets/logo.png";
+
 import { BackButton, Button, Navbar } from "app/Components";
 
 export default function DeclaracionJurada() {
   return (
     <>
       <div className="shadow-lg mx-auto max-w-md h-[640px]">
-        <Navbar/>
-        <BackButton/>
+        <Navbar />
+        <BackButton />
         <div className="flex w-full justify-center items-center">
           <div className="flex w-full flex-col items-center justify-around">
             <h1 className="font-inter text-xl font-normal mb-8 mt-8">
@@ -73,7 +72,7 @@ export default function DeclaracionJurada() {
           </div>
         </div>
         <div className="flex justify-center items-center">
-          <Button buttonText="CONTINUAR"/>
+          <Button buttonText="CONTINUAR" />
         </div>
       </div>
     </>
