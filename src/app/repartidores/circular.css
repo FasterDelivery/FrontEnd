@@ -33,8 +33,8 @@
     margin-left: 1rem;
   }
 }
-@media(max-width:320px){
-  .circular-progress{
+@media (max-width: 320px) {
+  .circular-progress {
     height: 75px;
     width: 80px;
   }

@@ -1,18 +1,16 @@
 import React from "react";
-import Image from "next/image";
-import logo from "../Assets/logo.png";
 import { BackButton, Button, Navbar } from "app/Components";
 
 const page = () => {
   return (
     <div className="mx-auto max-w-md">
-      <Navbar/>
+      <Navbar />
       <div className="shadow-lg rounded-md w-full my-4 flex flex-col justify-center p-4">
         <div
           className="focus:outline-none w-90 mx-auto"
           style={{ marginBottom: "15px" }}
         >
-          <BackButton/>
+          <BackButton />
           <h1 style={{ fontSize: "20px", marginBottom: "15px" }}>
             Agregar Paquetes
           </h1>
@@ -86,7 +84,7 @@ const page = () => {
             </button>
           </div>
         </div>
-        <Button buttonText="AGREGAR"/>
+        <Button buttonText="AGREGAR" />
       </div>
     </div>
   );

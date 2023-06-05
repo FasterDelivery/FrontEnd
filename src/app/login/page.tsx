@@ -29,7 +29,7 @@ export default function Login() {
             required
           />
         </div>
-        <Button buttonText="INGRESAR"/>
+        <Button buttonText="INGRESAR" />
         <a className="text-[#217BCE] my-2 font-sans" href="">
           Recuperar Contraseña
         </a>
