@@ -1,50 +1,36 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { FormEvent } from "react";
 import Image from "next/image";
 import logo from "../Assets/logo.png";
+import useInput from "../hooks/useInput";
 
 export default function SignUp() {
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [passwordError, setPasswordError] = useState("");
+  const name = useInput();
+  const lastName = useInput();
+  const password = useInput();
+  const confirmPassword = useInput();
+  const email = useInput();
 
-  const handlePasswordChange = (event: any) => {
-    setPassword(event.target.value);
+  const handleSubmit = (event: FormEvent<HTMLFormElement>): void => {
+    event.preventDefault();
+    password.validatePassword();
+    confirmPassword.validateConfirmPassword(password.value);
+    email.validateEmail();
+    console.log(password.passwordErrors);
+    console.log(email.emailErrors);
+    console.log(confirmPassword.value === password.value);
   };
 
-  const handleConfirmPasswordChange = (event: any) => {
-    setConfirmPassword(event.target.value);
-  };
-
-  console.log(passwordError);
-
-  const handleSignUp = () => {
-    if (password.length < 8) {
-      setPasswordError("La contraseña debe tener al menos 8 caracteres");
-    } else if (!/[A-Z]/.test(password)) {
-      setPasswordError("La contraseña debe tener al menos una letra mayúscula");
-    } else if (!/[\W_]/.test(password)) {
-      setPasswordError(
-        "La contraseña debe incluir al menos un caracter especial"
-      );
-    } else if (password !== confirmPassword) {
-      setPasswordError("Las contraseñas no coinciden");
-    } else {
-      // Perform sign-up logic here
-      // You can add your own implementation or API call
-      setPasswordError("");
-      console.log(passwordError);
-
-      // Reset form or redirect to success page
-    }
-  };
   return (
     <div className="w-90 mx-auto flex flex-col justify-center items-center">
       <div className="mt-8">
         <Image src={logo} alt="logo" />
       </div>
-      <div className="w-full mx-auto flex flex-col justify-start mt-8 items-center">
+      <form
+        onSubmit={handleSubmit}
+        className="w-full mx-auto flex flex-col justify-start mt-8 items-center"
+      >
         <div className="w-90 mx-auto py-2">
           <h1 className="text-md text-yellow-400">Nombre</h1>
           <input
@@ -52,6 +38,7 @@ export default function SignUp() {
             id="firstName"
             className="border-b-2 border-blue-500 focus:outline-none w-full"
             placeholder="Nombre"
+            {...name}
             required
           />
         </div>
@@ -62,6 +49,7 @@ export default function SignUp() {
             id="lastName"
             className="border-b-2 border-blue-500 focus:outline-none w-full"
             placeholder="Apellido"
+            {...lastName}
             required
           />
         </div>
@@ -72,8 +60,14 @@ export default function SignUp() {
             id="email"
             className="border-b-2 border-blue-500 focus:outline-none w-full"
             placeholder="email@example.com"
+            {...email}
             required
           />
+          {email.emailErrors ? (
+            <span className="text-red-500 text-sm">{email.emailErrors[0]}</span>
+          ) : (
+            ""
+          )}
         </div>
         <div className="w-90 mx-auto py-2">
           <h1 className="text-md text-yellow-400">Contraseña</h1>
@@ -82,10 +76,16 @@ export default function SignUp() {
             id="password"
             className="border-b-2 border-blue-500 focus:outline-none w-full"
             placeholder="Contraseña"
-            value={password}
-            onChange={handlePasswordChange}
+            {...password}
             required
           />
+          {password.passwordErrors ? (
+            <span className="text-red-500 text-sm">
+              {password.passwordErrors[0]}
+            </span>
+          ) : (
+            ""
+          )}
         </div>
         <div className="w-90 mx-auto py-2">
           <h1 className="text-md text-yellow-400">Confirmar Contraseña</h1>
@@ -94,22 +94,27 @@ export default function SignUp() {
             id="confirmPassword"
             className="border-b-2 border-blue-500 focus:outline-none w-full"
             placeholder="Confirmar Contraseña"
-            value={confirmPassword}
-            onChange={handleConfirmPasswordChange}
+            {...confirmPassword}
             required
           />
+          {confirmPassword.confirmPasswordErrors ? (
+            <span className="text-red-500 text-sm">
+              {confirmPassword.confirmPasswordErrors[0]}
+            </span>
+          ) : (
+            ""
+          )}
         </div>
         <button
-          type="button"
+          type="submit"
           className="my-6 text-white bg-[#217BCE] hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-md text-sm px-5 py-2.5"
-          onClick={handleSignUp}
         >
           REGISTRARSE
         </button>
-        <a className="text-[#217BCE] my-2 font-sans font-bold" href="">
-          Iniciar Sesión
-        </a>
-      </div>
+      </form>
+      <a className="text-[#217BCE] my-2 font-sans font-bold" href="">
+        Iniciar Sesión
+      </a>
     </div>
   );
 }

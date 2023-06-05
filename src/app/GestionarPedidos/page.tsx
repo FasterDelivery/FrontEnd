@@ -113,6 +113,7 @@ const Index = () => {
               <Link href="repartidores">
                 <Button buttonText="VER REPARTIDORES" />
               </Link>
+
             </div>
             <div>
               <h2>Porcentaje 2: 50%</h2>

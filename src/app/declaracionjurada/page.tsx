@@ -1,5 +1,4 @@
 import React from "react";
-
 import { BackButton, Button, Navbar } from "app/Components";
 
 export default function DeclaracionJurada() {
