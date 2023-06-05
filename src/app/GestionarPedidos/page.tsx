@@ -1,7 +1,6 @@
 "use client";
 import React from "react";
 import Image from "next/image";
-import logo from "../Assets/logo.png";
 import avatar from "../Assets/Ellipse 10.png";
 import dropdown from "../Assets/dropdown.png";
 import avatar2 from "../Assets/Ellipse 6.png";
@@ -33,7 +32,7 @@ const Index = () => {
 
   return (
     <div className="mx-auto max-w-md">
-      <Navbar/>
+      <Navbar />
       <div className="shadow-lg rounded-md w-full my-4 flex flex-row items-centerjustify-between  p-4">
         <Image src={avatar} alt="logo" className="w-20 h-20" />
         <div>
@@ -105,13 +104,13 @@ const Index = () => {
                 </div>
               </div>
 
-              <Button buttonText="VER REPARTIDORES"/>
+              <Button buttonText="VER REPARTIDORES" />
             </div>
             <div>
               <h2>Porcentaje 2: 50%</h2>
               <h1>Paquetes</h1>
               <h4>{"{activos / total}"} repartidos</h4>
-              <Button buttonText="VER PAQUETES"/>
+              <Button buttonText="VER PAQUETES" />
             </div>
           </div>
         )}

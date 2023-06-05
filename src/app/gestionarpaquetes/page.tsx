@@ -1,15 +1,14 @@
 import React from "react";
 import Image from "next/image";
-import logo from "../Assets/logo.png";
 import trash from "../Assets/trash.png";
 import polygon from "../Assets/polygon.png";
-import {BackButton, Navbar} from "../Components"
+import { BackButton, Navbar } from "../Components";
 
 export default function ManagePackages() {
   return (
     <div className="shadow-lg mx-auto max-w-md h-[640px]">
-      <Navbar/>
-      <BackButton/>
+      <Navbar />
+      <BackButton />
       <div className="max-w-md flex flex-col justify-start mx-auto items-center">
         <div className="shadow-lg rounded-md w-321 my-4 flex flex-col justify-center p-8">
           <div className="flex justify-between mx-4">
