@@ -1,17 +1,47 @@
-import React from "react";
+"use client";
+import React, { useState } from "react";
 import { BackButton, Button, Navbar } from "app/Components";
 import Link from "next/link";
+
 interface Ubicacion {
   id: number;
   nombre: string;
 }
 
+type debounceFunction = (cantidadDePaquetes: number, diferencial: string) => void
+
+const ubicaciones: Ubicacion[] = [
+  { id: 1, nombre: "Amenabar 2356, CABA" },
+  { id: 1, nombre: "AV. Carabobo y Rivadavia, CABA" },
+  { id: 1, nombre: "Melian 1242, CABA" }
+];
+
 const GetPackages = () => {
-  const ubicaciones: Ubicacion[] = [
-    { id: 1, nombre: "Amenabar 2356, CABA" },
-    { id: 1, nombre: "AV. Carabobo y Rivadavia, CABA" },
-    { id: 1, nombre: "Melian 1242, CABA" }
-  ];
+  const [paquetes, setPaquetes] = useState(1);
+
+  // Función controladora del estado inicial de "paquetes"
+  function debounce(func: debounceFunction, delay: number): debounceFunction {
+    let timerId: any;
+
+    return function (cantidadDePaquetes: number, diferencial: string) {
+      clearTimeout(timerId);
+
+      timerId = setTimeout(() => {
+        return func(cantidadDePaquetes, diferencial);
+      }, delay);
+    };
+  }
+
+  // Función que se ejecuta dependiendo de su texto "diferencial" que proviene de los btns
+  function procesadorDePaquetes(estado: number, diferencial: string) {
+    if (diferencial === "agregar") setPaquetes(estado + 1);
+    if (diferencial === "eliminar" && estado >= 2) setPaquetes(estado - 1);
+  }
+
+  // Aplicar debounce a la función procesadorDePaquetes con un retraso de 300ms
+  const agregarPaquete = debounce(procesadorDePaquetes, 300);
+  const disminuirPaquete = debounce(procesadorDePaquetes, 300);
+
   return (
     <>
       <div className="mx-auto max-w-md">
@@ -81,10 +111,13 @@ const GetPackages = () => {
                       borderRadius: "4px",
                       margin: "30px"
                     }}
+                    onClick={() => {
+                      disminuirPaquete(paquetes, "eliminar");
+                    }}
                   >
                     -
                   </button>
-                  2
+                  {paquetes}
                   <button
                     style={{
                       border: "1px solid black",
@@ -93,6 +126,9 @@ const GetPackages = () => {
                       backgroundColor: "white",
                       borderRadius: "4px",
                       margin: "30px"
+                    }}
+                    onClick={() => {
+                      agregarPaquete(paquetes, "agregar");
                     }}
                   >
                     +
