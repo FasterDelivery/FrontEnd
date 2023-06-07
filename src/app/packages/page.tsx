@@ -8,7 +8,10 @@ interface Ubicacion {
   nombre: string;
 }
 
-type debounceFunction = (cantidadDePaquetes: number, diferencial: string) => void
+type debounceFunction = (
+  cantidadDePaquetes: number,
+  diferencial: string
+) => void;
 
 const ubicaciones: Ubicacion[] = [
   { id: 1, nombre: "Amenabar 2356, CABA" },
