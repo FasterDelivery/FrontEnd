@@ -9,7 +9,7 @@ export default function Home() {
   return (
     <div className="mx-auto w-90">
       <Navbar />
-      <div className="max-w-md flex flex-col justify-start mx-auto items-center">
+      <div className="flex flex-col justify-start mx-auto items-center">
         <Link href="packages">
           <Button buttonText="OBTENER PAQUETES" />
         </Link>

@@ -20,7 +20,7 @@ const Page = () => {
   return (
     <div className="mx-auto max-w-md">
       <Navbar />
-      <div className="shadow-lg rounded-md w-full my-4 flex flex-col justify-center p-4">
+      <div className="shadow-lg rounded-md w-90 mx-auto my-4 flex flex-col justify-center p-4">
         <div
           className="focus:outline-none w-90 mx-auto"
           style={{ marginBottom: "15px" }}
