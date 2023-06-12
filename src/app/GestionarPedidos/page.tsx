@@ -9,6 +9,7 @@ import { Button, Navbar } from "app/Components";
 import { useState } from "react";
 import Link from "next/link";
 import BackButton from "app/Components";
+import CircularProgressBar from "./CircularProgressBar";
 
 interface Day {
   id: number;
@@ -24,23 +25,16 @@ const days: Day[] = [
   { id: 5, name: "Viernes" }
 ];
 
-// interface Item {
-//   percentage: number;
-// }
-
 const Index = () => {
-  const percentage = 45;
-  // const angle = percentage * 3.6;
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
   const handleToggle = () => {
     setIsExpanded(!isExpanded);
   };
-  // const [items] = useState<Item[]>([{ percentage: 60 }, { percentage: 100 }]);
-  // const [color, setColor] = useState("blue");
-  // useEffect(() => setColor("yellow"), []);
+
+  const percentage = 100;
 
   return (
-    <div className="mx-auto max-w-md">
+    <div className="shadow-lg mx-auto w-90">
       <Navbar />
       <BackButton />
       <div className="shadow-lg rounded-md w-full my-4 flex flex-row items-centerjustify-between  p-4">
@@ -53,8 +47,8 @@ const Index = () => {
           <p className="font-bold text-lg font-sans ml-4"> Gestionar pedidos</p>
         </div>
       </div>
-      <div className=" rounded-md w-full my-4 flex flex-col justify-center p-4">
-        <ul className="flex overflow-x-auto overflow-hidden whitespace-nowrap">
+      <div className=" rounded-md w-full my-4 flex flex-row justify-center p-4">
+        <ul className="flex overflow-x-auto overflow-hidden whitespace-nowrap items-center">
           {days.map((day) => (
             <li
               key={day.id}
@@ -116,7 +110,8 @@ const Index = () => {
                 <Button buttonText="VER REPARTIDORES" />
               </Link>
             </div>
-            <div>
+            <div className="shadow-lg rounded-md w-full my-4 flex flex-row items-centerjustify-between  p-4">
+              <CircularProgressBar percentage={percentage} />
               <h2>Porcentaje 2: 50%</h2>
               <h1>Paquetes</h1>
               <h4>{"{activos / total}"} repartidos</h4>
@@ -126,6 +121,9 @@ const Index = () => {
             </div>
           </div>
         )}
+        <div className="flex flex-col items-center justify-center h-screen">
+          <CircularProgressBar percentage={percentage} />
+        </div>
       </div>
     </div>
   );

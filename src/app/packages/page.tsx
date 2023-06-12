@@ -14,7 +14,7 @@ const GetPackages = () => {
   ];
   return (
     <>
-      <div className="mx-auto max-w-md">
+      <div className="mx-auto w-90">
         <Navbar />
         <div
           style={{
