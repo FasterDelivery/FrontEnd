@@ -1,22 +1,45 @@
-import React from "react";
+"use client";
+import React, { useState } from "react";
 import Image from "next/image";
 import trash from "../Assets/trash.png";
 import polygon from "../Assets/polygon.png";
+import dropdown from "../Assets/dropdown.png";
 import { BackButton, Navbar } from "../Components";
 import Link from "next/link";
+import "./styles.css";
 
 export default function ManagePackages() {
+  const [stateDropdown, setStateDropdown] = useState(
+    "dropdown-Controller-Container active"
+  );
+  const dropdownController = () => {
+    if (stateDropdown === "dropdown-Controller-Container active") {
+      setStateDropdown("dropdown-Controller-Container");
+    } else {
+      setStateDropdown("dropdown-Controller-Container active");
+    }
+  };
+
   return (
     <div className="shadow-lg mx-auto w-full h-[640px]">
       <Navbar />
       <BackButton />
       <div className="w-90 flex flex-col justify-start mx-auto items-center">
-        <div className="w-full shadow-lg rounded-md w-321 my-4 flex flex-col justify-center p-8">
+        <div
+          className={`${stateDropdown} w-full shadow-lg rounded-md w-321 my-4 flex flex-col justify-center p-8`}
+        >
           <div className="flex justify-between mx-4">
             <p className="font-bold text-lg font-sans"> Paquetes </p>
-            <div>
-              <Image src={polygon} alt="dropdown" />
-            </div>
+            <button onClick={dropdownController}>
+              <Image
+                src={
+                  stateDropdown === "dropdown-Controller-Container active"
+                    ? dropdown
+                    : polygon
+                }
+                alt="dropdown"
+              />
+            </button>
           </div>
 
           <p className="ml-4 font-sans text-sm">
