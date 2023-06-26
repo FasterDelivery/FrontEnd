@@ -31,5 +31,4 @@ describe("rendering all pages", () => {
   });
 });
 
-
-export {}
+export {};
