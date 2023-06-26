@@ -2,12 +2,14 @@
 import React, { FormEvent } from "react";
 import { BackButton, Navbar } from "app/Components";
 import useInput from "../hooks/useInput";
+import useControllCountPackages from "../hooks/useControllCountPackages";
 
 const Page = () => {
-  const address = useInput();
-  const name = useInput();
-  const kg = useInput();
-  const date = useInput();
+  const address = useInput(),
+    name = useInput(),
+    kg = useInput(),
+    date = useInput(),
+    controllCountPackages = useControllCountPackages();
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
@@ -15,12 +17,13 @@ const Page = () => {
     console.log(name.value);
     console.log(kg.value);
     console.log(date.value);
+    console.log(controllCountPackages.state);
   };
 
   return (
     <div className="mx-auto max-w-md">
       <Navbar />
-      <div className="shadow-lg rounded-md w-full my-4 flex flex-col justify-center p-4">
+      <div className="shadow-lg rounded-md w-90 mx-auto my-4 flex flex-col justify-center p-4">
         <div
           className="focus:outline-none w-90 mx-auto"
           style={{ marginBottom: "15px" }}
@@ -45,8 +48,8 @@ const Page = () => {
           <div className="w-90 mx-auto" style={{ marginBottom: "15px" }}>
             <h1 className="text-md text-yellow-400">Nombre de quien recibe</h1>
             <input
-              type="password"
-              id="password"
+              type="text"
+              id="recipient-name"
               className="border-b-2 border-blue-500 focus:outline-none w-full"
               {...name}
               required
@@ -56,8 +59,8 @@ const Page = () => {
           <div className="w-90 mx-auto" style={{ marginBottom: "15px" }}>
             <h1 className="text-md text-yellow-400">Peso (Kg)</h1>
             <input
-              type="password"
-              id="password"
+              type="text"
+              id="weight"
               className="border-b-2 border-blue-500 focus:outline-none w-full"
               {...kg}
               required
@@ -68,8 +71,8 @@ const Page = () => {
               Fecha en la que debe ser repartido
             </h1>
             <input
-              type="password"
-              id="password"
+              type="text"
+              id="date"
               className="border-b-2 border-blue-500 focus:outline-none w-full"
               {...date}
               required
@@ -80,6 +83,7 @@ const Page = () => {
             <div className="focus:outline-none">
               <button
                 type="button"
+                name="less"
                 style={{
                   border: "1px solid black",
                   height: "26px",
@@ -88,10 +92,13 @@ const Page = () => {
                   borderRadius: "4px",
                   marginRight: "30px"
                 }}
+                onClick={() => {
+                  controllCountPackages.onClick("less");
+                }}
               >
                 -
               </button>
-              2
+              {controllCountPackages.state}
               <button
                 type="button"
                 style={{
@@ -101,6 +108,9 @@ const Page = () => {
                   backgroundColor: "white",
                   borderRadius: "4px",
                   margin: "30px"
+                }}
+                onClick={() => {
+                  controllCountPackages.onClick("more");
                 }}
               >
                 +

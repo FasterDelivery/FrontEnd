@@ -1,59 +1,31 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
 import { BackButton, Button, Navbar } from "app/Components";
 import Link from "next/link";
+import useControllCountPackages from "../hooks/useControllCountPackages";
 
-interface Ubicacion {
+interface IUbicacion {
   id: number;
   nombre: string;
 }
 
-type debounceFunction = (
-  cantidadDePaquetes: number,
-  diferencial: string
-) => void;
-
-const ubicaciones: Ubicacion[] = [
+const ubicaciones: IUbicacion[] = [
   { id: 1, nombre: "Amenabar 2356, CABA" },
   { id: 1, nombre: "AV. Carabobo y Rivadavia, CABA" },
   { id: 1, nombre: "Melian 1242, CABA" }
 ];
 
 const GetPackages = () => {
-  const [paquetes, setPaquetes] = useState(1);
-
-  // Función controladora del estado inicial de "paquetes"
-  function debounce(func: debounceFunction, delay: number): debounceFunction {
-    let timerId: any;
-
-    return function (cantidadDePaquetes: number, diferencial: string) {
-      clearTimeout(timerId);
-
-      timerId = setTimeout(() => {
-        return func(cantidadDePaquetes, diferencial);
-      }, delay);
-    };
-  }
-
-  // Función que se ejecuta dependiendo de su texto "diferencial" que proviene de los btns
-  function procesadorDePaquetes(estado: number, diferencial: string) {
-    if (diferencial === "agregar") setPaquetes(estado + 1);
-    if (diferencial === "eliminar" && estado >= 2) setPaquetes(estado - 1);
-  }
-
-  // Aplicar debounce a la función procesadorDePaquetes con un retraso de 300ms
-  const agregarPaquete = debounce(procesadorDePaquetes, 300);
-  const disminuirPaquete = debounce(procesadorDePaquetes, 300);
+  const controllCountPackages = useControllCountPackages();
 
   return (
     <>
-      <div className="mx-auto max-w-md">
+      <div className="mx-auto w-90">
         <Navbar />
         <div
           style={{
             backgroundColor: "white",
             height: "100vh",
-
             width: "100%"
           }}
         >
@@ -75,7 +47,7 @@ const GetPackages = () => {
                 ¿Cuántos paquetes más vas a repartir hoy?
               </h5>
             </div>
-            {ubicaciones.map((ubicacion: Ubicacion) => (
+            {ubicaciones.map((ubicacion: IUbicacion) => (
               <div
                 style={{
                   marginTop: "20px",
@@ -115,12 +87,12 @@ const GetPackages = () => {
                       margin: "30px"
                     }}
                     onClick={() => {
-                      disminuirPaquete(paquetes, "eliminar");
+                      controllCountPackages.onClick("less");
                     }}
                   >
                     -
                   </button>
-                  {paquetes}
+                  {controllCountPackages.state}
                   <button
                     style={{
                       border: "1px solid black",
@@ -131,7 +103,7 @@ const GetPackages = () => {
                       margin: "30px"
                     }}
                     onClick={() => {
-                      agregarPaquete(paquetes, "agregar");
+                      controllCountPackages.onClick("more");
                     }}
                   >
                     +

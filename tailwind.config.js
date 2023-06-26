@@ -13,14 +13,14 @@ module.exports = {
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))"
       },
       width: {
-        '90': '90%',
-        '45': '45%'
+        90: "90%",
+        45: "45%"
       },
       borderRadius: {
-        'DEFAULT': '4px', // Aplica a todos los elementos
+        DEFAULT: "4px" // Aplica a todos los elementos
       },
       fontSize: {
-        'sm-90': '0.9rem', // Añade la nueva clase de tamaño de fuente
+        "sm-90": "0.9rem" // Añade la nueva clase de tamaño de fuente
       },
       colors: {
         "dark-blue-button": "#217BCE",
@@ -33,8 +33,11 @@ module.exports = {
         "80%": "#FEBD93",
         "100%": "#96DB76",
         "black-opaque-50%": "#00000080",
-        "inactive": "#FF6B6B"
-      }
+        inactive: "#FF6B6B"
+      },
+      height: {
+        'max-content': 'max-content',
+      },
     }
   },
   plugins: []
