@@ -1,4 +1,5 @@
-import React from "react";
+"use client";
+import React,{useState} from "react";
 import Image from "next/image";
 import { BackButton, Navbar } from "app/Components";
 import dropdown from "../Assets/dropdown.png";
@@ -6,7 +7,11 @@ import trash from "../Assets/trash.png";
 import profile from "../Assets/Ellipse 9.png";
 import "./styles.css";
 
+type DropdownState = boolean;
+
 export default function Home() {
+
+  const [dropdownOpen, setDropdownOpen]  = useState<DropdownState>(false);
   return (
     <div className="mx-auto">
       <Navbar />
@@ -23,7 +28,7 @@ export default function Home() {
                 src={profile}
                 width={40}
                 height={40}
-                fill={false}
+                className="self-start"
               />
               <div className="ml-4 flex-col justify-center items-center">
                 <p className="font-bold text-lg font-sans">Farid</p>
@@ -38,7 +43,7 @@ export default function Home() {
           <div className="shadow-lg rounded-[11px] w-full my-4 flex flex-col justify-center p-4">
             <div className="flex justify-between mx-4">
               <p className="font-bold text-lg font-sans">Repartos Pendientes</p>
-              <Image src={dropdown} alt="dropdown" width={13} className="h-5" />
+              <Image src={dropdown} alt="dropdown" width={13} className="self-start" />
             </div>
             <p className="ml-4 font-sans text-sm">
               {" "}
@@ -50,10 +55,17 @@ export default function Home() {
               <p className="font-bold text-lg font-sans">
                 Historial de Repartos
               </p>
-              <Image src={dropdown} alt="dropdown" width={13} className="h-5" />
+              <Image
+              className={`self-start transition-transform transform ${dropdownOpen ? 'rotate-180' : ''}`}
+              src={dropdown}
+              alt="dropdown"
+              width={13}
+              onClick={() => setDropdownOpen(!dropdownOpen)}
+            />
             </div>
             <p className="ml-4 font-sans text-sm"> Ya repartiste 58 paquetes</p>
-            <div className="divide-y">
+            {dropdownOpen && (
+              <div className="divide-y">
               <div className="flex justify-between py-4 h-110px w-full">
                 <div className="w-[80px] h-[80px] bg-[#E8EFFA] border-sm rounded-sm"></div>
                 <div className="">
@@ -120,6 +132,7 @@ export default function Home() {
                 </div>
               </div>
             </div>
+            )}            
           </div>
         </div>
       </div>
