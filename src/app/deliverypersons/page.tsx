@@ -17,6 +17,10 @@ const Page = () => {
     { name: "Luciana", state: "Finalizó", percentage: 100 },
     { name: "Santiago", state: "Inactivo", percentage: 65 }
   ]);
+  const [isExpanded, setIsExpanded] = useState<boolean>(false);
+  const handleToggle = () => {
+    setIsExpanded(!isExpanded);
+  };
 
   return (
     <>
@@ -32,9 +36,13 @@ const Page = () => {
           style={{ boxShadow: "0px 2px 6px rgba(0, 0, 0, 0.14)" }}
         >
           <section className="flex justify-between w-90 mx-auto">
-            <div className="py-6 font-bold font-sans text-base leading-tight">
+            <div
+              className="py-6 font-bold font-sans text-base leading-tight cursor-pointer "
+              onClick={handleToggle}
+            >
               Repartidores
             </div>
+
             <button className="">
               <Image src={dropdown} alt="dropdown" />
             </button>

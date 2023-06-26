@@ -16,7 +16,10 @@ export default function Home() {
     <div className="mx-auto">
       <Navbar />
       <BackButton />
-      <div className="max-w-md flex flex-col justify-start mx-auto items-center">
+      <div
+        id="container-courier-details"
+        className="w-90 mx-auto flex flex-col justify-start mx-auto items-center"
+      >
         <div className="shadow-lg rounded-[4px] w-full my-4 flex flex-col justify-center p-4">
           <div className="flex justify-between items-center p-4">
             <div className="flex">
