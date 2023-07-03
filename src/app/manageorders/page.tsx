@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import Image from "next/image";
 import avatar from "../Assets/Ellipse 10.png";
 import dropdown from "../Assets/dropdown.png";
@@ -10,26 +10,33 @@ import { useState } from "react";
 import Link from "next/link";
 import BackButton from "app/Components";
 import CircularProgressBar from "./CircularProgressBar";
+import { useGetWeekDate } from "app/hooks/useGetWeekDate";
 
-interface Day {
-  id: number;
-  name: string;
-  selected?: boolean;
+interface IWeek {
+  nameDay: string;
+  numberDay: string;
 }
 
-const days: Day[] = [
-  { id: 1, name: "Lunes" },
-  { id: 2, name: "Martes" },
-  { id: 3, name: "Miércoles" },
-  { id: 4, name: "Jueves" },
-  { id: 5, name: "Viernes" }
-];
+const arrWeekSpanish: { [key: string]: string } = {
+  Mon: "Lunes",
+  Tue: "Martes",
+  Wed: "Miercoles",
+  Thu: "Jueves",
+  Fri: "Viernes"
+};
 
 const Index = () => {
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
+  const [stateWeek, setStateWeek] = useState<IWeek[]>([]);
+  const getWeekHook = useGetWeekDate();
+
   const handleToggle = () => {
     setIsExpanded(!isExpanded);
   };
+
+  useEffect(() => {
+    setStateWeek(getWeekHook);
+  }, []);
 
   const percentage = 100;
 
@@ -41,24 +48,21 @@ const Index = () => {
         <Image src={avatar} alt="logo" className="w-20 h-20" />
         <div>
           <div className="flex justify-between mx-4">
-            <p className="ml-4 font-sans text-sm">Hola {"{Admin.name}"}!</p>
+            <p className="ml-4 font-sans text-sm">Hola Admin!</p>
             <br />
           </div>
           <p className="font-bold text-lg font-sans ml-4"> Gestionar pedidos</p>
         </div>
       </div>
       <div className=" rounded-md w-full my-4 flex flex-row justify-center p-4">
-        <ul className="flex overflow-x-auto overflow-hidden whitespace-nowrap items-center">
-          {days.map((day) => (
+        <ul className="flex w-90 m-auto justify-between">
+          {stateWeek.map((day, i) => (
             <li
-              key={day.id}
-              className={
-                day.name === "Jueves"
-                  ? "bg-yellow-500 rounded-lg m-2 p-4"
-                  : "bg-blue-500 rounded-lg m-2 p-4"
-              }
+              key={i}
+              className="bg-dark-blue-button flex-col items-center p-2 h-20vh rounded-40"
             >
-              {day.name}
+              <p>{arrWeekSpanish[day.nameDay]}</p>
+              <p>{day.numberDay}</p>
             </li>
           ))}
         </ul>

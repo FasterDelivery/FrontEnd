@@ -21,7 +21,7 @@ const Page = () => {
   };
 
   return (
-    <div className="mx-auto max-w-md">
+    <div className="mx-auto w-full">
       <Navbar />
       <div className="shadow-lg rounded-md w-90 mx-auto my-4 flex flex-col justify-center p-4">
         <div

@@ -38,6 +38,9 @@ module.exports = {
       height: {
         'max-content': 'max-content',
       },
+      boxShadow: {
+        'custom': '0px 2px 6px rgba(0, 0, 0, 0.14)',
+      },
     }
   },
   plugins: []

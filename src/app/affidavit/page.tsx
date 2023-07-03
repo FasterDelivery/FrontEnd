@@ -4,7 +4,7 @@ import { BackButton, Button, Navbar } from "app/Components";
 export default function DeclaracionJurada() {
   return (
     <>
-      <div className="w-90 shadow-lg mx-auto h-[640px]">
+      <div className="w-full shadow-lg mx-auto h-[640px]">
         <Navbar />
         <BackButton />
         <div className="flex w-full justify-center items-center">

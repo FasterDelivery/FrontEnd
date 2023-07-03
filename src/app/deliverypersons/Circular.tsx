@@ -21,7 +21,7 @@ const Circular: React.FC<Props> = ({ percentage, name, state }) => {
 
   return (
     <>
-      <Link href="courier_details">
+      <Link href="courierdetails">
         <div
           id="container"
           className="flex w-90 py-4 mx-auto items-center sm:justify-between"

@@ -1,0 +1,8 @@
+#container-Delivery-Persons {
+  height: 10vh;
+  overflow: hidden;
+}
+
+#container-Delivery-Persons.active {
+  height: auto;
+}
