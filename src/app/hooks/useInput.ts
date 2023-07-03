@@ -12,6 +12,7 @@ function useInput(): InputHook {
     []
   );
   const [emailErrors, setEmailErrors] = useState<string[]>([]);
+  const [phoneErrors, setPhoneErrors] = useState<string[]>([]);
 
   const validatePassword = (): void => {
     const errors: string[] = [];
@@ -44,15 +45,25 @@ function useInput(): InputHook {
     setEmailErrors(errors);
   };
 
+  const validatePhone = ():void =>{
+    const errors: string[] = [];
+    if (value.length!=8){
+      errors.push("El número debe ser exactamente 8 dígitos");
+    }
+    setPhoneErrors(errors);
+  };
+
   return {
     value,
     onChange,
     validatePassword,
     validateConfirmPassword,
     validateEmail,
+    validatePhone,
     passwordErrors,
     confirmPasswordErrors,
-    emailErrors
+    emailErrors,
+    phoneErrors
   };
 }
 

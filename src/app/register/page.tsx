@@ -1,5 +1,5 @@
 "use client";
-
+import axios from "axios";
 import React, { FormEvent } from "react";
 import Image from "next/image";
 import logo from "../Assets/logo.png";
@@ -13,18 +13,27 @@ export default function SignUp() {
   const password = useInput();
   const confirmPassword = useInput();
   const email = useInput();
+  const address = useInput();
+  const phone = useInput ();
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
     password.validatePassword();
     confirmPassword.validateConfirmPassword(password.value);
     email.validateEmail();
+    phone.validatePhone();
     console.log(router);
     password.passwordErrors[0] &&
     email.emailErrors[0] &&
     confirmPassword.confirmPasswordErrors[0]
-      ? router.push("/login")
-      : "";
+    phone.phoneErrors[0]
+    axios.post("http://localhost:3001/api/user/register" , {name: name.value, lastname:lastName.value, password:password.value, email:email.value, phone:parseInt(phone.value), address:address.value, isAdmin:false})
+    .then(res=>{
+      console.log(res.data)
+      alert(`Registro exitoso`)
+      router.push("/login")
+    })
+    .catch(() => alert("Error de registro"))
   };
 
   return (
@@ -110,6 +119,34 @@ export default function SignUp() {
             ""
           )}
         </div>
+         <div className="w-90 mx-auto py-2">
+          <h1 className="text-md text-yellow-400">Teléfono</h1>
+          <input
+            type="number"
+            id="phone"
+            className="border-b-2 border-blue-500 focus:outline-none w-full"
+            placeholder="Teléfono"
+            {...phone}
+            required
+          />
+          {phone.phoneErrors ? (
+            <span className="text-red-500 text-sm">
+              {phone.phoneErrors[0]}
+            </span>
+          ) : (
+            ""
+          )}
+        </div>
+         <div className="w-90 mx-auto py-2">
+          <h1 className="text-md text-yellow-400">Dirección</h1>
+          <input
+            type="text"
+            id="address"
+            className="border-b-2 border-blue-500 focus:outline-none w-full"
+            placeholder="Dirección"
+            {...address}
+            required
+          /></div>          
         <button
           type="submit"
           className="my-6 text-white bg-[#217BCE] hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-md text-sm px-5 py-2.5"
