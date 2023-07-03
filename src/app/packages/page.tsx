@@ -1,31 +1,15 @@
 "use client";
-<<<<<<< HEAD
 import React, { useState } from "react";
 import { BackButton, Button, Navbar } from "app/Components";
 import Link from "next/link";
 
-interface Ubicacion {
-=======
-import React from "react";
-import { BackButton, Button, Navbar } from "app/Components";
-import Link from "next/link";
-import useControllCountPackages from "../hooks/useControllCountPackages";
-
 interface IUbicacion {
->>>>>>> develop
   id: number;
   nombre: string;
 }
 
-const ubicaciones: IUbicacion[] = [
-  { id: 1, nombre: "Amenabar 2356, CABA" },
-  { id: 1, nombre: "AV. Carabobo y Rivadavia, CABA" },
-  { id: 1, nombre: "Melian 1242, CABA" }
-];
-
 const GetPackages = () => {
-<<<<<<< HEAD
-  const ubicaciones: Ubicacion[] = [
+  const ubicaciones: IUbicacion[] = [
     { id: 1, nombre: "Amenabar 2356, CABA" },
     { id: 2, nombre: "AV. Carabobo y Rivadavia, CABA" },
     { id: 3, nombre: "Melian 1242, CABA" }
@@ -42,7 +26,9 @@ const GetPackages = () => {
   const handleCheckboxChange = (id: number) => {
     setUbicacionStates((prevStates) =>
       prevStates.map((state) =>
-        state.id === id ? { ...state, checkboxChecked: !state.checkboxChecked } : state
+        state.id === id
+          ? { ...state, checkboxChecked: !state.checkboxChecked }
+          : state
       )
     );
   };
@@ -54,9 +40,6 @@ const GetPackages = () => {
       )
     );
   };
-=======
-  const controllCountPackages = useControllCountPackages();
->>>>>>> develop
 
   return (
     <>
@@ -87,25 +70,13 @@ const GetPackages = () => {
                 ¿Cuántos paquetes más vas a repartir hoy?
               </h5>
             </div>
-<<<<<<< HEAD
-            {ubicaciones.map((ubicacion: Ubicacion) => {
-              const ubicacionState = ubicacionStates.find((state) => state.id === ubicacion.id);
+            {ubicaciones.map((ubicacion: IUbicacion) => {
+              const ubicacionState = ubicacionStates.find(
+                (state) => state.id === ubicacion.id
+              );
               if (!ubicacionState) return null;
 
               return (
-=======
-            {ubicaciones.map((ubicacion: IUbicacion) => (
-              <div
-                style={{
-                  marginTop: "20px",
-                  marginBottom: "20px",
-                  textAlign: "center",
-                  width: "100%"
-                }}
-                key={ubicacion.id}
-              >
-                <h5>{ubicacion.nombre}</h5>
->>>>>>> develop
                 <div
                   style={{
                     marginTop: "20px",
@@ -140,7 +111,6 @@ const GetPackages = () => {
                         borderRadius: "4px",
                         margin: "30px"
                       }}
-<<<<<<< HEAD
                       onClick={() => handleNumberChange(ubicacion.id, -1)}
                     >
                       -
@@ -161,41 +131,6 @@ const GetPackages = () => {
                     </button>
                   </div>
                   <hr style={{ width: "100%", marginTop: "20px" }} />
-=======
-                    />
-                  </label>
-                  <button
-                    style={{
-                      border: "1px solid black",
-                      height: "26px",
-                      width: "26px",
-                      backgroundColor: "white",
-                      borderRadius: "4px",
-                      margin: "30px"
-                    }}
-                    onClick={() => {
-                      controllCountPackages.onClick("less");
-                    }}
-                  >
-                    -
-                  </button>
-                  {controllCountPackages.state}
-                  <button
-                    style={{
-                      border: "1px solid black",
-                      height: "26px",
-                      width: "26px",
-                      backgroundColor: "white",
-                      borderRadius: "4px",
-                      margin: "30px"
-                    }}
-                    onClick={() => {
-                      controllCountPackages.onClick("more");
-                    }}
-                  >
-                    +
-                  </button>
->>>>>>> develop
                 </div>
               );
             })}

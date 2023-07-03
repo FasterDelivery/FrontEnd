@@ -6,7 +6,9 @@ export interface InputHook {
   validatePassword: () => void;
   validateConfirmPassword: (password: string) => void;
   validateEmail: () => void;
+  validatePhone: () => void;
   passwordErrors: string[];
   confirmPasswordErrors: string[];
   emailErrors: string[];
+  phoneErrors: string[];
 }
