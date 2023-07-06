@@ -1,4 +1,5 @@
 "use client";
+/* eslint-disable */
 import axios from "axios";
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
@@ -15,17 +16,21 @@ export default function HomePage({}) {
   const [pending, setPending] = useState([]);
   const [delivered, setDelivered] = useState([]);
   const [onCourse, setOnCourse] = useState([]);
-  useEffect(()=>{
-    axios
-    .get(`http://localhost:3001/api/1/packages`)
-    .then(res=>{
-      console.log(res.data)
+  useEffect(() => {
+    axios.get(`http://localhost:3001/api/1/packages`).then((res) => {
+      console.log(res.data);
       const packages = res.data;
-      setPending(packages.filter((paquete:Package)=>paquete.status==="Pendiente"))
-      setDelivered(packages.filter((paquete:Package)=>paquete.status==="Entregado"))
-      setOnCourse(packages.filter((paquete:Package)=>paquete.status==="En curso"))
-    })
-  },[])
+      setPending(
+        packages.filter((paquete: Package) => paquete.status === "Pendiente")
+      );
+      setDelivered(
+        packages.filter((paquete: Package) => paquete.status === "Entregado")
+      );
+      setOnCourse(
+        packages.filter((paquete: Package) => paquete.status === "En curso")
+      );
+    });
+  }, []);
   return (
     <div className="mx-auto w-90">
       <Navbar />

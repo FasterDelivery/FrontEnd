@@ -45,9 +45,9 @@ function useInput(): InputHook {
     setEmailErrors(errors);
   };
 
-  const validatePhone = ():void =>{
+  const validatePhone = (): void => {
     const errors: string[] = [];
-    if (value.length!=8){
+    if (value.length !== 8) {
       errors.push("El número debe ser exactamente 8 dígitos");
     }
     setPhoneErrors(errors);

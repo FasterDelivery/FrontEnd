@@ -14,7 +14,7 @@ export default function SignUp() {
   const confirmPassword = useInput();
   const email = useInput();
   const address = useInput();
-  const phone = useInput ();
+  const phone = useInput();
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
@@ -24,16 +24,25 @@ export default function SignUp() {
     phone.validatePhone();
     console.log(router);
     password.passwordErrors[0] &&
-    email.emailErrors[0] &&
-    confirmPassword.confirmPasswordErrors[0]
-    phone.phoneErrors[0]
-    axios.post("http://localhost:3001/api/user/register" , {name: name.value, lastname:lastName.value, password:password.value, email:email.value, phone:parseInt(phone.value), address:address.value, isAdmin:false})
-    .then(res=>{
-      console.log(res.data)
-      alert(`Registro exitoso`)
-      router.push("/login")
-    })
-    .catch(() => alert("Error de registro"))
+      email.emailErrors[0] &&
+      confirmPassword.confirmPasswordErrors[0];
+    phone.phoneErrors[0];
+    axios
+      .post("http://localhost:3001/api/user/register", {
+        name: name.value,
+        lastname: lastName.value,
+        password: password.value,
+        email: email.value,
+        phone: parseInt(phone.value),
+        address: address.value,
+        isAdmin: false
+      })
+      .then((res) => {
+        console.log(res.data);
+        alert(`Registro exitoso`);
+        router.push("/login");
+      })
+      .catch(() => alert("Error de registro"));
   };
 
   return (
@@ -119,7 +128,7 @@ export default function SignUp() {
             ""
           )}
         </div>
-         <div className="w-90 mx-auto py-2">
+        <div className="w-90 mx-auto py-2">
           <h1 className="text-md text-yellow-400">Teléfono</h1>
           <input
             type="number"
@@ -130,14 +139,12 @@ export default function SignUp() {
             required
           />
           {phone.phoneErrors ? (
-            <span className="text-red-500 text-sm">
-              {phone.phoneErrors[0]}
-            </span>
+            <span className="text-red-500 text-sm">{phone.phoneErrors[0]}</span>
           ) : (
             ""
           )}
         </div>
-         <div className="w-90 mx-auto py-2">
+        <div className="w-90 mx-auto py-2">
           <h1 className="text-md text-yellow-400">Dirección</h1>
           <input
             type="text"
@@ -146,7 +153,8 @@ export default function SignUp() {
             placeholder="Dirección"
             {...address}
             required
-          /></div>          
+          />
+        </div>
         <button
           type="submit"
           className="my-6 text-white bg-[#217BCE] hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-md text-sm px-5 py-2.5"
