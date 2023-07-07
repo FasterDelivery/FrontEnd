@@ -5,13 +5,13 @@ name: Node.js CI
 
 on:
   push:
-    branches: [ "develop" ]
+    branches: ["develop"]
   pull_request:
-    branches: [ "develop" ]
+    branches: ["develop"]
+    types: ["opened", "synchronize"]
 
 jobs:
   build:
-
     runs-on: ubuntu-22.04
 
     strategy:
@@ -20,15 +20,19 @@ jobs:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
-    - uses: actions/checkout@v3
-      with:
-        fetch-depth: 0
-    - uses: actions/setup-node@v3
-      with: 
-        node-version: '16'
-    - name: Install-Dependencies
-      run: npm install
-    - name: Run Eslint
-      run: npm run lint
-    - name: tsc
-      run: npm run tsc
+      - name: Ignore redundants push & pull
+        uses: styfle/cancel-workflow-action@0.9.1
+        with:
+          access_token: ${{github.token}}
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "16"
+      - name: Install-Dependencies
+        run: npm install
+      - name: Run Eslint
+        run: npm run lint
+      - name: tsc
+        run: npm run tsc
