@@ -64,10 +64,6 @@ jobs:
           node-version: "16"
       - name: Install-Dependencies
         run: npm install
-      - name: Create Build
-        run: npm run build
-      - name: Run Build
-        run: npm run start
       - uses: actions/download-artifact@v3
         with:
           name: my-artifact
