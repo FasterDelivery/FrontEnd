@@ -53,7 +53,7 @@ jobs:
           path: path/to/artifact/world.txt
 
   test:
-    needs: [lint, build]
+    needs: [check_redundant, lint, build]
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3
@@ -71,3 +71,7 @@ jobs:
         run: ls -R
       - name: Cypress run
         uses: cypress-io/github-action@v5
+        with: 
+          command: npm run start_test_e2e
+          start: npm run start
+          wait-on: http://localhost:3000

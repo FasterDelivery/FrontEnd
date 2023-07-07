@@ -6,6 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "start_test_e2e": "npx cypress run",
+    "test": "jest",
     "lint": "eslint \"*/**/*.{js,ts,tsx}\" --fix",
     "prepare": "husky install",
     "tsc": "tsc"
