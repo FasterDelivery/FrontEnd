@@ -7,7 +7,6 @@ import polygon from "./Assets/polygon.png";
 import trash from "./Assets/trash.png";
 import Link from "next/link";
 import "./page.css";
-import HomePage from "./home/page";
 
 export default function Home() {
   const [controllDropdown, setControllDropdown] = useState({

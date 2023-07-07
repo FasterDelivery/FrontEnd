@@ -19,13 +19,17 @@ export default function Login() {
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
-    axios.post("http://localhost:3001/api/user/login" , {email:email.value, password:password.value})
-    .then(res=>{
-      console.log(res.data)
-      alert(`Bienvenido ${res.data.user.name}`)
-      router.push(`/home?user=${res.data.user.id}`)
-    })
-    .catch(() => alert("Error de registro"))
+    axios
+      .post("http://localhost:3001/api/user/login", {
+        email: email.value,
+        password: password.value
+      })
+      .then((res) => {
+        console.log(res.data);
+        alert(`Bienvenido ${res.data.user.name}`);
+        router.push(`/home?user=${res.data.user.id}`);
+      })
+      .catch(() => alert("Error de registro"));
   };
 
   return (
