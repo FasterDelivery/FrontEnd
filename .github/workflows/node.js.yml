@@ -30,24 +30,6 @@ jobs:
       - name: Run Eslint
         run: npm run lint
 
-  test:
-    needs: [lint, build]
-    runs-on: ubuntu-22.04
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-      - uses: actions/setup-node@v3
-        with:
-          node-version: "16"
-      - name: Install-Dependencies
-        run: npm install
-      - uses: actions/download-artifact@v3
-        with:
-          name: my-artifact
-      - name: Display structure of downloaded files
-        run: ls -R
-
   build:
     runs-on: ubuntu-22.04
     steps:
@@ -69,3 +51,27 @@ jobs:
         with:
           name: my-artifact
           path: path/to/artifact/world.txt
+
+  test:
+    needs: [lint, build]
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "16"
+      - name: Install-Dependencies
+        run: npm install
+      - name: Create Build
+        run: npm run build
+      - name: Run Build
+        run: npm run start
+      - uses: actions/download-artifact@v3
+        with:
+          name: my-artifact
+      - name: Display structure of downloaded files
+        run: ls -R
+      - name: Cypress run
+        uses: cypress-io/github-action@v5

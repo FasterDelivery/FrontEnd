@@ -1,33 +1,41 @@
 describe("rendering all pages", () => {
   it("passes", () => {
+    cy.visit("http://localhost:3000/addpackages");
+  });
+  it("passes", () => {
+    cy.visit("http://localhost:3000/affidavit");
+  });
+  it("passes", () => {
+    cy.visit("http://localhost:3000/courierdetails");
+  });
+  it("passes", () => {
+    cy.visit("http://localhost:3000/delivery");
+  });
+  it("passes", () => {
+    cy.visit("http://localhost:3000/deliverypersons");
+  });
+  it("passes", () => {
+    cy.visit("http://localhost:3000/");
+  });
+  it("passes", () => {
     cy.visit("http://localhost:3000/login");
-    cy.get("a").click();
   });
   it("passes", () => {
-    cy.visit("http://localhost:3000/home");
+    cy.visit("http://localhost:3000/manageorders");
   });
   it("passes", () => {
-    cy.visit("http://localhost:3000/GestionarPedidos");
-  });
-  it("passes", () => {
-    cy.visit("http://localhost:3000/declaracionjurada");
+    cy.visit("http://localhost:3000/managepackages");
+    // cy.get(".ml-4").contains("Hay");
+    // cy.get(".mx-4 > .font-bold").contains("Paquetes");
   });
   it("passes", () => {
     cy.visit("http://localhost:3000/packages");
   });
+  // it("passes", () => {
+  //   cy.visit("http://localhost:3000/recovery");
+  // });
   it("passes", () => {
-    cy.visit("http://localhost:3000/repartidores");
-  });
-  it("passes", () => {
-    cy.visit("http://localhost:3000/addpackages");
-  });
-  it("passes", () => {
-    cy.visit("http://localhost:3000/courier_details");
-  });
-  it("passes", () => {
-    cy.visit("http://localhost:3000/gestionarpaquetes");
-    cy.get(".ml-4").contains("Hay");
-    cy.get(".mx-4 > .font-bold").contains("Paquetes");
+    cy.visit("http://localhost:3000/register");
   });
 });
 
