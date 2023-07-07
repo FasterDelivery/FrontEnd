@@ -8,7 +8,6 @@ on:
     types: ["opened", "synchronize"]
 
 jobs:
-
   check_redundant:
     runs-on: ubuntu-22.04
     steps:
@@ -34,44 +33,36 @@ jobs:
   test:
     needs: [lint, build]
     runs-on: ubuntu-22.04
-
-    strategy:
-      matrix:
-        node-version: [16.x]
-        steps:
-          - uses: actions/checkout@v3
-            with:
-            fetch-depth: 0
-          - uses: actions/setup-node@v3
-            with:
-            node-version: "16"
-          - name: Install-Dependencies
-            run: npm install
-          - uses: actions/download-artifact@v2
-            with:
-              name: dist
-              path: dist
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "16"
+      - name: Install-Dependencies
+        run: npm install
+      - uses: actions/download-artifact@v2
+        with:
+          name: dist
+          path: dist
 
   build:
     runs-on: ubuntu-22.04
-
-    strategy:
-      matrix:
-        node-version: [16.x]
-        steps:
-          - uses: actions/checkout@v3
-            with:
-            fetch-depth: 0
-          - uses: actions/setup-node@v3
-            with:
-            node-version: "16"
-          - name: Install-Dependencies
-            run: npm install
-          - name: tsc
-            run: npm run tsc
-          - name: build
-            run: npm run build
-          - uses: actions/upload-artifact@v2
-            with:
-              name: dist
-              path: dist
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "16"
+      - name: Install-Dependencies
+        run: npm install
+      - name: tsc
+        run: npm run tsc
+      - name: build
+        run: npm run build
+      - uses: actions/upload-artifact@v2
+        with:
+          name: dist
+          path: dist
