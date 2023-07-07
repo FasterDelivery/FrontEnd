@@ -42,10 +42,11 @@ jobs:
           node-version: "16"
       - name: Install-Dependencies
         run: npm install
-      - uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v3
         with:
-          name: dist
-          path: dist
+          name: my-artifact
+      - name: Display structure of downloaded files
+        run: ls -R
 
   build:
     runs-on: ubuntu-22.04
@@ -62,7 +63,9 @@ jobs:
         run: npm run tsc
       - name: build
         run: npm run build
-      - uses: actions/upload-artifact@v2
+      - run: mkdir -p path/to/artifact
+      - run: echo hello > path/to/artifact/world.txt
+      - uses: actions/upload-artifact@v3
         with:
-          name: dist
-          path: dist
+          name: my-artifact
+          path: path/to/artifact/world.txt
