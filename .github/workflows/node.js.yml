@@ -69,6 +69,8 @@ jobs:
           name: my-artifact
       - name: Display structure of downloaded files
         run: ls -R
+      - name: Run build
+        run: npm run build
       - name: Cypress run
         uses: cypress-io/github-action@v5
         with: 
