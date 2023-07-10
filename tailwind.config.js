@@ -14,10 +14,13 @@ module.exports = {
       },
       width: {
         90: "90%",
-        45: "45%"
+        45: "45%",
+        "6vw": "6vw",
+        "25vw":"25vw"
       },
       borderRadius: {
-        DEFAULT: "4px" // Aplica a todos los elementos
+        DEFAULT: "4px", // Aplica a todos los elementos
+        45:"45px"
       },
       fontSize: {
         "sm-90": "0.9rem" // Añade la nueva clase de tamaño de fuente
@@ -37,6 +40,11 @@ module.exports = {
       },
       height: {
         'max-content': 'max-content',
+        '5vh':'5vh',
+        '20vh': '20vh'
+      },
+      margin: {
+        '21': '21%',
       },
     }
   },
