@@ -67,10 +67,12 @@ export default function Login() {
         </div>
 
         <Button buttonText="INGRESAR" />
-
+        
+        <Link href="recuperar">
         <button className="text-[#217BCE] my-2 font-sans" type="button">
           Recuperar Contraseña
         </button>
+        </Link>
         <Link href="register">
           <button
             className="text-[#217BCE] my-2 font-sans font-bold"
