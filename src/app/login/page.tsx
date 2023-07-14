@@ -5,11 +5,11 @@ import Image from "next/image";
 import logo from "../Assets/logo.png";
 import { Button } from "app/Components";
 import useInput from "../hooks/useInput";
-import Link from "next/link"
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 export default function Login() {
-  const router = useRouter()
+  const router = useRouter();
   const email = useInput();
   const password = useInput();
 
@@ -27,9 +27,11 @@ export default function Login() {
         localStorage.setItem("token", token);
 
         alert(`Bienvenido ${response.data.user.name}`);
-        router.push(`/home?user=${response.data.user.id}`);
+        response.data.user.isAdmin
+          ? router.push("manageorders")
+          : router.push(`/home`);
       })
-     .catch(() => alert("Error de registro"));
+      .catch(() => alert("Error de registro"));
   };
 
   return (
