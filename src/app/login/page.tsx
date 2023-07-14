@@ -5,31 +5,31 @@ import Image from "next/image";
 import logo from "../Assets/logo.png";
 import { Button } from "app/Components";
 import useInput from "../hooks/useInput";
-import Link from "next/link";
+import Link from "next/link"
 import { useRouter } from "next/navigation";
 
 export default function Login() {
-  const router = useRouter();
-  // en prop pasar condition
-  // let href = "";
-  // condition ? (href = "home") : (href = "GestionarPedidos");
-
+  const router = useRouter()
   const email = useInput();
   const password = useInput();
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
     axios
-      .post("http://localhost:3001/api/user/login", {
+      .post(`http://44.201.112.1/api/user/login`, {
         email: email.value,
         password: password.value
       })
-      .then((res) => {
-        console.log(res.data);
-        alert(`Bienvenido ${res.data.user.name}`);
-        router.push(`/home?user=${res.data.user.id}`);
+      .then((response) => {
+        const token = response.data.token;
+
+        // Store the token in localStorage
+        localStorage.setItem("token", token);
+
+        alert(`Bienvenido ${response.data.user.name}`);
+        router.push(`/home?user=${response.data.user.id}`);
       })
-      .catch(() => alert("Error de registro"));
+     .catch(() => alert("Error de registro"));
   };
 
   return (
