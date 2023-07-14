@@ -8,29 +8,57 @@ import dropdown from "../Assets/dropdown.png";
 import trash from "../Assets/trash.png";
 import Link from "next/link";
 import { Package } from "app/interfaces/packages";
+import { useRouter } from "next/navigation";
 
 type DropdownState = boolean;
 
 export default function HomePage({}) {
+  const router = useRouter()
   const [dropdownOpen, setDropdownOpen] = useState<DropdownState>(false);
   const [pending, setPending] = useState([]);
   const [delivered, setDelivered] = useState([]);
   const [onCourse, setOnCourse] = useState([]);
+
+  if (!localStorage.getItem("token")) router.push("/login")
+
   useEffect(() => {
-    axios.get(`http://localhost:3001/api/1/packages`).then((res) => {
-      console.log(res.data);
-      const packages = res.data;
-      setPending(
-        packages.filter((paquete: Package) => paquete.status === "Pendiente")
-      );
-      setDelivered(
-        packages.filter((paquete: Package) => paquete.status === "Entregado")
-      );
-      setOnCourse(
-        packages.filter((paquete: Package) => paquete.status === "En curso")
-      );
-    });
+    const fetchData = async () => {
+      try {
+        if (localStorage.getItem('token')) {
+          const response = await axios.get(`http://44.201.112.1/api/user/me`, {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('token')}`,
+            },
+          });
+          const id = response.data.id;
+
+          const result = await axios.get(`http://44.201.112.1/api/packages/${id}/packages`, {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('token')}`,
+            },
+          });
+          console.log(result.data);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchData();
   }, []);
+  // axios.get(`http://localhost:3001/api/1/packages`).then((res) => {
+    //   console.log(res.data);
+    //   const packages = res.data;
+    //   setPending(
+    //     packages.filter((paquete: Package) => paquete.status === "Pendiente")
+    //   );
+    //   setDelivered(
+    //     packages.filter((paquete: Package) => paquete.status === "Entregado")
+    //   );
+    //   setOnCourse(
+    //     packages.filter((paquete: Package) => paquete.status === "En curso")
+    //   );
+    // });
   return (
     <div className="mx-auto w-90">
       <Navbar />

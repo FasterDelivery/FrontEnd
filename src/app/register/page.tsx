@@ -28,7 +28,7 @@ export default function SignUp() {
       confirmPassword.confirmPasswordErrors[0];
     phone.phoneErrors[0];
     axios
-      .post("http://localhost:3001/api/user/register", {
+      .post(`http://44.201.112.1/api/user/register`, {
         name: name.value,
         lastname: lastName.value,
         password: password.value,
