@@ -8,18 +8,33 @@ import dropdown from "../Assets/dropdown.png";
 import trash from "../Assets/trash.png";
 import Link from "next/link";
 import { Package } from "app/interfaces/packages";
+import {User} from "app/interfaces/users"
 import { useRouter } from "next/navigation";
 
 type DropdownState = boolean;
 
 export default function HomePage({}) {
   const router = useRouter()
-  const [dropdownOpen, setDropdownOpen] = useState<DropdownState>(false);
+  const [delliveredDropdownOpen, setDeliveredDropdownOpen] = useState<DropdownState>(false);
+  const [pendingDropdownOpen, setPendingDropdownOpen] = useState<DropdownState>(false);
+  const [user, setUser] = useState<User>({id:0, name:"", lastname:"", email: "", address:"", phone:"", isAdmin:false})
   const [pending, setPending] = useState([]);
   const [delivered, setDelivered] = useState([]);
   const [onCourse, setOnCourse] = useState([]);
 
   if (!localStorage.getItem("token")) router.push("/login")
+
+  const handleFilterPackages = (packages:[]) => {
+    setPending(
+      packages.filter((paquete: Package) => paquete.status === "pendiente")
+    );
+    setDelivered(
+      packages.filter((paquete: Package) => paquete.status === "entregado")
+    );
+    setOnCourse(
+      packages.filter((paquete: Package) => paquete.status === "en curso")
+    );
+  }
 
   useEffect(() => {
     const fetchData = async () => {
@@ -30,14 +45,15 @@ export default function HomePage({}) {
               Authorization: `Bearer ${localStorage.getItem('token')}`,
             },
           });
+          setUser(response.data)
           const id = response.data.id;
-
+          
           const result = await axios.get(`http://44.201.112.1/api/packages/${id}/packages`, {
             headers: {
               Authorization: `Bearer ${localStorage.getItem('token')}`,
             },
           });
-          console.log(result.data);
+          handleFilterPackages(result.data.packages);
         }
       } catch (error) {
         console.log(error);
@@ -46,19 +62,7 @@ export default function HomePage({}) {
 
     fetchData();
   }, []);
-  // axios.get(`http://localhost:3001/api/1/packages`).then((res) => {
-    //   console.log(res.data);
-    //   const packages = res.data;
-    //   setPending(
-    //     packages.filter((paquete: Package) => paquete.status === "Pendiente")
-    //   );
-    //   setDelivered(
-    //     packages.filter((paquete: Package) => paquete.status === "Entregado")
-    //   );
-    //   setOnCourse(
-    //     packages.filter((paquete: Package) => paquete.status === "En curso")
-    //   );
-    // });
+ 
   return (
     <div className="mx-auto w-90">
       <Navbar />
@@ -70,93 +74,101 @@ export default function HomePage({}) {
           <div className="flex justify-between mx-4">
             <p className="font-bold text-lg font-sans">Repartos Pendientes</p>
             <Image
-              className="self-start"
+              className={`self-start transition-transform transform ${
+                pendingDropdownOpen ? "rotate-180" : ""
+              }`}
               src={dropdown}
               alt="dropdown"
               width={13}
+              onClick={() => setPendingDropdownOpen(!pendingDropdownOpen)}
             />
           </div>
-          <p className="ml-4 font-sans text-sm">No tenés repartos pendientes</p>
+          <p className="ml-4 font-sans text-sm"> {pending.length === 0 ? "No tenés historial de repartos":`Tenés ${pending.length} paquetes pendientes`}</p>
+          {pendingDropdownOpen && (
+            <div className="divide-y">
+              {pending.map((paquete:Package)=>{
+                return(
+                  <div className="flex justify-between py-4 h-110px w-full">
+
+                <Image
+                 className="bg-[#E8EFFA] border-sm rounded-sm"
+                 src={paquete.image}
+                 alt="imagen paquete"
+                 width={80}
+                 height={80}/>
+                <div className="">
+                  <div className="flex flex-col justify-between h-full">
+                    <div className="flex justify-between">
+                      <p className="font-sans text-sm mr-8">
+                        {paquete.address}
+                      </p>
+                      <Image
+                        className="h-5"
+                        src={trash}
+                        alt="trash"
+                        width={16}
+                        height={16}
+                      />
+                    </div>
+                    <p className="font-sans text-sm font-bold self-end">
+                      {paquete.status}
+                    </p>
+                  </div>
+                </div>
+              </div>
+                )
+              })}
+            </div>
+          )}
         </div>
         <div className="shadow-lg rounded-md w-full my-4 flex flex-col justify-center p-4">
           <div className="flex justify-between mx-4">
             <p className="font-bold text-lg font-sans">Historial de Repartos</p>
             <Image
               className={`self-start transition-transform transform ${
-                dropdownOpen ? "rotate-180" : ""
+                delliveredDropdownOpen ? "rotate-180" : ""
               }`}
               src={dropdown}
               alt="dropdown"
               width={13}
-              onClick={() => setDropdownOpen(!dropdownOpen)}
+              onClick={() => setDeliveredDropdownOpen(!delliveredDropdownOpen)}
             />
           </div>
-          <p className="ml-4 font-sans text-sm"> Ya repartiste 58 paquetes</p>
-          {dropdownOpen && (
+          <p className="ml-4 font-sans text-sm"> {delivered.length === 0 ? "No tenés historial de repartos":`Ya repartiste ${delivered.length} paquetes`}</p>
+          {delliveredDropdownOpen && (
             <div className="divide-y">
-              <div className="flex justify-between py-4 h-110px w-full">
-                <div className="w-[80px] h-[80px] bg-[#E8EFFA] border-sm rounded-sm"></div>
+              {delivered.map((paquete:Package)=>{
+                return(
+                  <div className="flex justify-between py-4 h-110px w-full">
+
+                <Image
+                 className="bg-[#E8EFFA] border-sm rounded-sm"
+                 src={paquete.image}
+                 alt="imagen paquete"
+                 width={80}
+                 height={80}/>
                 <div className="">
                   <div className="flex flex-col justify-between h-full">
                     <div className="flex justify-between">
                       <p className="font-sans text-sm mr-8">
-                        Amenabar 2356, CABA
+                        {paquete.address}
                       </p>
                       <Image
                         className="h-5"
                         src={trash}
                         alt="trash"
                         width={16}
+                        height={16}
                       />
                     </div>
                     <p className="font-sans text-sm font-bold self-end">
-                      Entregado
+                      {paquete.status}
                     </p>
                   </div>
                 </div>
               </div>
-              <div className="flex justify-between py-4 h-110px w-full">
-                <div className="w-[80px] h-[80px] bg-[#E8EFFA] border-sm rounded-sm"></div>
-                <div className="">
-                  <div className="flex flex-col justify-between h-full">
-                    <div className="flex justify-between">
-                      <p className="font-sans text-sm mr-8">
-                        Av. Carabobo y Rivadavia, CABA
-                      </p>
-                      <Image
-                        className="h-5"
-                        src={trash}
-                        alt="trash"
-                        width={16}
-                      />
-                    </div>
-                    <p className="font-sans text-sm font-bold self-end">
-                      Entregado
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div className="flex justify-between py-4 h-110px w-full">
-                <div className="w-[80px] h-[80px] bg-[#E8EFFA] border-sm rounded-sm"></div>
-                <div className="">
-                  <div className="flex flex-col justify-between h-full">
-                    <div className="flex justify-between">
-                      <p className="font-sans text-sm mr-8">
-                        Mendoza 1810, CABA
-                      </p>
-                      <Image
-                        className="h-5"
-                        src={trash}
-                        alt="trash"
-                        width={16}
-                      />
-                    </div>
-                    <p className="font-sans text-sm font-bold self-end text-yellow-300">
-                      En curso
-                    </p>
-                  </div>
-                </div>
-              </div>
+                )
+              })}
             </div>
           )}
         </div>
