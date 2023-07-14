@@ -1,17 +1,22 @@
 "use client";
+import axios from "axios";
 import React, { FormEvent } from "react";
 import Image from "next/image";
 import logo from "../Assets/logo.png";
 import { Button } from "app/Components";
 import useInput from "../hooks/useInput";
-import { useRouter } from "next/navigation";
 
 const Recuperar = () => {
-  const router = useRouter();
+
   const email = useInput();
   const handleSubmit = (event: FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
-    router.push("/home");
+    axios.
+    post("http://44.201.112.1/api/user/recover",{email:email.value})
+    .then((res)=>{
+      if (res.status === 200)alert("Correo de recuperación enviado")
+    })
+    .catch(()=>alert(`Error`))
   };
   return (
     <div className="flex flex-col justify-center m-auto items-center">
@@ -38,7 +43,7 @@ const Recuperar = () => {
           />
         </div>
 
-        <Button buttonText="RECUPERAR CONTRASEÑA" />
+        <Button buttonText="RECUPERAR CONTRASEÑA"/>
       </form>
     </div>
   );

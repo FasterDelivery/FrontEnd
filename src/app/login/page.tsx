@@ -27,10 +27,11 @@ export default function Login() {
         localStorage.setItem("token", token);
 
         alert(`Bienvenido ${response.data.user.name}`);
-        response.data.user.isAdmin ? router.push("manageorders") : router.push(`/home`)
-        
+        response.data.user.isAdmin
+          ? router.push("manageorders")
+          : router.push(`/home`);
       })
-     .catch(() => alert("Error de registro"));
+      .catch(() => alert("Error de registro"));
   };
 
   return (
