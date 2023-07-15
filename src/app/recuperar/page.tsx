@@ -5,6 +5,7 @@ import Image from "next/image";
 import logo from "../Assets/logo.png";
 import { Button } from "app/Components";
 import useInput from "../hooks/useInput";
+import Swal from "sweetalert2";
 
 const Recuperar = () => {
   const email = useInput();
@@ -13,7 +14,14 @@ const Recuperar = () => {
     axios
       .post("http://44.201.112.1/api/user/recover", { email: email.value })
       .then((res) => {
-        if (res.status === 200) alert("Correo de recuperación enviado");
+        if (res.status === 200) {
+          Swal.fire({
+            title: "Aviso",
+            text: "Correo de recuperación enviado",
+            icon: "info",
+            confirmButtonColor: "#217BCE"
+          })
+        };
       })
       .catch(() => alert(`Error`));
   };
