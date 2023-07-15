@@ -7,6 +7,7 @@ import { Button } from "app/Components";
 import useInput from "../hooks/useInput";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import Swal from "sweetalert2";
 
 export default function Login() {
   const router = useRouter();
@@ -26,12 +27,25 @@ export default function Login() {
         // Store the token in localStorage
         localStorage.setItem("token", token);
 
-        alert(`Bienvenido ${response.data.user.name}`);
+        Swal.fire({
+          title: "Inicio de Sesión exitoso",
+          text: `Bienvenido ${response.data.user.name}`,
+          icon:"success",
+          confirmButtonText:"Continuar",
+          confirmButtonColor: "#217BCE"
+        })
         response.data.user.isAdmin
           ? router.push("manageorders")
           : router.push(`/home`);
       })
-      .catch(() => alert("Error de registro"));
+      .catch(() => {
+        Swal.fire({
+          title: "Error",
+          text: `Datos incorrectos`,
+          icon:"error",
+          confirmButtonColor: "#217BCE"
+        })
+      });
   };
 
   return (
@@ -67,11 +81,10 @@ export default function Login() {
         </div>
 
         <Button buttonText="INGRESAR" />
-
         <Link href="recuperar">
-          <button className="text-[#217BCE] my-2 font-sans" type="button">
-            Recuperar Contraseña
-          </button>
+        <button className="text-[#217BCE] my-2 font-sans" type="button">
+          Recuperar Contraseña
+        </button>
         </Link>
         <Link href="register">
           <button

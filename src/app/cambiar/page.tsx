@@ -7,6 +7,7 @@ import Image from "next/image";
 import logo from "../Assets/logo.png";
 import useInput from "../hooks/useInput";
 import { useRouter } from "next/navigation";
+import Swal from "sweetalert2";
 
 export default function Cambiar() {
   const router = useRouter();
@@ -46,6 +47,13 @@ export default function Cambiar() {
       );
 
       localStorage.setItem("token", response.data.token);
+      Swal.fire({
+        title: "Éxito",
+        text: "Contraseña Reestablecida",
+        icon: "success",
+        confirmButtonColor: "#217BCE",
+        confirmButtonText: "Continuar"
+      });
       user.isAdmin ? router.push("manageorders") : router.push(`/home`);
     }
   };

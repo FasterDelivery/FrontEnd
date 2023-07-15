@@ -47,8 +47,8 @@ function useInput(): InputHook {
 
   const validatePhone = (): void => {
     const errors: string[] = [];
-    if (value.length !== 8) {
-      errors.push("El número debe ser exactamente 8 dígitos");
+    if (value.length !== 10) {
+      errors.push("El número debe ser exactamente 10 dígitos");
     }
     setPhoneErrors(errors);
   };

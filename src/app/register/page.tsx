@@ -5,6 +5,7 @@ import Image from "next/image";
 import logo from "../Assets/logo.png";
 import useInput from "../hooks/useInput";
 import { useRouter } from "next/navigation";
+import Swal from "sweetalert2";
 
 export default function SignUp() {
   const router = useRouter();
@@ -16,19 +17,29 @@ export default function SignUp() {
   const address = useInput();
   const phone = useInput();
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>): void => {
-    event.preventDefault();
-    password.validatePassword();
-    confirmPassword.validateConfirmPassword(password.value);
-    email.validateEmail();
-    phone.validatePhone();
-    console.log(router);
-    password.passwordErrors[0] &&
-      email.emailErrors[0] &&
-      confirmPassword.confirmPasswordErrors[0];
-    phone.phoneErrors[0];
-    axios
-      .post(`http://44.201.112.1/api/user/register`, {
+const handleSubmit = async (event: FormEvent<HTMLFormElement>): Promise<void> => {
+  event.preventDefault();
+
+  password.validatePassword();
+  confirmPassword.validateConfirmPassword(password.value);
+  email.validateEmail();
+  phone.validatePhone();
+
+ if (
+  password.passwordErrors.length > 0 ||
+  confirmPassword.confirmPasswordErrors.length > 0 ||
+  email.emailErrors.length > 0 ||
+  phone.phoneErrors.length > 0
+  ) {
+    Swal.fire({
+      title: "Error",
+      text: "Error de registro. Revisá los datos.",
+      icon: "error",
+      confirmButtonColor: "#217BCE"
+    });
+  } else {
+    try {
+      const response = await axios.post("http://44.201.112.1/api/user/register", {
         name: name.value,
         lastname: lastName.value,
         password: password.value,
@@ -36,14 +47,32 @@ export default function SignUp() {
         phone: parseInt(phone.value),
         address: address.value,
         isAdmin: false
-      })
-      .then((res) => {
-        console.log(res.data);
-        alert(`Registro exitoso`);
-        router.push("/login");
-      })
-      .catch(() => alert("Error de registro"));
-  };
+      });
+      
+      console.log(response.data);
+      
+      Swal.fire({
+        title: "Registro exitoso",
+        text: `Bienvenido a Fastdelivery ${response.data.newUser.name}`,
+        icon: "success",
+        confirmButtonText: "Continuar a Login",
+        confirmButtonColor: "#217BCE"
+      });
+      
+      router.push("/login");
+    } catch (error) {
+      console.log(error);
+      
+      Swal.fire({
+        title: "Error",
+        text: "Ocurrió un error en el registro.",
+        icon: "error",
+        confirmButtonColor: "#217BCE"
+      });
+    }
+  }
+};
+
 
   return (
     <div className="w-90 mx-auto flex flex-col justify-center items-center">
