@@ -1,7 +1,38 @@
-import React from "react";
-import { BackButton, Button, Navbar } from "app/Components";
+"use client";
+import React, { useState } from "react";
+import { BackButton, Navbar } from "app/Components";
+import Link from "next/link";
 
 export default function DeclaracionJurada() {
+  const [declaracionBebidas, setDeclaracionBebidas] = useState<boolean>(true);
+  const [declaracionMedicamentos, setDeclaracionMedicamentos] =
+    useState<boolean>(true);
+  const [declaracionEmocional, setDeclaracionEmocional] =
+    useState<boolean>(true);
+
+  const handleYesBebidas = () => {
+    setDeclaracionBebidas(true);
+  };
+  const handleNoBebidas = () => {
+    setDeclaracionBebidas(false);
+  };
+
+  const handleYesMedicamentos = () => {
+    setDeclaracionMedicamentos(true);
+  };
+
+  const handleNoMedicamentos = () => {
+    setDeclaracionMedicamentos(false);
+  };
+
+  const handleYesEmocional = () => {
+    setDeclaracionEmocional(true);
+  };
+
+  const handleNoEmocional = () => {
+    setDeclaracionEmocional(false);
+  };
+
   return (
     <>
       <div className="w-90 shadow-lg mx-auto h-[640px]">
@@ -19,14 +50,25 @@ export default function DeclaracionJurada() {
               </h2>
               <div className="flex justify-center w-96 m-4 space-x-8">
                 <button
+                  id="buttonBebidas"
                   type="button"
-                  className="bg-gray-300 text-black rounded-md w-24 h-10"
+                  className={
+                    declaracionBebidas
+                      ? "bg-blue-500 text-black rounded-md w-24 h-10"
+                      : "bg-gray-300 text-black rounded-md w-24 h-10"
+                  }
+                  onClick={handleYesBebidas}
                 >
                   SI
                 </button>
                 <button
                   type="button"
-                  className="bg-gray-300 text-black rounded-md w-24 h-10"
+                  className={
+                    declaracionBebidas
+                      ? "bg-gray-300 text-black rounded-md w-24 h-10"
+                      : "bg-blue-500 text-black rounded-md w-24 h-10"
+                  }
+                  onClick={handleNoBebidas}
                 >
                   NO
                 </button>
@@ -40,11 +82,24 @@ export default function DeclaracionJurada() {
               <div className="flex justify-center w-96 m-4 space-x-8">
                 <button
                   type="button"
-                  className="bg-gray-300 text-black rounded-md w-24 h-10"
+                  className={
+                    declaracionMedicamentos
+                      ? "bg-blue-500 text-black rounded-md w-24 h-10"
+                      : "bg-gray-300 text-black rounded-md w-24 h-10"
+                  }
+                  onClick={handleYesMedicamentos}
                 >
                   SI
                 </button>
-                <button className="bg-gray-300 text-black rounded-md w-24 h-10">
+                <button
+                  type="button"
+                  className={
+                    declaracionMedicamentos
+                      ? "bg-gray-300 text-black rounded-md w-24 h-10"
+                      : "bg-blue-500 text-black rounded-md w-24 h-10"
+                  }
+                  onClick={handleNoMedicamentos}
+                >
                   NO
                 </button>
               </div>
@@ -56,13 +111,23 @@ export default function DeclaracionJurada() {
               <div className="flex justify-center w-96 m-4 space-x-8">
                 <button
                   type="button"
-                  className="bg-gray-300 text-black rounded-md w-24 h-10"
+                  className={
+                    declaracionEmocional
+                      ? "bg-blue-500 text-black rounded-md w-24 h-10"
+                      : "bg-gray-300 text-black rounded-md w-24 h-10"
+                  }
+                  onClick={handleYesEmocional}
                 >
                   SI
                 </button>
                 <button
                   type="button"
-                  className="bg-gray-300 text-black rounded-md w-24 h-10"
+                  className={
+                    declaracionEmocional
+                      ? "bg-gray-300 text-black rounded-md w-24 h-10"
+                      : "bg-blue-500 text-black rounded-md w-24 h-10"
+                  }
+                  onClick={handleNoEmocional}
                 >
                   NO
                 </button>
@@ -71,7 +136,20 @@ export default function DeclaracionJurada() {
           </div>
         </div>
         <div className="flex justify-center items-center">
-          <Button buttonText="CONTINUAR" />
+          {!declaracionBebidas &&
+          !declaracionEmocional &&
+          !declaracionMedicamentos ? (
+            <Link href="home">
+              <button
+                type="button"
+                className="bg-blue-800 text-white rounded-xl w-32 h-12 mt-4 font-sans font-bold"
+              >
+                Continuar
+              </button>
+            </Link>
+          ) : (
+            false
+          )}
         </div>
       </div>
     </>
