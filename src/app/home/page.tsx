@@ -14,12 +14,24 @@ type DropdownState = boolean;
 
 export default function HomePage() {
   const router = useRouter();
-  const [delliveredDropdownOpen, setDeliveredDropdownOpen] = useState<DropdownState>(false);
-  const [pendingDropdownOpen, setPendingDropdownOpen] = useState<DropdownState>(false);
-  const [user, setUser] = useState<User>({ id: 0, name: "", lastname: "", email: "", address: "", phone: "", isAdmin: false });
+  const [delliveredDropdownOpen, setDeliveredDropdownOpen] =
+    useState<DropdownState>(false);
+  const [pendingDropdownOpen, setPendingDropdownOpen] =
+    useState<DropdownState>(false);
+  const [user, setUser] = useState<User>({
+    id: 0,
+    name: "",
+    lastname: "",
+    email: "",
+    address: "",
+    phone: "",
+    isAdmin: false
+  });
   const [pending, setPending] = useState<Package[]>([]);
   const [delivered, setDelivered] = useState<Package[]>([]);
   const [onCourse, setOnCourse] = useState<Package[]>([]);
+
+  console.log(user, onCourse);
 
   useEffect(() => {
     if (!localStorage.getItem("token")) {
@@ -31,17 +43,20 @@ export default function HomePage() {
       try {
         const response = await axios.get("http://44.201.112.1/api/user/me", {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
+            Authorization: `Bearer ${localStorage.getItem("token")}`
+          }
         });
         setUser(response.data);
         const id = response.data.id;
 
-        const result = await axios.get(`http://44.201.112.1/api/packages/${id}/packages`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        });
+        const result = await axios.get(
+          `http://44.201.112.1/api/packages/${id}/packages`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`
+            }
+          }
+        );
         handleFilterPackages(result.data.packages);
       } catch (error) {
         console.log(error);
@@ -52,9 +67,15 @@ export default function HomePage() {
   }, []);
 
   const handleFilterPackages = (packages: Package[]) => {
-    setPending(packages.filter((paquete: Package) => paquete.status === "pendiente"));
-    setDelivered(packages.filter((paquete: Package) => paquete.status === "entregado"));
-    setOnCourse(packages.filter((paquete: Package) => paquete.status === "en curso"));
+    setPending(
+      packages.filter((paquete: Package) => paquete.status === "pendiente")
+    );
+    setDelivered(
+      packages.filter((paquete: Package) => paquete.status === "entregado")
+    );
+    setOnCourse(
+      packages.filter((paquete: Package) => paquete.status === "en curso")
+    );
   };
 
   return (
@@ -68,7 +89,9 @@ export default function HomePage() {
           <div className="flex justify-between mx-4">
             <p className="font-bold text-lg font-sans">Repartos Pendientes</p>
             <Image
-              className={`self-start transition-transform transform ${pendingDropdownOpen ? "rotate-180" : ""}`}
+              className={`self-start transition-transform transform ${
+                pendingDropdownOpen ? "rotate-180" : ""
+              }`}
               src={dropdown}
               alt="dropdown"
               width={13}
@@ -76,13 +99,18 @@ export default function HomePage() {
             />
           </div>
           <p className="ml-4 font-sans text-sm">
-            {pending.length === 0 ? "No tenés historial de repartos" : `Tenés ${pending.length} paquetes pendientes`}
+            {pending.length === 0
+              ? "No tenés historial de repartos"
+              : `Tenés ${pending.length} paquetes pendientes`}
           </p>
           {pendingDropdownOpen && (
             <div className="divide-y">
-              {pending.map((paquete: Package) => {
+              {pending.map((paquete: Package, index: number) => {
                 return (
-                  <div className="flex justify-between py-4 h-110px w-full">
+                  <div
+                    className="flex justify-between py-4 h-110px w-full"
+                    key={index}
+                  >
                     <Image
                       className="bg-[#E8EFFA] border-sm rounded-sm"
                       src={paquete.image}
@@ -93,7 +121,9 @@ export default function HomePage() {
                     <div className="">
                       <div className="flex flex-col justify-between h-full">
                         <div className="flex justify-between">
-                          <p className="font-sans text-sm mr-8">{paquete.address}</p>
+                          <p className="font-sans text-sm mr-8">
+                            {paquete.address}
+                          </p>
                           <Image
                             className="h-5"
                             src={trash}
@@ -102,7 +132,9 @@ export default function HomePage() {
                             height={16}
                           />
                         </div>
-                        <p className="font-sans text-sm font-bold self-end">{paquete.status}</p>
+                        <p className="font-sans text-sm font-bold self-end">
+                          {paquete.status}
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -115,7 +147,9 @@ export default function HomePage() {
           <div className="flex justify-between mx-4">
             <p className="font-bold text-lg font-sans">Historial de Repartos</p>
             <Image
-              className={`self-start transition-transform transform ${delliveredDropdownOpen ? "rotate-180" : ""}`}
+              className={`self-start transition-transform transform ${
+                delliveredDropdownOpen ? "rotate-180" : ""
+              }`}
               src={dropdown}
               alt="dropdown"
               width={13}
@@ -123,13 +157,18 @@ export default function HomePage() {
             />
           </div>
           <p className="ml-4 font-sans text-sm">
-            {delivered.length === 0 ? "No tenés historial de repartos" : `Ya repartiste ${delivered.length} paquetes`}
+            {delivered.length === 0
+              ? "No tenés historial de repartos"
+              : `Ya repartiste ${delivered.length} paquetes`}
           </p>
           {delliveredDropdownOpen && (
             <div className="divide-y">
-              {delivered.map((paquete: Package) => {
+              {delivered.map((paquete: Package, index: number) => {
                 return (
-                  <div className="flex justify-between py-4 h-110px w-full">
+                  <div
+                    className="flex justify-between py-4 h-110px w-full"
+                    key={index}
+                  >
                     <Image
                       className="bg-[#E8EFFA] border-sm rounded-sm"
                       src={paquete.image}
@@ -140,7 +179,9 @@ export default function HomePage() {
                     <div className="">
                       <div className="flex flex-col justify-between h-full">
                         <div className="flex justify-between">
-                          <p className="font-sans text-sm mr-8">{paquete.address}</p>
+                          <p className="font-sans text-sm mr-8">
+                            {paquete.address}
+                          </p>
                           <Image
                             className="h-5"
                             src={trash}
@@ -149,7 +190,9 @@ export default function HomePage() {
                             height={16}
                           />
                         </div>
-                        <p className="font-sans text-sm font-bold self-end">{paquete.status}</p>
+                        <p className="font-sans text-sm font-bold self-end">
+                          {paquete.status}
+                        </p>
                       </div>
                     </div>
                   </div>
