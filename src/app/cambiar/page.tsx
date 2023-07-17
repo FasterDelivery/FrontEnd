@@ -11,8 +11,6 @@ import Swal from "sweetalert2";
 
 export default function Cambiar() {
   const router = useRouter();
-  const urlParams = new URLSearchParams(window.location.search);
-  const token = urlParams.get("token");
   const password = useInput();
   const confirmPassword = useInput();
   const [user, setUser] = useState<User>({
@@ -29,6 +27,8 @@ export default function Cambiar() {
     event: FormEvent<HTMLFormElement>
   ): Promise<void> => {
     event.preventDefault();
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get("token");
     password.validatePassword();
     confirmPassword.validateConfirmPassword(confirmPassword.value);
     if (
@@ -54,11 +54,13 @@ export default function Cambiar() {
         confirmButtonColor: "#217BCE",
         confirmButtonText: "Continuar"
       });
-      user.isAdmin ? router.push("manageorders") : router.push(`/home`);
+      user.isAdmin ? router.push("manageorders") : router.push(`/`);
     }
   };
 
   useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get("token");
     axios
       .get(`http://44.201.112.1/api/user/me`, {
         headers: {

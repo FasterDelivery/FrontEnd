@@ -17,62 +17,66 @@ export default function SignUp() {
   const address = useInput();
   const phone = useInput();
 
-const handleSubmit = async (event: FormEvent<HTMLFormElement>): Promise<void> => {
-  event.preventDefault();
+  const handleSubmit = async (
+    event: FormEvent<HTMLFormElement>
+  ): Promise<void> => {
+    event.preventDefault();
 
-  password.validatePassword();
-  confirmPassword.validateConfirmPassword(password.value);
-  email.validateEmail();
-  phone.validatePhone();
+    password.validatePassword();
+    confirmPassword.validateConfirmPassword(password.value);
+    email.validateEmail();
+    phone.validatePhone();
 
- if (
-  password.passwordErrors.length > 0 ||
-  confirmPassword.confirmPasswordErrors.length > 0 ||
-  email.emailErrors.length > 0 ||
-  phone.phoneErrors.length > 0
-  ) {
-    Swal.fire({
-      title: "Error",
-      text: "Error de registro. Revisá los datos.",
-      icon: "error",
-      confirmButtonColor: "#217BCE"
-    });
-  } else {
-    try {
-      const response = await axios.post("http://44.201.112.1/api/user/register", {
-        name: name.value,
-        lastname: lastName.value,
-        password: password.value,
-        email: email.value,
-        phone: parseInt(phone.value),
-        address: address.value,
-        isAdmin: false
-      });
-      
-      console.log(response.data);
-      
-      Swal.fire({
-        title: "Registro exitoso",
-        text: `Bienvenido a Fastdelivery ${response.data.newUser.name}`,
-        icon: "success",
-        confirmButtonText: "Continuar a Login",
-        confirmButtonColor: "#217BCE"
-      });
-      
-      router.push("/login");
-    } catch (error) {
-      console.log(error);
-      
+    if (
+      password.passwordErrors.length > 0 ||
+      confirmPassword.confirmPasswordErrors.length > 0 ||
+      email.emailErrors.length > 0 ||
+      phone.phoneErrors.length > 0
+    ) {
       Swal.fire({
         title: "Error",
-        text: "Ocurrió un error en el registro.",
+        text: "Error de registro. Revisá los datos.",
         icon: "error",
         confirmButtonColor: "#217BCE"
       });
-    }
-  }
-};
+    } else {
+      try {
+        const response = await axios.post(
+          "http://44.201.112.1/api/user/register",
+          {
+            name: name.value,
+            lastname: lastName.value,
+            password: password.value,
+            email: email.value,
+            phone: parseInt(phone.value),
+            address: address.value,
+            isAdmin: false
+          }
+        );
 
+        console.log(response.data);
+
+        Swal.fire({
+          title: "Registro exitoso",
+          text: `Bienvenido a Fastdelivery ${response.data.newUser.name}`,
+          icon: "success",
+          confirmButtonText: "Continuar a Login",
+          confirmButtonColor: "#217BCE"
+        });
+
+        router.push("/login");
+      } catch (error) {
+        console.log(error);
+
+        Swal.fire({
+          title: "Error",
+          text: "Ocurrió un error en el registro.",
+          icon: "error",
+          confirmButtonColor: "#217BCE"
+        });
+      }
+    }
+  };
 
   return (
     <div className="w-90 mx-auto flex flex-col justify-center items-center">

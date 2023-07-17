@@ -30,21 +30,21 @@ export default function Login() {
         Swal.fire({
           title: "Inicio de Sesión exitoso",
           text: `Bienvenido ${response.data.user.name}`,
-          icon:"success",
-          confirmButtonText:"Continuar",
+          icon: "success",
+          confirmButtonText: "Continuar",
           confirmButtonColor: "#217BCE"
-        })
+        });
         response.data.user.isAdmin
           ? router.push("manageorders")
-          : router.push(`/home`);
+          : router.push(`/`);
       })
       .catch(() => {
         Swal.fire({
           title: "Error",
           text: `Datos incorrectos`,
-          icon:"error",
+          icon: "error",
           confirmButtonColor: "#217BCE"
-        })
+        });
       });
   };
 
@@ -82,9 +82,9 @@ export default function Login() {
 
         <Button buttonText="INGRESAR" />
         <Link href="recuperar">
-        <button className="text-[#217BCE] my-2 font-sans" type="button">
-          Recuperar Contraseña
-        </button>
+          <button className="text-[#217BCE] my-2 font-sans" type="button">
+            Recuperar Contraseña
+          </button>
         </Link>
         <Link href="register">
           <button
