@@ -1,16 +1,34 @@
 "use client";
-import React, { useState } from "react";
+/* eslint-disable */
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { BackButton, Navbar } from "app/Components";
 import dropdown from "../Assets/dropdown.png";
 import trash from "../Assets/trash.png";
 import profile from "../Assets/Ellipse 9.png";
 import "./styles.css";
+import axios from "axios";
 
 type DropdownState = boolean;
 
 export default function Home() {
   const [dropdownOpen, setDropdownOpen] = useState<DropdownState>(false);
+  //   [checkbox, setCheckbox] = useState(false),
+  //   [user, setUser] = useState(""),
+  //   token = localStorage.getItem("token");
+
+  // useEffect(() => {
+  //   const getUserF = async () => {
+  //     const getUser = await axios.get("http://localhost:30100/api/user/me", {
+  //       headers: {
+  //         Authorization: `Bearer ${token}`
+  //       }
+  //     });
+  //     setUser(getUser.data);
+  //   };
+  //   getUserF();
+  // }, []);
+
   return (
     <div className="mx-auto">
       <Navbar />
@@ -30,13 +48,20 @@ export default function Home() {
                 className="self-start"
               />
               <div className="ml-4 flex-col justify-center items-center">
-                <p className="font-bold text-lg font-sans">Farid</p>
+                <p className="font-bold text-lg font-sans">Admin</p>
                 <p className="text-blue-500"> Activo</p>
               </div>
             </div>
             <label className="relative inline-flex items-center cursor-pointer">
               <input type="checkbox" value="" className="sr-only peer" />
-              <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+              <div
+                className={
+                  // solucionar error del localStorage
+                  false
+                    ? "w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full  after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all  peer-checked:bg-blue-600"
+                    : "w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full  after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all  peer-checked:bg-blue-600"
+                }
+              ></div>
             </label>
           </div>
           <div className="shadow-lg rounded-[11px] w-full my-4 flex flex-col justify-center p-4">
