@@ -10,11 +10,12 @@ export function Navbar() {
   return (
     <nav
       style={{
-        borderBottom: "1px solid gray",
-        boxShadow: "0px 2px 4px rgba(0,0,0,0.1)"
+        boxShadow: "0px 2px 4px rgba(0,0,0,0.1)",
+        height: "15vh",
+        paddingBottom: "1rem"
       }}
     >
-      <Image src={logo} alt="logo" style={{ width: "51px", height: "32px" }} />
+      <Image src={logo} alt="logo" style={{ width: "20vh", height: "15vh" }} />
     </nav>
   );
 }
