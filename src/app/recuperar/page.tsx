@@ -20,8 +20,8 @@ const Recuperar = () => {
             text: "Correo de recuperación enviado",
             icon: "info",
             confirmButtonColor: "#217BCE"
-          })
-        };
+          });
+        }
       })
       .catch(() => alert(`Error`));
   };
