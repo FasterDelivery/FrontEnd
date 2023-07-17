@@ -1,208 +1,205 @@
 "use client";
-import React, { useState } from "react";
+import axios from "axios";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
-import { Navbar, Button } from "app/Components";
+import { Navbar, Button } from "../app/Components";
 import dropdown from "./Assets/dropdown.png";
-import polygon from "./Assets/polygon.png";
 import trash from "./Assets/trash.png";
 import Link from "next/link";
-import "./page.css";
+import { Package } from "./interfaces/packages";
+import { User } from "./interfaces/users";
+import { useRouter } from "next/navigation";
 
-export default function Home() {
-  const [controllDropdown, setControllDropdown] = useState({
-    history: "controllDropdownHistory",
-    delivery: "controllDropdownDelivery"
+type DropdownState = boolean;
+
+export default function HomePage() {
+  const router = useRouter();
+  const [delliveredDropdownOpen, setDeliveredDropdownOpen] =
+    useState<DropdownState>(false);
+  const [pendingDropdownOpen, setPendingDropdownOpen] =
+    useState<DropdownState>(false);
+  const [user, setUser] = useState<User>({
+    id: 0,
+    name: "",
+    lastname: "",
+    email: "",
+    address: "",
+    phone: "",
+    isAdmin: false
   });
+  const [pending, setPending] = useState<Package[]>([]);
+  const [delivered, setDelivered] = useState<Package[]>([]);
+  const [onCourse, setOnCourse] = useState<Package[]>([]);
 
-  const controllDropdwonF = (e: any) => {
-    e.stopPropagation();
-    console.log(e.target.id, e.target.className);
-    if (e.target.id === "history") {
-      if (controllDropdown.history === "controllDropdownHistory") {
-        setControllDropdown({
-          ...controllDropdown,
-          history: "controllDropdownHistory active"
-        });
-      } else {
-        setControllDropdown({
-          ...controllDropdown,
-          history: "controllDropdownHistory"
-        });
-      }
-    } else {
-      if (controllDropdown.delivery === "controllDropdownDelivery") {
-        setControllDropdown({
-          ...controllDropdown,
-          delivery: "controllDropdownDelivery active"
-        });
-      } else {
-        setControllDropdown({
-          ...controllDropdown,
-          delivery: "controllDropdownDelivery"
-        });
-      }
+  console.log(user, onCourse);
+
+  useEffect(() => {
+    if (!localStorage.getItem("token")) {
+      router.push("/login");
+      return;
     }
+
+    const fetchData = async () => {
+      try {
+        const response = await axios.get("http://44.201.112.1/api/user/me", {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`
+          }
+        });
+        setUser(response.data);
+        const id = response.data.id;
+
+        const result = await axios.get(
+          `http://44.201.112.1/api/packages/${id}/packages`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`
+            }
+          }
+        );
+        handleFilterPackages(result.data.packages);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const handleFilterPackages = (packages: Package[]) => {
+    setPending(
+      packages.filter((paquete: Package) => paquete.status === "pendiente")
+    );
+    setDelivered(
+      packages.filter((paquete: Package) => paquete.status === "entregado")
+    );
+    setOnCourse(
+      packages.filter((paquete: Package) => paquete.status === "en curso")
+    );
   };
 
   return (
     <div className="mx-auto w-90">
       <Navbar />
-      <div className="flex flex-col justify-start mx-auto items-center">
+      <div className="max-w-md flex flex-col justify-start mx-auto items-center">
         <Link href="packages">
           <Button buttonText="OBTENER PAQUETES" />
         </Link>
-        <div
-          className={`${controllDropdown.delivery} shadow-lg rounded-md w-full my-4 flex flex-col justify-center p-4`}
-        >
-          <section
-            id="delivery"
-            onClick={(e) => {
-              e.stopPropagation();
-              controllDropdwonF(e);
-            }}
-          >
-            <div id="delivery" className="flex justify-between mx-4">
-              <p id="delivery" className="font-bold text-lg font-sans">
-                Repartos Pendientes
-              </p>
-              <Image
-                id="delivery"
-                className="h-max-content"
-                src={
-                  controllDropdown.delivery === "controllDropdownDelivery"
-                    ? dropdown
-                    : polygon
-                }
-                alt="dropdown"
-                width={13}
-              />
-            </div>
-            <p id="delivery" className="ml-4 font-sans text-sm">
-              No tenés repartos pendientes
-            </p>
-          </section>
-          <div className="divide-y">
-            <div className="flex justify-between py-4 h-110px w-full">
-              <div className="w-[80px] h-[80px] bg-[#E8EFFA] border-sm rounded-sm"></div>
-              <div className="">
-                <div className="flex flex-col justify-between h-full">
-                  <div className="flex justify-between">
-                    <p className="font-sans text-sm mr-8">
-                      Amenabar 2356, CABA
-                    </p>
-                    <Image className="h-5" src={trash} alt="trash" width={16} />
-                  </div>
-                  <p className="font-sans text-sm font-bold self-end">
-                    Entregado
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div className="flex justify-between py-4 h-110px w-full">
-              <div className="w-[80px] h-[80px] bg-[#E8EFFA] border-sm rounded-sm"></div>
-              <div className="">
-                <div className="flex flex-col justify-between h-full">
-                  <div className="flex justify-between">
-                    <p className="font-sans text-sm mr-8">
-                      Av. Carabobo y Rivadavia, CABA
-                    </p>
-                    <Image className="h-5" src={trash} alt="trash" width={16} />
-                  </div>
-                  <p className="font-sans text-sm font-bold self-end">
-                    Entregado
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div className="flex justify-between py-4 h-110px w-full">
-              <div className="w-[80px] h-[80px] bg-[#E8EFFA] border-sm rounded-sm"></div>
-              <div className="">
-                <div className="flex flex-col justify-between h-full">
-                  <div className="flex justify-between">
-                    <p className="font-sans text-sm mr-8">Mendoza 1810, CABA</p>
-                    <Image className="h-5" src={trash} alt="trash" width={16} />
-                  </div>
-                  <p className="font-sans text-sm font-bold self-end text-yellow-300">
-                    En curso
-                  </p>
-                </div>
-              </div>
-            </div>
+        <div className="shadow-lg rounded-md w-full my-4 flex flex-col justify-center p-4">
+          <div className="flex justify-between mx-4">
+            <p className="font-bold text-lg font-sans">Repartos Pendientes</p>
+            <Image
+              className={`self-start transition-transform transform ${
+                pendingDropdownOpen ? "rotate-180" : ""
+              }`}
+              src={dropdown}
+              alt="dropdown"
+              width={13}
+              onClick={() => setPendingDropdownOpen(!pendingDropdownOpen)}
+            />
           </div>
+          <p className="ml-4 font-sans text-sm">
+            {pending.length === 0
+              ? "No tenés historial de repartos"
+              : `Tenés ${pending.length} paquetes pendientes`}
+          </p>
+          {pendingDropdownOpen && (
+            <div className="divide-y">
+              {pending.map((paquete: Package, index: number) => {
+                return (
+                  <div
+                    className="flex justify-between py-4 h-110px w-full"
+                    key={index}
+                  >
+                    <Image
+                      className="bg-[#E8EFFA] border-sm rounded-sm"
+                      src={paquete.image}
+                      alt="imagen paquete"
+                      width={80}
+                      height={80}
+                    />
+                    <div className="">
+                      <div className="flex flex-col justify-between h-full">
+                        <div className="flex justify-between">
+                          <p className="font-sans text-sm mr-8">
+                            {paquete.address}
+                          </p>
+                          <Image
+                            className="h-5"
+                            src={trash}
+                            alt="trash"
+                            width={16}
+                            height={16}
+                          />
+                        </div>
+                        <p className="font-sans text-sm font-bold self-end">
+                          {paquete.status}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
-        <div
-          className={`${controllDropdown.history} shadow-lg rounded-md w-full my-4 flex flex-col justify-center p-4`}
-        >
-          <section id="history" onClick={(e) => controllDropdwonF(e)}>
-            <div id="history" className="flex justify-between mx-4">
-              <p id="history" className="font-bold text-lg font-sans">
-                Historial de Repartos
-              </p>
-              <Image
-                id="history"
-                className="h-max-content"
-                src={
-                  controllDropdown.history === "controllDropdownHistory"
-                    ? dropdown
-                    : polygon
-                }
-                alt="dropdown"
-                width={13}
-              />
-            </div>
-            <p id="history" className="ml-4 font-sans text-sm">
-              {" "}
-              Ya repartiste 58 paquetes
-            </p>
-          </section>
-          <div className="divide-y">
-            <div className="flex justify-between py-4 h-110px w-full">
-              <div className="w-[80px] h-[80px] bg-[#E8EFFA] border-sm rounded-sm"></div>
-              <div className="">
-                <div className="flex flex-col justify-between h-full">
-                  <div className="flex justify-between">
-                    <p className="font-sans text-sm mr-8">
-                      Amenabar 2356, CABA
-                    </p>
-                    <Image className="h-5" src={trash} alt="trash" width={16} />
-                  </div>
-                  <p className="font-sans text-sm font-bold self-end">
-                    Entregado
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div className="flex justify-between py-4 h-110px w-full">
-              <div className="w-[80px] h-[80px] bg-[#E8EFFA] border-sm rounded-sm"></div>
-              <div className="">
-                <div className="flex flex-col justify-between h-full">
-                  <div className="flex justify-between">
-                    <p className="font-sans text-sm mr-8">
-                      Av. Carabobo y Rivadavia, CABA
-                    </p>
-                    <Image className="h-5" src={trash} alt="trash" width={16} />
-                  </div>
-                  <p className="font-sans text-sm font-bold self-end">
-                    Entregado
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div className="flex justify-between py-4 h-110px w-full">
-              <div className="w-[80px] h-[80px] bg-[#E8EFFA] border-sm rounded-sm"></div>
-              <div className="">
-                <div className="flex flex-col justify-between h-full">
-                  <div className="flex justify-between">
-                    <p className="font-sans text-sm mr-8">Mendoza 1810, CABA</p>
-                    <Image className="h-5" src={trash} alt="trash" width={16} />
-                  </div>
-                  <p className="font-sans text-sm font-bold self-end text-yellow-300">
-                    En curso
-                  </p>
-                </div>
-              </div>
-            </div>
+        <div className="shadow-lg rounded-md w-full my-4 flex flex-col justify-center p-4">
+          <div className="flex justify-between mx-4">
+            <p className="font-bold text-lg font-sans">Historial de Repartos</p>
+            <Image
+              className={`self-start transition-transform transform ${
+                delliveredDropdownOpen ? "rotate-180" : ""
+              }`}
+              src={dropdown}
+              alt="dropdown"
+              width={13}
+              onClick={() => setDeliveredDropdownOpen(!delliveredDropdownOpen)}
+            />
           </div>
+          <p className="ml-4 font-sans text-sm">
+            {delivered.length === 0
+              ? "No tenés historial de repartos"
+              : `Ya repartiste ${delivered.length} paquetes`}
+          </p>
+          {delliveredDropdownOpen && (
+            <div className="divide-y">
+              {delivered.map((paquete: Package, index: number) => {
+                return (
+                  <div
+                    className="flex justify-between py-4 h-110px w-full"
+                    key={index}
+                  >
+                    <Image
+                      className="bg-[#E8EFFA] border-sm rounded-sm"
+                      src={paquete.image}
+                      alt="imagen paquete"
+                      width={80}
+                      height={80}
+                    />
+                    <div className="">
+                      <div className="flex flex-col justify-between h-full">
+                        <div className="flex justify-between">
+                          <p className="font-sans text-sm mr-8">
+                            {paquete.address}
+                          </p>
+                          <Image
+                            className="h-5"
+                            src={trash}
+                            alt="trash"
+                            width={16}
+                            height={16}
+                          />
+                        </div>
+                        <p className="font-sans text-sm font-bold self-end">
+                          {paquete.status}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
       </div>
     </div>
