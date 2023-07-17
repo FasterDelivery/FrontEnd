@@ -17,7 +17,7 @@ export default function Login() {
   const handleSubmit = (event: FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
     axios
-      .post(`http://localhost:30100/api/user/login`, {
+      .post(`http://44.201.112.1/api/user/login`, {
         email: email.value,
         password: password.value
       })
