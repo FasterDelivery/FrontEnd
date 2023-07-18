@@ -9,6 +9,7 @@ import Link from "next/link";
 import { Package } from "./interfaces/packages";
 import { User } from "./interfaces/users";
 import { useRouter } from "next/navigation";
+import imagen from "./Assets/package-icon-vector.jpg";
 
 type DropdownState = boolean;
 
@@ -113,7 +114,7 @@ export default function HomePage() {
                   >
                     <Image
                       className="bg-[#E8EFFA] border-sm rounded-sm"
-                      src={paquete.image}
+                      src={paquete.image === "imagen" ? paquete.image : imagen}
                       alt="imagen paquete"
                       width={80}
                       height={80}
@@ -171,7 +172,7 @@ export default function HomePage() {
                   >
                     <Image
                       className="bg-[#E8EFFA] border-sm rounded-sm"
-                      src={paquete.image}
+                      src={paquete.image === "imagen" ? paquete.image : imagen}
                       alt="imagen paquete"
                       width={80}
                       height={80}
