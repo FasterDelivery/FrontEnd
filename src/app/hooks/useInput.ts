@@ -34,7 +34,7 @@ function useInput(): InputHook {
   const validateConfirmPassword = (password: string): void => {
     password !== value
       ? setRepeatPasswordErrors(["Las contraseñas no coinciden"])
-      : "";
+      : setRepeatPasswordErrors([]);
   };
 
   const validateEmail = (): void => {

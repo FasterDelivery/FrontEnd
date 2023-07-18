@@ -17,10 +17,15 @@ export default function SignUp() {
   const address = useInput();
   const phone = useInput();
 
-  const handleSubmit = async (
-    event: FormEvent<HTMLFormElement>
-  ): Promise<void> => {
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    // Store the error lengths in separate variables
+    const passwordErrorsLength = password.passwordErrors.length;
+    const confirmPasswordErrorsLength =
+      confirmPassword.confirmPasswordErrors.length;
+    const emailErrorsLength = email.emailErrors.length;
+    const phoneErrorsLength = phone.phoneErrors.length;
 
     password.validatePassword();
     confirmPassword.validateConfirmPassword(password.value);
@@ -28,10 +33,10 @@ export default function SignUp() {
     phone.validatePhone();
 
     if (
-      password.passwordErrors.length > 0 ||
-      confirmPassword.confirmPasswordErrors.length > 0 ||
-      email.emailErrors.length > 0 ||
-      phone.phoneErrors.length > 0
+      passwordErrorsLength > 0 ||
+      confirmPasswordErrorsLength > 0 ||
+      emailErrorsLength > 0 ||
+      phoneErrorsLength > 0
     ) {
       Swal.fire({
         title: "Error",
@@ -39,42 +44,42 @@ export default function SignUp() {
         icon: "error",
         confirmButtonColor: "#217BCE"
       });
-    } else {
-      try {
-        const response = await axios.post(
-          "http://44.201.112.1/api/user/register",
-          {
-            name: name.value,
-            lastname: lastName.value,
-            password: password.value,
-            email: email.value,
-            phone: parseInt(phone.value),
-            address: address.value,
-            isAdmin: false
-          }
-        );
+    } else if (
+      password.passwordErrors[0] === "" &&
+      confirmPassword.confirmPasswordErrors[0] === "" &&
+      email.emailErrors[0] === "" &&
+      phone.phoneErrors[0] === ""
+    ) {
+      axios
+        .post("http://44.201.112.1/api/user/register", {
+          name: name.value,
+          lastname: lastName.value,
+          password: password.value,
+          email: email.value,
+          phone: parseInt(phone.value),
+          address: address.value,
+          isAdmin: false
+        })
+        .then((response) => {
+          Swal.fire({
+            title: "Registro exitoso",
+            text: `Bienvenido a Fastdelivery ${response.data.newUser.name}`,
+            icon: "success",
+            confirmButtonText: "Continuar a Login",
+            confirmButtonColor: "#217BCE"
+          });
+          router.push("/login");
+        })
+        .catch((error) => {
+          console.log(error);
 
-        console.log(response.data);
-
-        Swal.fire({
-          title: "Registro exitoso",
-          text: `Bienvenido a Fastdelivery ${response.data.newUser.name}`,
-          icon: "success",
-          confirmButtonText: "Continuar a Login",
-          confirmButtonColor: "#217BCE"
+          Swal.fire({
+            title: "Error",
+            text: "Ocurrió un error en el registro.",
+            icon: "error",
+            confirmButtonColor: "#217BCE"
+          });
         });
-
-        router.push("/login");
-      } catch (error) {
-        console.log(error);
-
-        Swal.fire({
-          title: "Error",
-          text: "Ocurrió un error en el registro.",
-          icon: "error",
-          confirmButtonColor: "#217BCE"
-        });
-      }
     }
   };
 
