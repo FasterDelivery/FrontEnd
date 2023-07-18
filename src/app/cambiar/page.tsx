@@ -1,8 +1,7 @@
 "use client";
 import axios from "axios";
-import React, { useState, useEffect, FormEvent } from "react";
+import React, { FormEvent } from "react";
 import { Navbar, Button } from "app/Components";
-import { User } from "app/interfaces/users";
 import Image from "next/image";
 import logo from "../Assets/logo.png";
 import useInput from "../hooks/useInput";
