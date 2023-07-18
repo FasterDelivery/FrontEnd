@@ -41,7 +41,7 @@ export default function HomePage() {
 
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://44.201.112.1/api/user/me", {
+        const response = await axios.get("https://3.91.204.112/api/user/me", {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`
           }
@@ -50,7 +50,7 @@ export default function HomePage() {
         const id = response.data.id;
 
         const result = await axios.get(
-          `http://44.201.112.1/api/packages/${id}/packages`,
+          `https://3.91.204.112/api/packages/${id}/packages`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`

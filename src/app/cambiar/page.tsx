@@ -21,7 +21,7 @@ export default function Cambiar() {
     if (password.value === confirmPassword.value) {
       const urlParams = new URLSearchParams(window.location.search);
       const token = urlParams.get("token");
-      const result = await axios.get(`http://44.201.112.1/api/user/me`, {
+      const result = await axios.get(`https://3.91.204.112/api/user/me`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -30,7 +30,7 @@ export default function Cambiar() {
       const user = result.data;
 
       const response = await axios.put(
-        `http://44.201.112.1/api/user/edit/${user.id}`,
+        `https://3.91.204.112/api/user/edit/${user.id}`,
         { ...user, password: password.value },
         {
           headers: {
