@@ -51,7 +51,7 @@ export default function SignUp() {
       phone.phoneErrors[0] === ""
     ) {
       axios
-        .post("http://44.201.112.1/api/user/register", {
+        .post("https://3.91.204.112/api/user/register", {
           name: name.value,
           lastname: lastName.value,
           password: password.value,

@@ -12,7 +12,7 @@ const Recuperar = () => {
   const handleSubmit = (event: FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
     axios
-      .post("http://44.201.112.1/api/user/recover", { email: email.value })
+      .post("https://3.91.204.112/api/user/recover", { email: email.value })
       .then((res) => {
         if (res.status === 200) {
           Swal.fire({
