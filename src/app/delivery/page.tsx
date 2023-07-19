@@ -3,6 +3,9 @@ import Image from "next/image";
 import dropdown from "../Assets/dropdown.png";
 import { BackButton, Navbar } from "app/Components";
 
+console.log("Mapa");
+
+
 const pages = () => {
   return (
     <>
