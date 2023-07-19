@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { BackButton, Navbar } from "app/Components";
 import Link from "next/link";
+import axios from "axios";
 
 export default function DeclaracionJurada() {
   const [declaracionBebidas, setDeclaracionBebidas] = useState<boolean>(true);
@@ -31,6 +32,17 @@ export default function DeclaracionJurada() {
 
   const handleNoEmocional = () => {
     setDeclaracionEmocional(false);
+  };
+
+  const handleContinue = () => {
+    const day = new Date().toString();
+    axios.post("http://localhost:3001/api/ddjj", {
+      dayDeclaracionJurada: day,
+      bebidasAlcoholicas: "no",
+      medicamentos: "no",
+      estadoEmocional: "no",
+      userId: 35
+    });
   };
 
   return (
@@ -143,6 +155,7 @@ export default function DeclaracionJurada() {
               <button
                 type="button"
                 className="bg-blue-800 text-white rounded-xl w-32 h-12 mt-4 font-sans font-bold"
+                onClick={handleContinue}
               >
                 Continuar
               </button>
