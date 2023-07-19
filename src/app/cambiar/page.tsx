@@ -1,8 +1,7 @@
 "use client";
 import axios from "axios";
-import React, { useState, useEffect, FormEvent } from "react";
+import React, { FormEvent } from "react";
 import { Navbar, Button } from "app/Components";
-import { User } from "app/interfaces/users";
 import Image from "next/image";
 import logo from "../Assets/logo.png";
 import useInput from "../hooks/useInput";
@@ -13,31 +12,25 @@ export default function Cambiar() {
   const router = useRouter();
   const password = useInput();
   const confirmPassword = useInput();
-  const [user, setUser] = useState<User>({
-    id: 0,
-    name: "",
-    lastname: "",
-    email: "",
-    address: "",
-    phone: "",
-    isAdmin: false
-  });
 
-  const handleSubmit = async (
-    event: FormEvent<HTMLFormElement>
-  ): Promise<void> => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const urlParams = new URLSearchParams(window.location.search);
-    const token = urlParams.get("token");
     password.validatePassword();
-    confirmPassword.validateConfirmPassword(confirmPassword.value);
-    if (
-      password.passwordErrors.length === 0 &&
-      confirmPassword.confirmPasswordErrors.length === 0
-    ) {
-      console.log(token);
+    confirmPassword.validateConfirmPassword(password.value);
+
+    if (password.value === confirmPassword.value) {
+      const urlParams = new URLSearchParams(window.location.search);
+      const token = urlParams.get("token");
+      const result = await axios.get(`https://3.91.204.112/api/user/me`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+
+      const user = result.data;
+
       const response = await axios.put(
-        `http://44.201.112.1/api/user/edit/${user.id}`,
+        `https://3.91.204.112/api/user/edit/${user.id}`,
         { ...user, password: password.value },
         {
           headers: {
@@ -46,31 +39,25 @@ export default function Cambiar() {
         }
       );
 
-      localStorage.setItem("token", response.data.token);
-      Swal.fire({
-        title: "Éxito",
-        text: "Contraseña Reestablecida",
-        icon: "success",
-        confirmButtonColor: "#217BCE",
-        confirmButtonText: "Continuar"
+      if (response.data.editedUser) {
+        Swal.fire({
+          title: "Éxito",
+          text: "Contraseña Reestablecida",
+          icon: "success",
+          confirmButtonColor: "#217BCE",
+          confirmButtonText: "Continuar"
+        });
+        user.isAdmin ? router.push("manageorders") : router.push(`/login`);
+      }
+    } else {
+      return Swal.fire({
+        title: "Error",
+        text: "Las contraseñas no coinciden",
+        icon: "error",
+        confirmButtonColor: "#217BCE"
       });
-      user.isAdmin ? router.push("manageorders") : router.push(`/`);
     }
   };
-
-  useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const token = urlParams.get("token");
-    axios
-      .get(`http://44.201.112.1/api/user/me`, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
-      .then((res) => {
-        setUser(res.data);
-      });
-  }, []);
 
   return (
     <>
