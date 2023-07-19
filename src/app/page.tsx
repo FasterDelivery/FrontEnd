@@ -7,13 +7,10 @@ import dropdown from "./Assets/dropdown.png";
 import trash from "./Assets/trash.png";
 import Link from "next/link";
 import { Package } from "./interfaces/packages";
-import { User } from "./interfaces/users";
 import { useRouter } from "next/navigation";
 import imagen from "./Assets/package-icon-vector.jpg";
 
 type DropdownState = boolean;
-
-const databaseUrl = process.env.NEXT_PUBLIC_DATABASE_URL;
 
 export default function HomePage() {
   const router = useRouter();
@@ -21,18 +18,11 @@ export default function HomePage() {
     useState<DropdownState>(false);
   const [pendingDropdownOpen, setPendingDropdownOpen] =
     useState<DropdownState>(false);
-  const [user, setUser] = useState<User>({
-    id: 0,
-    name: "",
-    lastname: "",
-    email: "",
-    address: "",
-    phone: "",
-    isAdmin: false
-  });
+
   const [pending, setPending] = useState<Package[]>([]);
   const [delivered, setDelivered] = useState<Package[]>([]);
   const [onCourse, setOnCourse] = useState<Package[]>([]);
+  console.log(onCourse);
 
   useEffect(() => {
     if (!localStorage.getItem("token")) {
@@ -47,7 +37,6 @@ export default function HomePage() {
             Authorization: `Bearer ${localStorage.getItem("token")}`
           }
         });
-        setUser(response.data);
         const id = response.data.id;
 
         const result = await axios.get(

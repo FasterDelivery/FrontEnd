@@ -4,8 +4,6 @@ import { BackButton, Navbar } from "app/Components";
 import Link from "next/link";
 import axios from "axios";
 
-const databaseUrl = process.env.NEXT_PUBLIC_DATABASE_URL;
-
 export default function DeclaracionJurada() {
   const [declaraciones, setDeclaraciones] = useState({
     bebidas: true,

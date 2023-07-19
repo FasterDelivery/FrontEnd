@@ -1,6 +1,6 @@
 "use client";
 import axios from "axios";
-import React, { FormEvent, useState } from "react";
+import React, { FormEvent } from "react";
 import Image from "next/image";
 import logo from "../Assets/logo.png";
 import { Button } from "app/Components";
@@ -8,19 +8,14 @@ import useInput from "../hooks/useInput";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
-import affidavit from "app/affidavit/page";
-
-const databaseUrl = process.env.NEXT_PUBLIC_DATABASE_URL;
 
 export default function Login() {
   const router = useRouter();
   const email = useInput();
   const password = useInput();
-  const [userId, setUserId] = useState("");
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
-    console.log(databaseUrl, "aca esta la impresion ");
     axios
       .post(`https://3.91.204.112/api/user/login`, {
         email: email.value,
@@ -31,7 +26,6 @@ export default function Login() {
 
         // Store the token in localStorage
         localStorage.setItem("token", token);
-        setUserId(response.data);
 
         Swal.fire({
           title: "Inicio de Sesión exitoso",
