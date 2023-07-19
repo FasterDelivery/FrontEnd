@@ -13,7 +13,7 @@ export default function Login() {
   const router = useRouter();
   const email = useInput();
   const password = useInput();
-
+  
   const handleSubmit = (event: FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
     axios
@@ -36,7 +36,7 @@ export default function Login() {
         });
         response.data.user.isAdmin
           ? router.push("manageorders")
-          : router.push(`/`);
+          : router.push(`/affidavit`);
       })
       .catch(() => {
         Swal.fire({
