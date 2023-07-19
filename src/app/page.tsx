@@ -7,7 +7,6 @@ import dropdown from "./Assets/dropdown.png";
 import trash from "./Assets/trash.png";
 import Link from "next/link";
 import { Package } from "./interfaces/packages";
-import { User } from "./interfaces/users";
 import { useRouter } from "next/navigation";
 import imagen from "./Assets/package-icon-vector.jpg";
 
@@ -19,20 +18,11 @@ export default function HomePage() {
     useState<DropdownState>(false);
   const [pendingDropdownOpen, setPendingDropdownOpen] =
     useState<DropdownState>(false);
-  const [user, setUser] = useState<User>({
-    id: 0,
-    name: "",
-    lastname: "",
-    email: "",
-    address: "",
-    phone: "",
-    isAdmin: false
-  });
+
   const [pending, setPending] = useState<Package[]>([]);
   const [delivered, setDelivered] = useState<Package[]>([]);
   const [onCourse, setOnCourse] = useState<Package[]>([]);
-
-  console.log(user, onCourse);
+  console.log(onCourse);
 
   useEffect(() => {
     if (!localStorage.getItem("token")) {
@@ -42,12 +32,11 @@ export default function HomePage() {
 
     const fetchData = async () => {
       try {
-        const response = await axios.get("https://3.91.204.112/api/user/me", {
+        const response = await axios.get(`https://3.91.204.112/api/user/me`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`
           }
         });
-        setUser(response.data);
         const id = response.data.id;
 
         const result = await axios.get(

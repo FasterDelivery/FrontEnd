@@ -36,7 +36,7 @@ export default function Login() {
         });
         response.data.user.isAdmin
           ? router.push("manageorders")
-          : router.push(`/`);
+          : router.push(`/affidavit`);
       })
       .catch(() => {
         Swal.fire({
