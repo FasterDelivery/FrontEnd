@@ -9,7 +9,7 @@ import Link from "next/link";
 import { Package } from "./interfaces/packages";
 import { User } from "./interfaces/users";
 import { useRouter } from "next/navigation";
-import imagen from "./Assets/package-icon-vector.jpg";
+import imagen from "../app/Assets/package-icon-vector.jpg";
 
 type DropdownState = boolean;
 

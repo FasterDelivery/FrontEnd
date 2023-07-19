@@ -5,45 +5,32 @@ import Link from "next/link";
 import axios from "axios";
 
 export default function DeclaracionJurada() {
-  const [declaracionBebidas, setDeclaracionBebidas] = useState<boolean>(true);
-  const [declaracionMedicamentos, setDeclaracionMedicamentos] =
-    useState<boolean>(true);
-  const [declaracionEmocional, setDeclaracionEmocional] =
-    useState<boolean>(true);
+  const [declaraciones, setDeclaraciones] = useState({
+    bebidas: true,
+    medicamentos: true,
+    emocional: true
+  });
 
-  const handleYesBebidas = () => {
-    setDeclaracionBebidas(true);
-  };
-  const handleNoBebidas = () => {
-    setDeclaracionBebidas(false);
-  };
-
-  const handleYesMedicamentos = () => {
-    setDeclaracionMedicamentos(true);
-  };
-
-  const handleNoMedicamentos = () => {
-    setDeclaracionMedicamentos(false);
-  };
-
-  const handleYesEmocional = () => {
-    setDeclaracionEmocional(true);
-  };
-
-  const handleNoEmocional = () => {
-    setDeclaracionEmocional(false);
+  const handleYesNoChange = (field: string, value: boolean) => {
+    setDeclaraciones((prevDeclaraciones) => ({
+      ...prevDeclaraciones,
+      [field]: value
+    }));
   };
 
   const handleContinue = () => {
     const day = new Date().toString();
-    axios.post("http://localhost:3001/api/ddjj", {
+    const { bebidas, medicamentos, emocional } = declaraciones;
+    axios.post(`https://3.91.204.112/api/ddjj`, {
       dayDeclaracionJurada: day,
-      bebidasAlcoholicas: "no",
-      medicamentos: "no",
-      estadoEmocional: "no",
+      bebidasAlcoholicas: bebidas ? "yes" : "no",
+      medicamentos: medicamentos ? "yes" : "no",
+      estadoEmocional: emocional ? "yes" : "no",
       userId: 35
     });
   };
+
+  console.log(declaraciones);
 
   return (
     <>
@@ -65,22 +52,22 @@ export default function DeclaracionJurada() {
                   id="buttonBebidas"
                   type="button"
                   className={
-                    declaracionBebidas
+                    declaraciones.bebidas
                       ? "bg-blue-500 text-black rounded-md w-24 h-10"
                       : "bg-gray-300 text-black rounded-md w-24 h-10"
                   }
-                  onClick={handleYesBebidas}
+                  onClick={() => handleYesNoChange("bebidas", true)}
                 >
                   SI
                 </button>
                 <button
                   type="button"
                   className={
-                    declaracionBebidas
+                    declaraciones.bebidas
                       ? "bg-gray-300 text-black rounded-md w-24 h-10"
                       : "bg-blue-500 text-black rounded-md w-24 h-10"
                   }
-                  onClick={handleNoBebidas}
+                  onClick={() => handleYesNoChange("bebidas", false)}
                 >
                   NO
                 </button>
@@ -95,22 +82,22 @@ export default function DeclaracionJurada() {
                 <button
                   type="button"
                   className={
-                    declaracionMedicamentos
+                    declaraciones.medicamentos
                       ? "bg-blue-500 text-black rounded-md w-24 h-10"
                       : "bg-gray-300 text-black rounded-md w-24 h-10"
                   }
-                  onClick={handleYesMedicamentos}
+                  onClick={() => handleYesNoChange("medicamentos", true)}
                 >
                   SI
                 </button>
                 <button
                   type="button"
                   className={
-                    declaracionMedicamentos
+                    declaraciones.medicamentos
                       ? "bg-gray-300 text-black rounded-md w-24 h-10"
                       : "bg-blue-500 text-black rounded-md w-24 h-10"
                   }
-                  onClick={handleNoMedicamentos}
+                  onClick={() => handleYesNoChange("medicamentos", false)}
                 >
                   NO
                 </button>
@@ -124,22 +111,22 @@ export default function DeclaracionJurada() {
                 <button
                   type="button"
                   className={
-                    declaracionEmocional
+                    declaraciones.emocional
                       ? "bg-blue-500 text-black rounded-md w-24 h-10"
                       : "bg-gray-300 text-black rounded-md w-24 h-10"
                   }
-                  onClick={handleYesEmocional}
+                  onClick={() => handleYesNoChange("emocional", true)}
                 >
                   SI
                 </button>
                 <button
                   type="button"
                   className={
-                    declaracionEmocional
+                    declaraciones.emocional
                       ? "bg-gray-300 text-black rounded-md w-24 h-10"
                       : "bg-blue-500 text-black rounded-md w-24 h-10"
                   }
-                  onClick={handleNoEmocional}
+                  onClick={() => handleYesNoChange("emocional", false)}
                 >
                   NO
                 </button>
@@ -148,10 +135,10 @@ export default function DeclaracionJurada() {
           </div>
         </div>
         <div className="flex justify-center items-center">
-          {!declaracionBebidas &&
-          !declaracionEmocional &&
-          !declaracionMedicamentos ? (
-            <Link href="home">
+          {!declaraciones.bebidas &&
+          !declaraciones.medicamentos &&
+          !declaraciones.emocional ? (
+            <Link href="/">
               <button
                 type="button"
                 className="bg-blue-800 text-white rounded-xl w-32 h-12 mt-4 font-sans font-bold"
