@@ -13,7 +13,7 @@ export default function Login() {
   const router = useRouter();
   const email = useInput();
   const password = useInput();
-  
+
   const handleSubmit = (event: FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
     axios
