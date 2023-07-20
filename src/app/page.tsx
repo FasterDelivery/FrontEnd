@@ -31,20 +31,16 @@ export default function HomePage() {
   const [pending, setPending] = useState<Package[]>([]);
   const [delivered, setDelivered] = useState<Package[]>([]);
   const [onCourse, setOnCourse] = useState<Package[]>([]);
+  const [token, setToken] = useState<string>("");
 
   console.log(user, onCourse);
 
   useEffect(() => {
-    if (!localStorage.getItem("token")) {
-      router.push("/login");
-      return;
-    }
-
     const fetchData = async () => {
       try {
         const response = await axios.get("https://3.91.204.112/api/user/me", {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`
+            Authorization: `Bearer ${token}`
           }
         });
         setUser(response.data);
@@ -54,7 +50,7 @@ export default function HomePage() {
           `https://3.91.204.112/api/packages/${id}/packages`,
           {
             headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`
+              Authorization: `Bearer ${token}`
             }
           }
         );
@@ -64,8 +60,39 @@ export default function HomePage() {
       }
     };
 
+    if (!localStorage.getItem("session")) {
+      router.push("/login");
+      return;
+    }
+    const session = localStorage.getItem("session") || "";
+    let json;
+
+    try {
+      json = JSON.parse(session);
+    } catch (error) {
+      // Handle the error gracefully (if needed)
+      console.error("Error parsing JSON:", error);
+    }
+
+    if (json && json.value) {
+      setToken(json.value);
+    }
+
     fetchData();
-  }, []);
+  }, [token]);
+
+  useEffect(() => {
+    // Check if user is defined and now is greater than the expiry time
+    if (user && user.id !== 0) {
+      const now = new Date().getTime();
+      const session = JSON.parse(localStorage.getItem("session") || "{}");
+      const expiry = session.expiry || 0;
+
+      if (now > expiry) {
+        router.push(`affidavit?id=${user.id}&token=${token}`);
+      }
+    }
+  }, [user]);
 
   const handleFilterPackages = (packages: Package[]) => {
     setPending(

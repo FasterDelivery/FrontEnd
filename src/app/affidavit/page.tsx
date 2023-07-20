@@ -1,15 +1,28 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BackButton, Navbar } from "app/Components";
 import Link from "next/link";
 import axios from "axios";
+import { useRouter } from "next/navigation";
+import Swal from "sweetalert2";
 
 export default function DeclaracionJurada() {
+  const router = useRouter();
   const [declaraciones, setDeclaraciones] = useState({
     bebidas: true,
     medicamentos: true,
     emocional: true
   });
+
+  useEffect(() => {
+    Swal.fire({
+      title: "Declaración Jurada",
+      text: `Por favor respondé a las siguientes preguntas`,
+      icon: "info",
+      confirmButtonText: "Continuar",
+      confirmButtonColor: "#217BCE"
+    });
+  }, []);
 
   const handleYesNoChange = (field: string, value: boolean) => {
     setDeclaraciones((prevDeclaraciones) => ({
@@ -18,16 +31,26 @@ export default function DeclaracionJurada() {
     }));
   };
 
-  const handleContinue = () => {
-    const day = new Date().toString();
+  const handleContinue = async () => {
+    const now = new Date();
+    const urlParams = new URLSearchParams(window.location.search);
+    const idQuery = urlParams.get("id");
+    const id = idQuery?.split("?")[0];
+    const token = idQuery?.split("token=")[1];
     const { bebidas, medicamentos, emocional } = declaraciones;
-    axios.post(`https://3.91.204.112/api/ddjj`, {
-      dayDeclaracionJurada: day,
+    await axios.post(`https://3.91.204.112/api/ddjj`, {
+      dayDeclaracionJurada: now.toString(),
       bebidasAlcoholicas: bebidas ? "yes" : "no",
       medicamentos: medicamentos ? "yes" : "no",
       estadoEmocional: emocional ? "yes" : "no",
-      userId: 35
+      userId: id
     });
+    const item = {
+      value: token,
+      expiry: now.getTime() + 60 * 1000 // Convierte a milisegundos
+    };
+    localStorage.setItem("session", JSON.stringify(item));
+    router.push("/");
   };
 
   console.log(declaraciones);
