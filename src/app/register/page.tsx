@@ -1,6 +1,6 @@
 "use client";
 import axios from "axios";
-import React, { FormEvent } from "react";
+import React, {FormEvent, useState } from "react";
 import Image from "next/image";
 import logo from "../Assets/logo.png";
 import useInput from "../hooks/useInput";
@@ -16,40 +16,35 @@ export default function SignUp() {
   const email = useInput();
   const address = useInput();
   const phone = useInput();
+  const [error, setError] = useState<boolean>(true);
+
+  const checkErrors = () => {
+    if (
+      password.passwordErrors.length > 0 ||
+      confirmPassword.confirmPasswordErrors.length > 0 ||
+      email.emailErrors.length > 0 ||
+      phone.phoneErrors.length > 0
+    )
+      setError(true);
+    else setError(false);
+  };
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
-    // Store the error lengths in separate variables
-    const passwordErrorsLength = password.passwordErrors.length;
-    const confirmPasswordErrorsLength =
-      confirmPassword.confirmPasswordErrors.length;
-    const emailErrorsLength = email.emailErrors.length;
-    const phoneErrorsLength = phone.phoneErrors.length;
-
     password.validatePassword();
     confirmPassword.validateConfirmPassword(password.value);
     email.validateEmail();
     phone.validatePhone();
+    checkErrors();
 
-    if (
-      passwordErrorsLength > 0 ||
-      confirmPasswordErrorsLength > 0 ||
-      emailErrorsLength > 0 ||
-      phoneErrorsLength > 0
-    ) {
+    if (error) {
       Swal.fire({
         title: "Error",
         text: "Error de registro. Revisá los datos.",
         icon: "error",
         confirmButtonColor: "#217BCE"
       });
-    } else if (
-      password.passwordErrors[0] === "" &&
-      confirmPassword.confirmPasswordErrors[0] === "" &&
-      email.emailErrors[0] === "" &&
-      phone.phoneErrors[0] === ""
-    ) {
+    } else {
       axios
         .post("https://3.91.204.112/api/user/register", {
           name: name.value,
