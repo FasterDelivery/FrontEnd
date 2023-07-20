@@ -1,6 +1,6 @@
 "use client";
 import axios from "axios";
-import React, {FormEvent, useState } from "react";
+import React, { FormEvent, useState } from "react";
 import Image from "next/image";
 import logo from "../Assets/logo.png";
 import useInput from "../hooks/useInput";

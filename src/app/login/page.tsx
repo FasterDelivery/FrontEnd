@@ -23,20 +23,10 @@ export default function Login() {
       })
       .then((response) => {
         const token = response.data.token;
-
-        // Store the token in localStorage
-        localStorage.setItem("token", token);
-
-        Swal.fire({
-          title: "Inicio de Sesión exitoso",
-          text: `Bienvenido ${response.data.user.name}`,
-          icon: "success",
-          confirmButtonText: "Continuar",
-          confirmButtonColor: "#217BCE"
-        });
-        response.data.user.isAdmin
-          ? router.push("manageorders")
-          : router.push(`/affidavit`);
+        if (response.data.user.isAdmin) router.push("manageorders");
+        else {
+          router.push(`/affidavit?id=${response.data.user.id}?token=${token}`);
+        }
       })
       .catch(() => {
         Swal.fire({
