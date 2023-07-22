@@ -1,9 +1,15 @@
 import React from "react";
+import Map from "./mapa";
 import Image from "next/image";
 import dropdown from "../Assets/dropdown.png";
 import { BackButton, Navbar } from "app/Components";
 
-const pages = () => {
+const App: React.FC = () => {
+  const destination: google.maps.LatLngLiteral = {
+    lat: -22.977635749850354,
+    lng: -46.98865870252204
+  };
+
   return (
     <>
       <Navbar />
@@ -26,13 +32,7 @@ const pages = () => {
             </button>
           </section>
           <section className="">
-            <iframe
-              title="ubicacion"
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d785.459350600613!2d-57.55511987076555!3d-38.05087484266043!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9584de0a949d16d9%3A0x2bf3db8497eb780f!2sFigueroa%20Alcorta%201499%2C%20B7603BUQ%20Mar%20del%20Plata%2C%20Provincia%20de%20Buenos%20Aires!5e0!3m2!1ses!2sar!4v1630346064185!5m2!1ses!2sar"
-              width="100%"
-              height="450"
-              loading="lazy"
-            ></iframe>
+            <Map destination={destination} />
           </section>
           <section className="flex flex-col py-4">
             <div className="flex">
@@ -70,8 +70,9 @@ const pages = () => {
           </section>
         </div>
       </div>
+
     </>
   );
 };
 
-export default pages;
+export default App;
