@@ -1,8 +1,9 @@
 "use client";
+import React from "react";
 import {
   useLoadScript,
   GoogleMap,
-  DirectionsRenderer,
+  DirectionsRenderer
 } from "@react-google-maps/api";
 import { useState, useEffect, ReactElement } from "react";
 
