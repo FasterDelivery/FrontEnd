@@ -70,7 +70,6 @@ const App: React.FC = () => {
           </section>
         </div>
       </div>
-
     </>
   );
 };

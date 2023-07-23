@@ -1,10 +1,12 @@
 "use client";
+import React from "react";
 import {
   useLoadScript,
   GoogleMap,
-  DirectionsRenderer,
+  DirectionsRenderer
 } from "@react-google-maps/api";
 import { useState, useEffect, ReactElement } from "react";
+import Spinner from "../Components/spinner";
 
 const mapOptions = {
   disableDefaultUI: true,
@@ -88,9 +90,7 @@ const Mapa = ({
           )}
         </GoogleMap>
       ) : (
-        <div className="flex justify-center pt-40 h-screen">
-          <div className="border-t-8 border-orange-500 rounded-full animate-spin ease-linear w-12 h-12"></div>
-        </div>
+        <Spinner />
       )}
     </>
   );
