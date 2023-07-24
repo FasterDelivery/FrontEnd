@@ -42,7 +42,7 @@ const Page = () => {
   useEffect(() => {
     const getData = async () => {
       const getDataFetch = await axios.get(
-        "http://localhost:3004/api/user/deliveries"
+        "https://3.91.204.112/api/user/deliveries"
       );
 
       getDataFetch ? setStateDeliveryData(getDataFetch.data.allUsers) : false;
