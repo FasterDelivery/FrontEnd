@@ -237,7 +237,7 @@ const Index = () => {
                 </section>
               </div>
               <Link
-                href={"packages"}
+                href={"/managepackages"}
                 className="flex items-center justify-center bg-dark-blue-button rounded mt-4 w-25vw h-5vh text-white font-bold"
               >
                 <h3>VER PAQUETES</h3>
