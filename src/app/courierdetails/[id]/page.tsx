@@ -44,7 +44,7 @@ const Page = ({ params }: { params: { id: string } }) => {
   useEffect(() => {
     const getData = async () => {
       const getDataFetch = await axios.get(
-        `http://localhost:3004/api/user/deliveries/${params.id}`
+        `https://3.91.204.112/api/user/deliveries/${params.id}`
       );
       getDataFetch ? setStateDeliveryData(getDataFetch.data.user) : false;
     };
@@ -54,7 +54,7 @@ const Page = ({ params }: { params: { id: string } }) => {
   useEffect(() => {
     const getDataPackages = async () => {
       const getDataFetchPackages = await axios.get(
-        `http://localhost:3004/api/packages/${params.id}/packages`
+        `https://3.91.204.112/api/packages/${params.id}/packages`
       );
       getDataFetchPackages
         ? setStatePackagesData(getDataFetchPackages.data.packages)
