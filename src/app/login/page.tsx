@@ -23,8 +23,16 @@ export default function Login() {
       })
       .then((response) => {
         const token = response.data.token;
-        if (response.data.user.isAdmin) router.push("manageorders");
-        else {
+        console.log(token);
+        if (response.data.user.isAdmin) {
+          const now = new Date();
+          const item = {
+            value: token,
+            expiry: now.getTime() + 60 * 1000 // Convierte a milisegundos
+          };
+          localStorage.setItem("session", JSON.stringify(item));
+          router.push("manageorders");
+        } else {
           router.push(`/affidavit?id=${response.data.user.id}?token=${token}`);
         }
       })

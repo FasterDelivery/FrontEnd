@@ -171,7 +171,12 @@ export default function DeclaracionJurada() {
               </button>
             </Link>
           ) : (
-            false
+            <button
+              type="button"
+              className="bg-gray-300 text-white rounded-xl w-32 h-12 mt-4 font-sans font-bold"
+            >
+              Continuar
+            </button>
           )}
         </div>
       </div>

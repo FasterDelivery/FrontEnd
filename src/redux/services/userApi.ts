@@ -1,8 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 const accesToken =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImVtYWlsIjoiYWRtaW5AYWRtaW4uY29tIiwicGFzc3dvcmQiOiIkMmIkMDkkS2YxRmQ1WlIvektvcG4ybGFhUG9VdXBSNXBjd0dvbkg0TXQyQ0c1eS9LcFNUb3BISTQ1eDYiLCJpc0FkbWluIjp0cnVlfSwiaWF0IjoxNjkwMDYyOTY5LCJleHAiOjE2OTAwNzAxNjl9.t-hZZptL2OYGDl_u_bAAx_pgfAS0pL4OGDV885QzPQw";
-
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImVtYWlsIjoiYWRtaW5AYWRtaW4uY29tIiwicGFzc3dvcmQiOiIkMmIkMDkkZy4xS3ZyTWpiam11NkNKd2N1Rk5FZW4uSmh1cHpGV25lZUFRejAuWVBpcHNDTDdvVTIuaTIiLCJpc0FkbWluIjp0cnVlfSwiaWF0IjoxNjkwMjI2Mjg5LCJleHAiOjE2OTAyMzM0ODl9.D1pcgzMoVKXIH9cxsDReLE1T-W9X88-OquK9A3_btpk";
 type Moto = {
   allUsers: [
     id: any,
@@ -17,7 +16,7 @@ type Moto = {
 export const userApi = createApi({
   reducerPath: "userApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:3001/api/user/",
+    baseUrl: "https://3.91.204.112/api/user/",
     prepareHeaders: (headers) => {
       headers.set("Authorization", `Bearer ${accesToken}`);
     }
