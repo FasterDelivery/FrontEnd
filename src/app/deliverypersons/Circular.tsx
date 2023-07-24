@@ -7,21 +7,29 @@ import Link from "next/link";
 interface Props {
   percentage: number;
   name: string;
-  state: string;
+  surname: string;
+  status: string;
+  id: number;
 }
 
-const Circular: React.FC<Props> = ({ percentage, name, state }) => {
+const Circular: React.FC<Props> = ({
+  percentage,
+  name,
+  surname,
+  status,
+  id
+}) => {
   const obj: { [key: string]: string } = {
-    Inactivo: "#FF6B6B",
+    inactive: "#FF6B6B",
     Finalizó: "#96DB76",
     "Viaje en curso": "#217BCE"
   };
 
-  const color = obj[state] || "";
+  const color = obj[status] || "";
 
   return (
     <>
-      <Link href="courier_details">
+      <Link href={`courierdetails/${id}`}>
         <div
           id="container"
           className="flex w-90 py-4 mx-auto items-center sm:justify-between"
@@ -38,6 +46,7 @@ const Circular: React.FC<Props> = ({ percentage, name, state }) => {
           </section>
           <section id="container-state" className="flex flex-col ml-8 w-45">
             <p className="my-0 mb-2 font-bold">{name}</p>
+            <p className="my-0 mb-2 font-bold">{surname}</p>
             <div className="flex items-center">
               <p className="my-0 mr-2 h-2 w-2 rounded-lg bg-cyan-text"></p>
               <p
@@ -45,7 +54,7 @@ const Circular: React.FC<Props> = ({ percentage, name, state }) => {
                 className="my-0 text-cyan-text font-bold"
                 style={{ color: `${color}` }}
               >
-                {state}
+                {status}
               </p>
             </div>
           </section>

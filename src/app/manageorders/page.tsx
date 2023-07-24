@@ -19,11 +19,11 @@ interface Day {
 }
 
 const days: Day[] = [
-  { id: 10, name: "Lun" },
-  { id: 11, name: "Mar" },
-  { id: 12, name: "Mié" },
-  { id: 13, name: "Jue" },
-  { id: 14, name: "Vie" }
+  { id: 24, name: "Lun" },
+  { id: 25, name: "Mar" },
+  { id: 26, name: "Mié" },
+  { id: 27, name: "Jue" },
+  { id: 28, name: "Vie" }
 ];
 
 const Index = () => {
