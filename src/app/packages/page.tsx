@@ -134,7 +134,7 @@ const GetPackages = () => {
                 </div>
               );
             })}
-            <Link href="reparto">
+            <Link href="delivery">
               <Button buttonText="INICIAR JORNADA" />
             </Link>
           </div>
