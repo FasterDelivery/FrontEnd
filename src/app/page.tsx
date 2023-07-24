@@ -43,9 +43,9 @@ export default function HomePage() {
             Authorization: `Bearer ${token}`
           }
         });
+        if (response.data.isAdmin) return router.push("/manageorders");
         setUser(response.data);
         const id = response.data.id;
-
         const result = await axios.get(
           `https://3.91.204.112/api/packages/${id}/packages`,
           {
