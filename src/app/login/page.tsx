@@ -31,9 +31,9 @@ export default function Login() {
             expiry: now.getTime() + 60 * 1000 // Convierte a milisegundos
           };
           localStorage.setItem("session", JSON.stringify(item));
-          router.push("manageorders");
+           return router.push("manageorders");
         } else {
-          router.push(`/affidavit?id=${response.data.user.id}?token=${token}`);
+          return router.push(`/affidavit?id=${response.data.user.id}?token=${token}`);
         }
       })
       .catch(() => {
