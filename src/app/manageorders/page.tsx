@@ -1,5 +1,6 @@
 "use client";
-import React from "react";
+/* eslint-disable */
+import React, { useEffect } from "react";
 import Image from "next/image";
 import avatar from "../Assets/Ellipse 10.png";
 import dropdown from "../Assets/dropdown.png";
@@ -11,6 +12,10 @@ import { useState } from "react";
 import BackButton from "app/Components";
 // import CircularProgressBar from "./CircularProgressBar";
 import "./page.css";
+import axios from "axios";
+import Link from "next/link";
+import Swal from "sweetalert2";
+import { useSelector } from "react-redux";
 
 interface Day {
   id: number;
@@ -19,27 +24,90 @@ interface Day {
 }
 
 const days: Day[] = [
-  { id: 10, name: "Lun" },
-  { id: 11, name: "Mar" },
-  { id: 12, name: "Mié" },
-  { id: 13, name: "Jue" },
-  { id: 14, name: "Vie" }
+  { id: 17, name: "Lun" },
+  { id: 18, name: "Mar" },
+  { id: 19, name: "Mié" },
+  { id: 20, name: "Jue" },
+  { id: 21, name: "Vie" }
 ];
 
 const Index = () => {
-  const [isExpanded, setIsExpanded] = useState<boolean>(false);
-  const handleToggle = () => {
-    setIsExpanded(!isExpanded);
+  const [isExpanded, setIsExpanded] = useState<boolean>(false),
+    dateActually = new Date(),
+    [stateController, setStateController] = useState({
+      allPackages: [],
+      packagesActives: [],
+      deliveryPersons: [],
+      usersActives: [],
+      packagesPercentage: 0,
+      usersPercentage: 0
+    }),
+    handleToggle = () => {
+      setIsExpanded(!isExpanded);
+    };
+
+  const calcularPorcentaje = (cantidad: number, total: number) => {
+    return Math.round((cantidad / total) * 100);
   };
 
-  const percentage = 80;
-  const percentage2 = 20;
+  useEffect(() => {
+    const getDataDeliveryPers = async () => {
+      const request1 = axios.get("http://localhost:3004/api/packages");
+      const request2 = axios.get("http://localhost:3004/api/user/deliveries");
+
+      axios
+        .all([request1, request2])
+        .then(
+          axios.spread((response1, response2) => {
+            // Maneja las respuestas individuales aquí
+            const packages = response1.data.allPackages,
+              users = response2.data.allUsers;
+
+            const packagesActives = packages.filter(
+              (packages: { status: string }) => packages.status === "entregado"
+            );
+
+            const usersActives = users.filter(
+              (users: { status: string }) => users.status === "active"
+            );
+
+            setStateController({
+              ...stateController,
+              allPackages: packages,
+              packagesActives: packagesActives,
+              deliveryPersons: users,
+              usersActives: usersActives,
+              usersPercentage: calcularPorcentaje(
+                parseFloat(usersActives.length),
+                parseFloat(users.length)
+              ),
+              packagesPercentage: calcularPorcentaje(
+                parseFloat(packagesActives.length),
+                parseFloat(packages.length)
+              )
+            });
+          })
+        )
+        .catch((error) => {
+          // Maneja los errores aquí
+          console.log(error);
+
+          Swal.fire({
+            title: "Error",
+            text: `${error}`,
+            icon: "error",
+            confirmButtonColor: "#217BCE"
+          });
+        });
+    };
+    getDataDeliveryPers();
+  }, []);
 
   return (
-    <div className="shadow-lg mx-auto w-90">
+    <div className="shadow-lg mx-auto w-full">
       <Navbar />
       <BackButton />
-      <div className="shadow-lg rounded-md w-full my-4 flex flex-row items-centerjustify-between  p-4">
+      <div className="shadow-lg rounded-md mx-auto w-90 my-4 flex flex-row items-centerjustify-between  p-4">
         <Image src={avatar} alt="logo" className="w-20 h-20" />
         <div>
           <div className="flex justify-between mx-4">
@@ -49,7 +117,7 @@ const Index = () => {
           <p className="font-bold text-lg font-sans ml-4"> Gestionar pedidos</p>
         </div>
       </div>
-      <div className="rounded-md w-full my-4 flex flex-row justify-center p-4">
+      <div className="rounded-md w-90 mx-auto my-4 flex flex-row justify-center p-4">
         <ul className="w-full flex justify-around overflow-x-auto overflow-hidden whitespace-nowrap items-center">
           {days.map((day) => (
             <li
@@ -83,7 +151,7 @@ const Index = () => {
           className="cursor-pointer w-90 flex justify-between font-bold"
           onClick={handleToggle}
         >
-          09/07/23 - Detalles
+          {`${dateActually.toString().slice(0, 15)} - Detalles`}
           <Image src={dropdown} alt="dropdown" width={13} height={9} />
         </h1>
         {isExpanded && (
@@ -97,11 +165,15 @@ const Index = () => {
                   className="circular-progress"
                   style={{
                     background: `conic-gradient(${
-                      percentage2 < 50 ? "#6373F7" : "#FEBD93"
-                    } ${percentage2 * 3.6}deg, #ededed 0deg)`
+                      stateController.usersPercentage < 50
+                        ? "#6373F7"
+                        : "#FEBD93"
+                    } ${
+                      stateController.usersPercentage * 3.6
+                    }deg, #ededed 0deg)`
                   }}
                 >
-                  <span className="absolute font-bold">{`${percentage2}%`}</span>
+                  <span className="absolute font-bold">{`${stateController.usersPercentage}%`}</span>
                 </section>
                 <section
                   id="container-state"
@@ -114,7 +186,7 @@ const Index = () => {
                       className="my-0 text-gray-paragraphs"
                       style={{ color: "black" }}
                     >
-                      2/10 activos
+                      {`${stateController.allPackages.length}/${stateController.packagesActives.length} activos`}
                     </p>
                   </div>
                 </section>
@@ -122,9 +194,12 @@ const Index = () => {
                   <Image src={avatar2} alt={"profile-picture"} />
                 </section>
               </div>
-              <button className="bg-dark-blue-button rounded mt-4 w-25vw h-5vh text-white font-bold">
-                VER REPARTIDORES
-              </button>
+              <Link
+                href={"deliverypersons"}
+                className="flex items-center justify-center bg-dark-blue-button rounded mt-4 w-25vw h-5vh text-white font-bold"
+              >
+                <h3>REPARTIDORES</h3>
+              </Link>
             </>
             <>
               <div
@@ -135,11 +210,15 @@ const Index = () => {
                   className="circular-progress"
                   style={{
                     background: `conic-gradient(${
-                      percentage < 50 ? "#6373F7" : "#FEBD93"
-                    } ${percentage * 3.6}deg, #ededed 0deg)`
+                      stateController.packagesPercentage < 50
+                        ? "#6373F7"
+                        : "#FEBD93"
+                    } ${
+                      stateController.packagesPercentage * 3.6
+                    }deg, #ededed 0deg)`
                   }}
                 >
-                  <span className="absolute font-bold">{`${percentage}%`}</span>
+                  <span className="absolute font-bold">{`${stateController.packagesPercentage}%`}</span>
                 </section>
                 <section
                   id="container-state"
@@ -152,14 +231,17 @@ const Index = () => {
                       className="my-0 text-gray-paragraphs"
                       style={{ color: "black" }}
                     >
-                      16/20 repartos
+                      {`${stateController.allPackages.length}/${stateController.packagesActives.length} repartos`}
                     </p>
                   </div>
                 </section>
               </div>
-              <button className="bg-dark-blue-button rounded mt-4 w-25vw h-5vh text-white font-bold">
-                VER PAQUETES
-              </button>
+              <Link
+                href={"packages"}
+                className="flex items-center justify-center bg-dark-blue-button rounded mt-4 w-25vw h-5vh text-white font-bold"
+              >
+                <h3>VER PAQUETES</h3>
+              </Link>
             </>
           </>
         )}
