@@ -195,7 +195,7 @@ export default function SignUp() {
           REGISTRARSE
         </button>
       </form>
-      <a className="text-[#217BCE] my-2 font-sans font-bold" href="">
+      <a className="text-[#217BCE] my-2 font-sans font-bold" href="/login">
         Iniciar Sesión
       </a>
     </div>
