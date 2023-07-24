@@ -24,11 +24,11 @@ interface Day {
 }
 
 const days: Day[] = [
-  { id: 17, name: "Lun" },
-  { id: 18, name: "Mar" },
-  { id: 19, name: "Mié" },
-  { id: 20, name: "Jue" },
-  { id: 21, name: "Vie" }
+  { id: 24, name: "Lun" },
+  { id: 25, name: "Mar" },
+  { id: 26, name: "Mié" },
+  { id: 27, name: "Jue" },
+  { id: 28, name: "Vie" }
 ];
 
 const Index = () => {
@@ -52,8 +52,8 @@ const Index = () => {
 
   useEffect(() => {
     const getDataDeliveryPers = async () => {
-      const request1 = axios.get("https://3.91.204.112/api/packages");
-      const request2 = axios.get("https://3.91.204.112/api/user/deliveries");
+      const request1 = axios.get("https://3.91.204.112/api/packages/");
+      const request2 = axios.get("https://3.91.204.112/api/user/deliveries/");
 
       axios
         .all([request1, request2])
@@ -237,7 +237,7 @@ const Index = () => {
                 </section>
               </div>
               <Link
-                href={"packages"}
+                href={"managepackages"}
                 className="flex items-center justify-center bg-dark-blue-button rounded mt-4 w-25vw h-5vh text-white font-bold"
               >
                 <h3>VER PAQUETES</h3>
