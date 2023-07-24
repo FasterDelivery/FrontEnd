@@ -91,7 +91,7 @@ const Page = () => {
             </button>
           </section>
           {stateDeliveryData
-            ? usersActually.map((User:I_User, index) => (
+            ? usersActually.map((User: I_User, index) => (
                 <Circular
                   percentage={User.percentage}
                   name={User.name}
