@@ -52,8 +52,8 @@ const Index = () => {
 
   useEffect(() => {
     const getDataDeliveryPers = async () => {
-      const request1 = axios.get("http://localhost:3004/api/packages");
-      const request2 = axios.get("http://localhost:3004/api/user/deliveries");
+      const request1 = axios.get("https://3.91.204.112/api/packages");
+      const request2 = axios.get("https://3.91.204.112/api/user/deliveries");
 
       axios
         .all([request1, request2])
