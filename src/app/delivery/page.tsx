@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React from "react";
 import Map from "./mapa";
 import Image from "next/image";
@@ -12,14 +12,17 @@ const App: React.FC = () => {
     lng: -46.98865870252204
   };
 
-  const HandleFinalizar =  async () => {
-    await axios.put("http://localhost:3001/api/packages/2/edit/package/42"), {
-      status: "entregado"
-    }, { headers: {
-      Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImVtYWlsIjoidXNlckB1c2VyLmNvbSIsInBhc3N3b3JkIjoiJDJiJDA5JHRyRDlvZnh1L0dNSDA0cHdqN3ZZWWVUenEwTlVVOGp0a0xjZ0dQV2dEdVVqVVpRWkE5ZC9TIiwiaXNBZG1pbiI6ZmFsc2V9LCJpYXQiOjE2OTAzMDM0MDAsImV4cCI6MTY5MDMxMDYwMH0.B1SYONzXpM8zGAc-mzI2qrh6kGMUBF5UprMT5n5gnns`
-    }}
-  }
-
+  const HandleFinalizar = async () => {
+    await axios.put("http://localhost:3001/api/packages/2/edit/package/42"),
+      {
+        status: "entregado"
+      },
+      {
+        headers: {
+          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImVtYWlsIjoidXNlckB1c2VyLmNvbSIsInBhc3N3b3JkIjoiJDJiJDA5JHRyRDlvZnh1L0dNSDA0cHdqN3ZZWWVUenEwTlVVOGp0a0xjZ0dQV2dEdVVqVVpRWkE5ZC9TIiwiaXNBZG1pbiI6ZmFsc2V9LCJpYXQiOjE2OTAzMDM0MDAsImV4cCI6MTY5MDMxMDYwMH0.B1SYONzXpM8zGAc-mzI2qrh6kGMUBF5UprMT5n5gnns`
+        }
+      };
+  };
 
   return (
     <>

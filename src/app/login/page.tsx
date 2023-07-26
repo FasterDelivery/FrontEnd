@@ -24,7 +24,7 @@ export default function Login() {
       .then((response) => {
         const token = response.data.token;
         console.log(response.data, "Esta es la data");
-        
+
         console.log(token);
         if (response.data.user.isAdmin) {
           const now = new Date();
@@ -33,7 +33,7 @@ export default function Login() {
             expiry: now.getTime() + 60 * 1000 // Convierte a milisegundos
           };
           console.log(response.data);
-          
+
           localStorage.setItem("session", JSON.stringify(item));
           return router.push("manageorders");
         } else {

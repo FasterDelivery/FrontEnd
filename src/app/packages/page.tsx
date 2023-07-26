@@ -1,7 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { BackButton, Button, Navbar } from "app/Components";
-import Link from "next/link";
+import { BackButton, Navbar } from "app/Components";
 import axios from "axios";
 import Image from "next/image";
 import imagen from "../Assets/package-icon-vector.jpg";
@@ -12,7 +11,6 @@ const GetPackages = () => {
   const router = useRouter();
   const [packagesDay, setPackagesDay] = useState<any>([]);
   const [packagesTaken, setPackagesTaken] = useState<any>([]);
-  const [buttonText, setButtonText] = useState<any>("Tomar");
 
   const currentDate = new Date().toISOString().slice(0, 10);
 
@@ -50,7 +48,7 @@ const GetPackages = () => {
   const isPackageTaken = (paquete: any) => {
     const isTaken = packagesTaken.some(
       (takenPackage: any) => takenPackage.id === paquete.id
-    )
+    );
     return isTaken;
   };
 
@@ -143,7 +141,7 @@ const GetPackages = () => {
                             className="w-20 bg-blue-500 hover:bg-blue-600 text-white font-semibold text-xs py-1 px-2 rounded mt-2"
                             onClick={() => handleTomarPaquete(paquete)}
                           >
-                            {buttonText}
+                            Tomar
                           </button>
                         )}
                       </p>
