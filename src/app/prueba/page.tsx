@@ -6,7 +6,7 @@ import { useGetUsersQuery } from "../../redux/services/userApi";
 import Spinner from "../Components/spinner";
 
 function HomePage() {
-  const count = useAppSelector((state) => state.counterReducer.counter);
+  const count = useAppSelector((state) => state.counter);
   const dispatch = useAppDispatch();
   const { data, error, isLoading, isFetching } = useGetUsersQuery(null);
 
@@ -18,7 +18,7 @@ function HomePage() {
 
   return (
     <div>
-      <h1 className="text-center text-2xl">Total: {count}</h1>
+      <h1 className="text-center text-2xl">Total: {count.counter}</h1>
       <div className="flex justify-center bg-red-100 gap-x-2">
         <button
           className="bg-green-500 px-3 py-2 rounded-md"

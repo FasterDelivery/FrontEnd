@@ -1,6 +1,6 @@
 "use client";
 import axios from "axios";
-import React, { FormEvent, useState } from "react";
+import React, { FormEvent } from "react";
 import Image from "next/image";
 import logo from "../Assets/logo.png";
 import useInput from "../hooks/useInput";
@@ -16,28 +16,23 @@ export default function SignUp() {
   const email = useInput();
   const address = useInput();
   const phone = useInput();
-  const [error, setError] = useState<boolean>(true);
 
-  const checkErrors = () => {
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    document.getElementById("firstName")?.blur();
+    document.getElementById("lastName")?.blur();
+    document.getElementById("email")?.blur();
+    document.getElementById("password")?.blur();
+    document.getElementById("confirmPassword")?.blur();
+    document.getElementById("phone")?.blur();
+    document.getElementById("address")?.blur();
+
     if (
       password.passwordErrors.length > 0 ||
       confirmPassword.confirmPasswordErrors.length > 0 ||
       email.emailErrors.length > 0 ||
       phone.phoneErrors.length > 0
-    )
-      setError(true);
-    else setError(false);
-  };
-
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    password.validatePassword();
-    confirmPassword.validateConfirmPassword(password.value);
-    email.validateEmail();
-    phone.validatePhone();
-    checkErrors();
-
-    if (error) {
+    ) {
       Swal.fire({
         title: "Error",
         text: "Error de registro. Revisá los datos.",
@@ -118,6 +113,9 @@ export default function SignUp() {
             placeholder="email@example.com"
             {...email}
             required
+            onBlur={() => {
+              email.validateEmail();
+            }}
           />
           {email.emailErrors ? (
             <span className="text-red-500 text-sm">{email.emailErrors[0]}</span>
@@ -134,6 +132,7 @@ export default function SignUp() {
             placeholder="Contraseña"
             {...password}
             required
+            onBlur={() => password.validatePassword()}
           />
           {password.passwordErrors ? (
             <span className="text-red-500 text-sm">
@@ -152,6 +151,9 @@ export default function SignUp() {
             placeholder="Confirmar Contraseña"
             {...confirmPassword}
             required
+            onBlur={() =>
+              confirmPassword.validateConfirmPassword(password.value)
+            }
           />
           {confirmPassword.confirmPasswordErrors ? (
             <span className="text-red-500 text-sm">
@@ -170,6 +172,7 @@ export default function SignUp() {
             placeholder="Teléfono"
             {...phone}
             required
+            onBlur={() => phone.validatePhone()}
           />
           {phone.phoneErrors ? (
             <span className="text-red-500 text-sm">{phone.phoneErrors[0]}</span>
