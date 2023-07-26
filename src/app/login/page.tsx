@@ -1,6 +1,8 @@
 "use client";
 import axios from "axios";
 import React, { FormEvent } from "react";
+import { useAppSelector, useAppDispatch } from "../../redux/hooks";
+import { setUser } from "redux/features/users";
 import Image from "next/image";
 import logo from "../Assets/logo.png";
 import { Button } from "app/Components";
@@ -10,6 +12,8 @@ import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
 
 export default function Login() {
+  const dispatch = useAppDispatch();
+  const user = useAppSelector((state) => state.users);
   const router = useRouter();
   const email = useInput();
   const password = useInput();
@@ -23,7 +27,7 @@ export default function Login() {
       })
       .then((response) => {
         const token = response.data.token;
-        console.log(token);
+        dispatch(setUser(response.data.user));
         if (response.data.user.isAdmin) {
           const now = new Date();
           const item = {
@@ -47,7 +51,7 @@ export default function Login() {
         });
       });
   };
-
+  console.log(user);
   return (
     <div className="flex flex-col justify-center m-auto items-center">
       <div className="mt-8">

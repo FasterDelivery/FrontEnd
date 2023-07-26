@@ -1,7 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { BackButton, Navbar } from "app/Components";
-import Link from "next/link";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
@@ -33,11 +32,12 @@ export default function DeclaracionJurada() {
 
   const handleContinue = async () => {
     const now = new Date();
+    const { bebidas, medicamentos, emocional } = declaraciones;
+    const session = JSON.parse(localStorage.getItem("session") || "{}");
     const urlParams = new URLSearchParams(window.location.search);
     const idQuery = urlParams.get("id");
     const id = idQuery?.split("?")[0];
-    const token = idQuery?.split("token=")[1];
-    const { bebidas, medicamentos, emocional } = declaraciones;
+    const token = session.value || idQuery?.split("token=")[1];
     await axios.post(`https://3.91.204.112/api/ddjj`, {
       dayDeclaracionJurada: now.toString(),
       bebidasAlcoholicas: bebidas ? "yes" : "no",
@@ -50,7 +50,7 @@ export default function DeclaracionJurada() {
       expiry: now.getTime() + 60 * 1000 // Convierte a milisegundos
     };
     localStorage.setItem("session", JSON.stringify(item));
-    router.push("/");
+    return router.push("/");
   };
 
   console.log(declaraciones);
@@ -161,15 +161,13 @@ export default function DeclaracionJurada() {
           {!declaraciones.bebidas &&
           !declaraciones.medicamentos &&
           !declaraciones.emocional ? (
-            <Link href="/">
-              <button
-                type="button"
-                className="bg-blue-800 text-white rounded-xl w-32 h-12 mt-4 font-sans font-bold"
-                onClick={handleContinue}
-              >
-                Continuar
-              </button>
-            </Link>
+            <button
+              type="button"
+              className="bg-blue-800 text-white rounded-xl w-32 h-12 mt-4 font-sans font-bold"
+              onClick={handleContinue}
+            >
+              Continuar
+            </button>
           ) : (
             <button
               type="button"
