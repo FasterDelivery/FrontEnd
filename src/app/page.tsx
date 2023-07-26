@@ -1,85 +1,77 @@
 "use client";
 import axios from "axios";
 import React, { useState, useEffect } from "react";
+import { useAppSelector, useAppDispatch } from "../redux/hooks";
+import { setUser } from "redux/features/users";
 import Image from "next/image";
 import { Navbar, Button } from "../app/Components";
 import dropdown from "./Assets/dropdown.png";
 import trash from "./Assets/trash.png";
 import Link from "next/link";
 import { Package } from "./interfaces/packages";
-import { User } from "./interfaces/users";
 import { useRouter } from "next/navigation";
 import imagen from "../app/Assets/package-icon-vector.jpg";
 
 type DropdownState = boolean;
 
 export default function HomePage() {
+  const dispatch = useAppDispatch();
+  const user = useAppSelector((state) => state.users);
   const router = useRouter();
   const [delliveredDropdownOpen, setDeliveredDropdownOpen] =
     useState<DropdownState>(false);
   const [pendingDropdownOpen, setPendingDropdownOpen] =
     useState<DropdownState>(false);
-  const [user, setUser] = useState<User>({
-    id: 0,
-    name: "",
-    lastname: "",
-    email: "",
-    address: "",
-    phone: "",
-    isAdmin: false
-  });
   const [pending, setPending] = useState<Package[]>([]);
   const [delivered, setDelivered] = useState<Package[]>([]);
   const [onCourse, setOnCourse] = useState<Package[]>([]);
-  const [token, setToken] = useState<string>("");
 
-  console.log(user, onCourse);
+  const fetchUser = async (token: string) => {
+    try {
+      const response = await axios.get("https://3.91.204.112/api/user/me", {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      dispatch(setUser(response.data));
+      if (response.data.isAdmin) return router.push("/manageorders");
+      return response.data;
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
+  };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get("https://3.91.204.112/api/user/me", {
+  const fetchPackages = async (id: number, token: string) => {
+    try {
+      const response = await axios.get(
+        `https://3.91.204.112/api/packages/${id}/packages`,
+        {
           headers: {
             Authorization: `Bearer ${token}`
           }
-        });
-        if (response.data.isAdmin) return router.push("/manageorders");
-        setUser(response.data);
-        const id = response.data.id;
-        const result = await axios.get(
-          `https://3.91.204.112/api/packages/${id}/packages`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`
-            }
-          }
-        );
-        handleFilterPackages(result.data.packages);
-      } catch (error) {
-        console.log(error);
-      }
-    };
+        }
+      );
+      handleFilterPackages(response.data.packages);
+      return response.data.packages;
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
+  };
 
-    if (!localStorage.getItem("session")) {
+  useEffect(() => {
+    const json = JSON.parse(localStorage.getItem("session") || "{}");
+
+    if (!localStorage.getItem("session") || !json.value) {
       router.push("/login");
       return;
     }
-    const session = localStorage.getItem("session") || "";
-    let json;
 
-    try {
-      json = JSON.parse(session);
-    } catch (error) {
-      // Handle the error gracefully (if needed)
-      console.error("Error parsing JSON:", error);
+    if (json.value !== "" && user.id === 0) {
+      fetchUser(json.value);
     }
-
-    if (json && json.value) {
-      setToken(json.value);
-    }
-
-    fetchData();
-  }, [token]);
+  }, []);
 
   useEffect(() => {
     // Check if user is defined and now is greater than the expiry time
@@ -89,7 +81,9 @@ export default function HomePage() {
       const expiry = session.expiry || 0;
 
       if (now > expiry) {
-        router.push(`affidavit?id=${user.id}&token=${token}`);
+        router.push(`affidavit?id=${user.id}&token=${session.value}`);
+      } else {
+        fetchPackages(user.id, session.value);
       }
     }
   }, [user]);
@@ -105,6 +99,8 @@ export default function HomePage() {
       packages.filter((paquete: Package) => paquete.status === "en curso")
     );
   };
+
+  console.log(user, onCourse);
 
   return (
     <div className="mx-auto w-90">
