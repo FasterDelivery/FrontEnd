@@ -27,7 +27,7 @@ const GetPackages = () => {
           "http://localhost:3001/api/packages/packages",
           {
             headers: {
-              Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImVtYWlsIjoidXNlckB1c2VyLmNvbSIsInBhc3N3b3JkIjoiJDJiJDA5JHRyRDlvZnh1L0dNSDA0cHdqN3ZZWWVUenEwTlVVOGp0a0xjZ0dQV2dEdVVqVVpRWkE5ZC9TIiwiaXNBZG1pbiI6ZmFsc2V9LCJpYXQiOjE2OTA0MDAzMjQsImV4cCI6MTY5MDQwNzUyNH0.Akzghff2Rm_M5b1viT1ERTVN2xGx5Pm8N27Xt07WtmA`
+              Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImVtYWlsIjoidXNlckB1c2VyLmNvbSIsInBhc3N3b3JkIjoiJDJiJDA5JHRyRDlvZnh1L0dNSDA0cHdqN3ZZWWVUenEwTlVVOGp0a0xjZ0dQV2dEdVVqVVpRWkE5ZC9TIiwiaXNBZG1pbiI6ZmFsc2V9LCJpYXQiOjE2OTA0MDQ2NjQsImV4cCI6MTY5MDQxMTg2NH0.s7tnUnYodsiO3R_LdYNZHvPpSVeCpFAT9q6sYoh1TIQ`
             }
           }
         );
@@ -55,7 +55,7 @@ const GetPackages = () => {
   const handleConfirmarPaquetes = async (paquetes: any) => {
     if (packagesTaken.length > 10) {
       return Swal.fire({
-        title: "Declaración Jurada",
+        title: "Advertencia",
         text: `No se pueden tomar más de 10 (diez) pedidos por día`,
         icon: "warning",
         confirmButtonText: "Continuar",
@@ -77,7 +77,7 @@ const GetPackages = () => {
             {
               headers: {
                 Authorization:
-                  "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImVtYWlsIjoidXNlckB1c2VyLmNvbSIsInBhc3N3b3JkIjoiJDJiJDA5JHRyRDlvZnh1L0dNSDA0cHdqN3ZZWWVUenEwTlVVOGp0a0xjZ0dQV2dEdVVqVVpRWkE5ZC9TIiwiaXNBZG1pbiI6ZmFsc2V9LCJpYXQiOjE2OTA0MDAzMjQsImV4cCI6MTY5MDQwNzUyNH0.Akzghff2Rm_M5b1viT1ERTVN2xGx5Pm8N27Xt07WtmA"
+                  "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImVtYWlsIjoidXNlckB1c2VyLmNvbSIsInBhc3N3b3JkIjoiJDJiJDA5JHRyRDlvZnh1L0dNSDA0cHdqN3ZZWWVUenEwTlVVOGp0a0xjZ0dQV2dEdVVqVVpRWkE5ZC9TIiwiaXNBZG1pbiI6ZmFsc2V9LCJpYXQiOjE2OTA0MDQ2NjQsImV4cCI6MTY5MDQxMTg2NH0.s7tnUnYodsiO3R_LdYNZHvPpSVeCpFAT9q6sYoh1TIQ"
               }
             }
           );
