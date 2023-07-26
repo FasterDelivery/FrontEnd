@@ -48,7 +48,6 @@ export default function HomePage() {
           headers: {
             Authorization: `Bearer ${token}`
           }
-
         }
       );
       dispatch(setPackages(response.data.packages));
@@ -58,7 +57,6 @@ export default function HomePage() {
       return null;
     }
   };
-
 
   useEffect(() => {
     const json = JSON.parse(localStorage.getItem("session") || "{}");
@@ -134,7 +132,7 @@ export default function HomePage() {
                       <div className="flex flex-col justify-between h-full">
                         <div className="flex justify-between">
                           <p className="font-sans text-sm mr-8">
-                            {paquete.address}
+                            {`${paquete.street} ${paquete.number} ${paquete.city}`}
                           </p>
                           <Image
                             className="h-5"
@@ -144,6 +142,9 @@ export default function HomePage() {
                             height={16}
                           />
                         </div>
+                        <p className="font-sans text-sm self-end">
+                          {paquete.clientname}
+                        </p>
                         <p className="font-sans text-sm font-bold self-end">
                           {paquete.status}
                         </p>
@@ -192,7 +193,7 @@ export default function HomePage() {
                       <div className="flex flex-col justify-between h-full">
                         <div className="flex justify-between">
                           <p className="font-sans text-sm mr-8">
-                            {paquete.address}
+                            {`${paquete.street} ${paquete.number} ${paquete.city}`}
                           </p>
                           <Image
                             className="h-5"
@@ -202,6 +203,9 @@ export default function HomePage() {
                             height={16}
                           />
                         </div>
+                        <p className="font-sans text-sm self-end">
+                          {paquete.clientname}
+                        </p>
                         <p className="font-sans text-sm font-bold self-end">
                           {paquete.status}
                         </p>
