@@ -3,6 +3,7 @@ import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { useAppSelector, useAppDispatch } from "../redux/hooks";
 import { setUser } from "redux/features/users";
+import { setPackages } from "redux/features/packages";
 import Image from "next/image";
 import { Navbar, Button } from "../app/Components";
 import dropdown from "./Assets/dropdown.png";
@@ -17,15 +18,12 @@ type DropdownState = boolean;
 export default function HomePage() {
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.users);
+  const packages = useAppSelector((state) => state.packages);
   const router = useRouter();
   const [delliveredDropdownOpen, setDeliveredDropdownOpen] =
     useState<DropdownState>(false);
   const [pendingDropdownOpen, setPendingDropdownOpen] =
     useState<DropdownState>(false);
-  const [pending, setPending] = useState<Package[]>([]);
-  const [delivered, setDelivered] = useState<Package[]>([]);
-  const [onCourse, setOnCourse] = useState<Package[]>([]);
-
   const fetchUser = async (token: string) => {
     try {
       const response = await axios.get("https://3.91.204.112/api/user/me", {
@@ -52,7 +50,7 @@ export default function HomePage() {
           }
         }
       );
-      handleFilterPackages(response.data.packages);
+      dispatch(setPackages(response.data.packages));
       return response.data.packages;
     } catch (error) {
       console.log(error);
@@ -71,7 +69,7 @@ export default function HomePage() {
     if (json.value !== "" && user.id === 0) {
       fetchUser(json.value);
     }
-  }, []);
+  }, [packages]);
 
   useEffect(() => {
     // Check if user is defined and now is greater than the expiry time
@@ -88,19 +86,7 @@ export default function HomePage() {
     }
   }, [user]);
 
-  const handleFilterPackages = (packages: Package[]) => {
-    setPending(
-      packages.filter((paquete: Package) => paquete.status === "pendiente")
-    );
-    setDelivered(
-      packages.filter((paquete: Package) => paquete.status === "entregado")
-    );
-    setOnCourse(
-      packages.filter((paquete: Package) => paquete.status === "en curso")
-    );
-  };
-
-  console.log(user, onCourse);
+  console.log(user, packages);
 
   return (
     <div className="mx-auto w-90">
@@ -123,13 +109,13 @@ export default function HomePage() {
             />
           </div>
           <p className="ml-4 font-sans text-sm">
-            {pending.length === 0
+            {packages.pendiente.length === 0
               ? "No tenés historial de repartos"
-              : `Tenés ${pending.length} paquetes pendientes`}
+              : `Tenés ${packages.pendiente.length} paquetes pendientes`}
           </p>
           {pendingDropdownOpen && (
             <div className="divide-y">
-              {pending.map((paquete: Package, index: number) => {
+              {packages.pendiente.map((paquete: Package, index: number) => {
                 return (
                   <div
                     className="flex justify-between py-4 h-110px w-full"
@@ -181,13 +167,13 @@ export default function HomePage() {
             />
           </div>
           <p className="ml-4 font-sans text-sm">
-            {delivered.length === 0
+            {packages.entregado.length === 0
               ? "No tenés historial de repartos"
-              : `Ya repartiste ${delivered.length} paquetes`}
+              : `Ya repartiste ${packages.entregado.length} paquetes`}
           </p>
           {delliveredDropdownOpen && (
             <div className="divide-y">
-              {delivered.map((paquete: Package, index: number) => {
+              {packages.entregado.map((paquete: Package, index: number) => {
                 return (
                   <div
                     className="flex justify-between py-4 h-110px w-full"
