@@ -27,13 +27,17 @@ export default function Login() {
       })
       .then((response) => {
         const token = response.data.token;
+
         dispatch(setUser(response.data.user));
+
         if (response.data.user.isAdmin) {
           const now = new Date();
           const item = {
             value: token,
             expiry: now.getTime() + 60 * 1000 // Convierte a milisegundos
           };
+          console.log(response.data);
+
           localStorage.setItem("session", JSON.stringify(item));
           return router.push("manageorders");
         } else {
