@@ -32,6 +32,8 @@ export default function HomePage() {
   const [delivered, setDelivered] = useState<Package[]>([]);
   const [onCourse, setOnCourse] = useState<Package[]>([]);
   const [token, setToken] = useState<string>("");
+ 
+
 
   console.log(user, onCourse);
 
@@ -54,6 +56,7 @@ export default function HomePage() {
             }
           }
         );
+       
         handleFilterPackages(result.data.packages);
       } catch (error) {
         console.log(error);

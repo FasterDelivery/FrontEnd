@@ -1,144 +1,165 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BackButton, Button, Navbar } from "app/Components";
 import Link from "next/link";
-
-interface IUbicacion {
-  id: number;
-  nombre: string;
-}
+import axios from "axios";
+import Image from "next/image";
+import imagen from "../Assets/package-icon-vector.jpg";
+import Swal from "sweetalert2";
+import { useRouter } from "next/navigation";
 
 const GetPackages = () => {
-  const ubicaciones: IUbicacion[] = [
-    { id: 1, nombre: "Amenabar 2356, CABA" },
-    { id: 2, nombre: "AV. Carabobo y Rivadavia, CABA" },
-    { id: 3, nombre: "Melian 1242, CABA" }
-  ];
+  const router = useRouter();
+  const [packagesDay, setPackagesDay] = useState<any>([]);
+  const [packagesTaken, setPackagesTaken] = useState<any>([]);
+  const [buttonText, setButtonText] = useState<any>("Tomar");
 
-  const [ubicacionStates, setUbicacionStates] = useState(
-    ubicaciones.map((ubicacion) => ({
-      id: ubicacion.id,
-      checkboxChecked: true,
-      number: 2
-    }))
-  );
+  const currentDate = new Date().toISOString().slice(0, 10);
 
-  const handleCheckboxChange = (id: number) => {
-    setUbicacionStates((prevStates) =>
-      prevStates.map((state) =>
-        state.id === id
-          ? { ...state, checkboxChecked: !state.checkboxChecked }
-          : state
-      )
-    );
+  const handleTomarPaquete = (paquete: any) => {
+    const updatedPackagesTaken = [...packagesTaken];
+    updatedPackagesTaken.push(paquete);
+    setPackagesTaken(updatedPackagesTaken);
   };
 
-  const handleNumberChange = (id: number, increment: number) => {
-    setUbicacionStates((prevStates) =>
-      prevStates.map((state) =>
-        state.id === id ? { ...state, number: state.number + increment } : state
-      )
-    );
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:3001/api/packages/packages",
+          {
+            headers: {
+              Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImVtYWlsIjoidXNlckB1c2VyLmNvbSIsInBhc3N3b3JkIjoiJDJiJDA5JHRyRDlvZnh1L0dNSDA0cHdqN3ZZWWVUenEwTlVVOGp0a0xjZ0dQV2dEdVVqVVpRWkE5ZC9TIiwiaXNBZG1pbiI6ZmFsc2V9LCJpYXQiOjE2OTA0MDAzMjQsImV4cCI6MTY5MDQwNzUyNH0.Akzghff2Rm_M5b1viT1ERTVN2xGx5Pm8N27Xt07WtmA`
+            }
+          }
+        );
+        const allPackagesPending = response.data.allPackages;
+        const allPackagesPendingDay = allPackagesPending.filter(
+          (item: any) => item.deliveryday.slice(0, 10) === currentDate
+        );
+        setPackagesDay(allPackagesPendingDay);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    fetchData();
+  }, []);
+
+  console.log(packagesTaken, "estos los agarro ===========");
+
+  const isPackageTaken = (paquete: any) => {
+    const isTaken = packagesTaken.some(
+      (takenPackage: any) => takenPackage.id === paquete.id
+    )
+    return isTaken;
+  };
+
+  const handleConfirmarPaquetes = async (paquetes: any) => {
+    if (packagesTaken.length > 10) {
+      return Swal.fire({
+        title: "Declaración Jurada",
+        text: `No se pueden tomar más de 10 (diez) pedidos por día`,
+        icon: "warning",
+        confirmButtonText: "Continuar",
+        confirmButtonColor: "#217BCE",
+        customClass: {
+          popup: "sm:w-1/2"
+        }
+      });
+    }
+    try {
+      const updatedPackages = await Promise.all(
+        paquetes.map(async (paquete: any) => {
+          const response = await axios.put(
+            `http://localhost:3001/api/packages/edit/package/${paquete.id}`,
+            {
+              status: "entregado",
+              userId: 2
+            },
+            {
+              headers: {
+                Authorization:
+                  "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImVtYWlsIjoidXNlckB1c2VyLmNvbSIsInBhc3N3b3JkIjoiJDJiJDA5JHRyRDlvZnh1L0dNSDA0cHdqN3ZZWWVUenEwTlVVOGp0a0xjZ0dQV2dEdVVqVVpRWkE5ZC9TIiwiaXNBZG1pbiI6ZmFsc2V9LCJpYXQiOjE2OTA0MDAzMjQsImV4cCI6MTY5MDQwNzUyNH0.Akzghff2Rm_M5b1viT1ERTVN2xGx5Pm8N27Xt07WtmA"
+              }
+            }
+          );
+          router.push("/delivery");
+          return response.data.editedPackage;
+        })
+      );
+
+      console.log("Paquetes actualizados con éxito:", updatedPackages);
+    } catch (error) {
+      console.error("Error al actualizar los paquetes:", error);
+    }
   };
 
   return (
     <>
       <div className="mx-auto w-90">
         <Navbar />
-        <div
-          style={{
-            backgroundColor: "white",
-            height: "100vh",
-            width: "100%"
-          }}
-        >
-          <BackButton />
-          <div
-            className="shadow-lg rounded-md w-full my-4 flex flex-col justify-center p-4"
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center"
-            }}
-          >
-            <div style={{ width: "100%", marginBottom: "30px" }}>
-              <h1 style={{ fontSize: "25px" }}>
-                <strong>Obtener paquetes</strong>
-              </h1>
-              <h5 className="text-red">
-                ¿Cuántos paquetes más vas a repartir hoy?
-              </h5>
-            </div>
-            {ubicaciones.map((ubicacion: IUbicacion) => {
-              const ubicacionState = ubicacionStates.find(
-                (state) => state.id === ubicacion.id
-              );
-              if (!ubicacionState) return null;
+      </div>
 
-              return (
-                <div
-                  style={{
-                    marginTop: "20px",
-                    marginBottom: "20px",
-                    textAlign: "center",
-                    width: "100%"
-                  }}
-                  key={ubicacion.id}
-                >
-                  <h5>{ubicacion.nombre}</h5>
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      width: "100%"
-                    }}
-                  >
-                    <label>
-                      <input
-                        type="checkbox"
-                        checked={ubicacionState.checkboxChecked}
-                        onChange={() => handleCheckboxChange(ubicacion.id)}
-                      />
-                    </label>
-                    <button
-                      style={{
-                        border: "1px solid black",
-                        height: "26px",
-                        width: "26px",
-                        backgroundColor: "white",
-                        borderRadius: "4px",
-                        margin: "30px"
-                      }}
-                      onClick={() => handleNumberChange(ubicacion.id, -1)}
-                    >
-                      -
-                    </button>
-                    {ubicacionState.number}
-                    <button
-                      style={{
-                        border: "1px solid black",
-                        height: "26px",
-                        width: "26px",
-                        backgroundColor: "white",
-                        borderRadius: "4px",
-                        margin: "30px"
-                      }}
-                      onClick={() => handleNumberChange(ubicacion.id, 1)}
-                    >
-                      +
-                    </button>
+      <div className="max-w-md flex flex-col justify-start mx-auto items-center">
+        <div className="shadow-lg rounded-md w-full my-4 flex flex-col justify-center p-4">
+          <BackButton />
+          <div className="flex justify-between mx-4 mt-3">
+            <p className="font-bold text-lg font-sans"> Obtener Paquetes </p>
+          </div>
+
+          <p className="ml-4 font-sans text-sm">
+            {" "}
+            ¿Cuántos paquetes más vas a repartir hoy?{" "}
+          </p>
+          <div className="divide-y">
+            {packagesDay.map((paquete: any) => (
+              <div
+                key={paquete.id}
+                className="flex justify-between py-4 h-110px w-full"
+              >
+                <Image
+                  className="bg-[#E8EFFA] border-sm rounded-sm"
+                  src={imagen}
+                  alt="imagen paquete"
+                  width={80}
+                  height={80}
+                />
+
+                <div className="flex justify-between">
+                  <div className="flex flex-col justify-between h-full">
+                    <div className="flex justify-between">
+                      <p className="font-sans text-sm mr-2 text-right">
+                        <span>
+                          {" "}
+                          {`${paquete.street} ${paquete.number} ${paquete.city}`}
+                        </span>{" "}
+                        <br />
+                        <span>{paquete.clientname} </span>
+                        <br />
+                        {isPackageTaken(paquete) ? (
+                          <p> aca va el otro boton </p>
+                        ) : (
+                          <button
+                            className="w-20 bg-blue-500 hover:bg-blue-600 text-white font-semibold text-xs py-1 px-2 rounded mt-2"
+                            onClick={() => handleTomarPaquete(paquete)}
+                          >
+                            {buttonText}
+                          </button>
+                        )}
+                      </p>
+                    </div>
                   </div>
-                  <hr style={{ width: "100%", marginTop: "20px" }} />
                 </div>
-              );
-            })}
-            <Link href="delivery">
-              <Button buttonText="INICIAR JORNADA" />
-            </Link>
+              </div>
+            ))}
           </div>
         </div>
+        <button
+          className="bg-blue-500 hover:bg-blue-600 text-white font-semibold text-sm py-2 px-4 rounded mb-4"
+          onClick={() => handleConfirmarPaquetes(packagesTaken)}
+        >
+          INICIAR JORNADA
+        </button>
       </div>
     </>
   );
