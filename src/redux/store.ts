@@ -3,12 +3,14 @@ import counterReducer from "./features/counterSlice";
 import { userApi } from "./services/userApi";
 import { setupListeners } from "@reduxjs/toolkit/dist/query";
 import usersReducer from "./features/users";
+import packagesReducer from "./features/packages";
 
 export const store = configureStore({
   reducer: {
     counter: counterReducer,
     [userApi.reducerPath]: userApi.reducer,
-    users: usersReducer
+    users: usersReducer,
+    packages: packagesReducer
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(userApi.middleware)
