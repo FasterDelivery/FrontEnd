@@ -53,8 +53,6 @@ const GetPackages = () => {
     fetchData();
   }, []);
 
-  console.log(packagesTaken, "estos los agarro ===========");
-
   const isPackageTaken = (paquete: any) => {
     const isTaken = packagesTaken.some(
       (takenPackage: any) => takenPackage.id === paquete.id
@@ -63,8 +61,6 @@ const GetPackages = () => {
   };
 
   const handleConfirmarPaquetes = async (paquetes: any) => {
-    console.log(packagesTaken.length);
-
     if (packagesTaken.length > 10) {
       return Swal.fire({
         title: "Advertencia",
