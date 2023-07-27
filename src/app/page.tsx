@@ -13,6 +13,7 @@ import { Package } from "./interfaces/packages";
 import { useRouter } from "next/navigation";
 import imagen from "../app/Assets/package-icon-vector.jpg";
 import { setToken } from "redux/features/token";
+import { getGeolocation, haversine } from "./utils";
 
 type DropdownState = boolean;
 
@@ -27,6 +28,9 @@ export default function HomePage() {
     useState<DropdownState>(false);
   const [onCourseDropdownOpen, setOnCourseDropdownOpen] =
     useState<DropdownState>(false);
+  const [distances, setDistances] = useState<number[]>([]);
+  const [onCourse, setOnCourse] = useState<Package[]>([]);
+
   const fetchUser = async (token: string) => {
     try {
       const response = await axios.get("https://3.91.204.112/api/user/me", {
@@ -62,6 +66,20 @@ export default function HomePage() {
     }
   };
 
+  const getDistances = async () => {
+    const response = await getGeolocation();
+    const lat = response.latitude;
+    const lng = response.longitude;
+
+    console.log(packages["en curso"]);
+
+    const dist = packages["en curso"].map((each) => {
+      const result = haversine(lat, lng, each.lat, each.lng);
+      return Number(result.toFixed(1));
+    });
+    setDistances(dist);
+  };
+
   const handleDetail = (packageId: number) => () => {
     router.push(`/delivery?package=${packageId}`);
   };
@@ -78,7 +96,20 @@ export default function HomePage() {
       dispatch(setToken(json.value));
       fetchUser(json.value);
     }
+    getDistances();
   }, [packages]);
+
+  useEffect(() => {
+    const packagesWithDistances = packages["en curso"].map((each, index) => {
+      const distance = distances[index];
+      return {
+        ...each,
+        distance: distance
+      };
+    });
+    packagesWithDistances.sort((a, b) => a.distance - b.distance);
+    setOnCourse(packagesWithDistances);
+  }, [distances]);
 
   useEffect(() => {
     // Check if user is defined and now is greater than the expiry time
@@ -94,8 +125,6 @@ export default function HomePage() {
       }
     }
   }, [user]);
-
-  console.log(user, packages);
 
   return (
     <div className="mx-auto w-90">
@@ -118,13 +147,13 @@ export default function HomePage() {
             />
           </div>
           <p className="ml-4 font-sans text-sm">
-            {packages["en curso"].length === 0
+            {onCourse.length === 0
               ? "No tenés historial de repartos"
-              : `Tenés ${packages["en curso"].length} paquetes por entregar hoy`}
+              : `Tenés ${onCourse.length} paquetes por entregar hoy`}
           </p>
           {onCourseDropdownOpen && (
             <div className="divide-y">
-              {packages["en curso"].map((paquete: Package) => {
+              {onCourse.map((paquete: any) => {
                 return (
                   <div
                     className="flex justify-between py-4 h-110px w-full"
@@ -140,23 +169,23 @@ export default function HomePage() {
                     />
                     <div className="">
                       <div className="flex flex-col justify-between h-full">
-                        <div className="flex justify-between">
-                          <p className="font-sans text-sm mr-8">
-                            {`${paquete.street} ${paquete.number} ${paquete.city}`}
-                          </p>
-                          <Image
+                        {/* <div className="flex justify-between"> */}
+                        <p className="font-sans text-sm">
+                          {`${paquete.street} ${paquete.number} ${paquete.city}`}
+                        </p>
+                        {/* <Image
                             className="h-5"
                             src={trash}
                             alt="trash"
                             width={16}
                             height={16}
-                          />
-                        </div>
+                          /> */}
+                        {/* </div> */}
                         <p className="font-sans text-sm self-end">
                           {paquete.clientname}
                         </p>
                         <p className="font-sans text-sm font-bold self-end">
-                          {paquete.status}
+                          {`${paquete.distance} km`}
                         </p>
                       </div>
                     </div>
