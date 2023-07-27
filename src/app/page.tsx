@@ -24,6 +24,7 @@ export default function HomePage() {
     useState<DropdownState>(false);
   const [pendingDropdownOpen, setPendingDropdownOpen] =
     useState<DropdownState>(false);
+
   const fetchUser = async (token: string) => {
     try {
       const response = await axios.get("https://3.91.204.112/api/user/me", {
@@ -35,7 +36,6 @@ export default function HomePage() {
       if (response.data.isAdmin) return router.push("/manageorders");
       return response.data;
     } catch (error) {
-      console.log(error);
       return null;
     }
   };
@@ -85,8 +85,6 @@ export default function HomePage() {
       }
     }
   }, [user]);
-
-  console.log(user, packages);
 
   return (
     <div className="mx-auto w-90">
