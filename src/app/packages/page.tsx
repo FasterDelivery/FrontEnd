@@ -8,14 +8,13 @@ import Swal from "sweetalert2";
 import { useRouter } from "next/navigation";
 import { useAppSelector } from "../../redux/hooks";
 
+const currentDate = new Date().toISOString().slice(0, 10);
+
 const GetPackages = () => {
   const router = useRouter();
   const [packagesDay, setPackagesDay] = useState<any>([]);
   const [packagesTaken, setPackagesTaken] = useState<any>([]);
-  const user = useAppSelector((state) => state.users);
   const token = useAppSelector((state) => state.token);
-
-  const currentDate = new Date().toISOString().slice(0, 10);
 
   const handleTomarPaquete = (paquete: any) => {
     const updatedPackagesTaken = [...packagesTaken];
@@ -23,34 +22,49 @@ const GetPackages = () => {
     setPackagesTaken(updatedPackagesTaken);
   };
 
+  const prueba = useAppSelector((state) => state.token);
+  console.log(prueba);
+  const user2 = useAppSelector((state) => state.users);
+  console.log(user2);
+
   const handleCancelarPaquete = (paquete: any) => {
     const updatedPackagesTaken = packagesTaken.filter(
-      (item: any) => item !== paquete
+      (item: any) => item.id !== paquete.id
     );
     setPackagesTaken(updatedPackagesTaken);
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(
-          "https://3.91.204.112/api/packages/packages",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`
-            }
+  const fetchDataPackagesDay = async () => {
+    try {
+      const response = await axios.get(
+        `https://3.91.204.112/api/packages/packagesDay/${currentDate}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
           }
-        );
-        const allPackagesPending = response.data.allPackages;
-        const allPackagesPendingDay = allPackagesPending.filter(
-          (item: any) => item.deliveryday.slice(0, 10) === currentDate
-        );
-        setPackagesDay(allPackagesPendingDay);
-      } catch (error) {
-        console.error("Error fetching data:", error);
+        }
+      );
+      const allPackagesPendingDay = response.data.AllPackagesDay;
+      if (!allPackagesPendingDay[0]) {
+        return Swal.fire({
+          title: "Hoy no hay paquetes",
+          text: `Hoy no hay paquetes para entregar`,
+          icon: "info",
+          confirmButtonText: "Continuar",
+          confirmButtonColor: "#217BCE",
+          customClass: {
+            popup: "sm:w-80"
+          }
+        });
       }
-    };
-    fetchData();
+      setPackagesDay(allPackagesPendingDay);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchDataPackagesDay();
   }, []);
 
   const isPackageTaken = (paquete: any) => {
@@ -91,7 +105,7 @@ const GetPackages = () => {
             `https://3.91.204.112/api/packages/edit/package/${paquete.id}`,
             {
               status: "en curso",
-              userId: user.id
+              userId: 25
             },
             {
               headers: {
@@ -103,7 +117,6 @@ const GetPackages = () => {
           return response.data.editedPackage;
         })
       );
-
       console.log("Paquetes actualizados con éxito:", updatedPackages);
     } catch (error) {
       console.error("Error al actualizar los paquetes:", error);

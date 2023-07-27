@@ -26,10 +26,12 @@ export default function HomePage() {
     useState<DropdownState>(false);
   const [pendingDropdownOpen, setPendingDropdownOpen] =
     useState<DropdownState>(false);
+
   const [onCourseDropdownOpen, setOnCourseDropdownOpen] =
     useState<DropdownState>(false);
   const [distances, setDistances] = useState<number[]>([]);
   const [onCourse, setOnCourse] = useState<Package[]>([]);
+
 
   const fetchUser = async (token: string) => {
     try {

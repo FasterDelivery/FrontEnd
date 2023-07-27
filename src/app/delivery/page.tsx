@@ -6,9 +6,11 @@ import dropdown from "../Assets/dropdown.png";
 import { BackButton, Navbar } from "app/Components";
 import { useAppSelector } from "redux/hooks";
 import axios from "axios";
+import { useAppSelector } from "../../redux/hooks";
 import { Package } from "app/interfaces/packages";
 import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
+
 
 const App: React.FC = () => {
   const router = useRouter();
@@ -36,10 +38,19 @@ const App: React.FC = () => {
 
   const [paquete, setPaquete] = useState<Package>(initialPackage);
 
-  const destination: google.maps.LatLngLiteral = {
-    lat: -22.977635749850354,
-    lng: -46.98865870252204
-  };
+  const user = useAppSelector((state) => state.users);
+  const token = useAppSelector((state) => state.token);
+
+  const HandleFinalizar = async () => {
+    await axios.put(
+      `https://3.91.204.112/api/packages/2/edit/package/${user.id}`
+    ),
+      {
+        status: "entregado"
+      },
+      {
+        headers: {
+
   useEffect(() => {
     const fetchPackages = async () => {
       try {

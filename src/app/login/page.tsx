@@ -36,7 +36,7 @@ export default function Login() {
             value: token,
             expiry: now.getTime() + 60 * 1000 // Convierte a milisegundos
           };
-
+          dispatch(setToken(token));
           localStorage.setItem("session", JSON.stringify(item));
           return router.push("manageorders");
         } else {
