@@ -73,6 +73,7 @@ export default function Login() {
             placeholder="user@email.com"
             {...email}
             required
+            autoCapitalize="none"
           />
         </div>
         <div className="py-2 w-90 mx-auto">
