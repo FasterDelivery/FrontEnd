@@ -1,7 +1,7 @@
 "use client";
 import axios from "axios";
 import React, { FormEvent } from "react";
-import { useAppSelector, useAppDispatch } from "../../redux/hooks";
+import { useAppDispatch } from "../../redux/hooks";
 import { setUser } from "redux/features/users";
 import Image from "next/image";
 import logo from "../Assets/logo.png";
@@ -10,10 +10,10 @@ import useInput from "../hooks/useInput";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
+import { setToken } from "redux/features/token";
 
 export default function Login() {
   const dispatch = useAppDispatch();
-  const user = useAppSelector((state) => state.users);
   const router = useRouter();
   const email = useInput();
   const password = useInput();
@@ -27,7 +27,7 @@ export default function Login() {
       })
       .then((response) => {
         const token = response.data.token;
-
+        dispatch(setToken(token));
         dispatch(setUser(response.data.user));
 
         if (response.data.user.isAdmin) {
@@ -36,7 +36,6 @@ export default function Login() {
             value: token,
             expiry: now.getTime() + 60 * 1000 // Convierte a milisegundos
           };
-          console.log(response.data);
 
           localStorage.setItem("session", JSON.stringify(item));
           return router.push("manageorders");
@@ -55,7 +54,7 @@ export default function Login() {
         });
       });
   };
-  console.log(user);
+
   return (
     <div className="flex flex-col justify-center m-auto items-center">
       <div className="mt-8">
