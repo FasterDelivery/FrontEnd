@@ -48,7 +48,6 @@ export default function HomePage() {
           headers: {
             Authorization: `Bearer ${token}`
           }
-
         }
       );
       dispatch(setPackages(response.data.packages));
@@ -58,7 +57,6 @@ export default function HomePage() {
       return null;
     }
   };
-
 
   useEffect(() => {
     const json = JSON.parse(localStorage.getItem("session") || "{}");
