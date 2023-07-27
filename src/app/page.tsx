@@ -12,6 +12,7 @@ import Link from "next/link";
 import { Package } from "./interfaces/packages";
 import { useRouter } from "next/navigation";
 import imagen from "../app/Assets/package-icon-vector.jpg";
+import { setToken } from "redux/features/token";
 
 type DropdownState = boolean;
 
@@ -61,6 +62,10 @@ export default function HomePage() {
     }
   };
 
+  const handleDetail = (packageId: number) => () => {
+    router.push(`/delivery?package=${packageId}`);
+  };
+
   useEffect(() => {
     const json = JSON.parse(localStorage.getItem("session") || "{}");
 
@@ -70,6 +75,7 @@ export default function HomePage() {
     }
 
     if (json.value !== "" && user.id === 0) {
+      dispatch(setToken(json.value));
       fetchUser(json.value);
     }
   }, [packages]);
@@ -118,11 +124,12 @@ export default function HomePage() {
           </p>
           {onCourseDropdownOpen && (
             <div className="divide-y">
-              {packages["en curso"].map((paquete: Package, index: number) => {
+              {packages["en curso"].map((paquete: Package) => {
                 return (
                   <div
                     className="flex justify-between py-4 h-110px w-full"
-                    key={index}
+                    key={paquete.id}
+                    onClick={handleDetail(paquete.id)}
                   >
                     <Image
                       className="bg-[#E8EFFA] border-sm rounded-sm"
@@ -179,11 +186,11 @@ export default function HomePage() {
           </p>
           {pendingDropdownOpen && (
             <div className="divide-y">
-              {packages.pendiente.map((paquete: Package, index: number) => {
+              {packages.pendiente.map((paquete: Package) => {
                 return (
                   <div
                     className="flex justify-between py-4 h-110px w-full"
-                    key={index}
+                    key={paquete.id}
                   >
                     <Image
                       className="bg-[#E8EFFA] border-sm rounded-sm"
@@ -232,11 +239,11 @@ export default function HomePage() {
           </p>
           {delliveredDropdownOpen && (
             <div className="divide-y">
-              {packages.entregado.map((paquete: Package, index: number) => {
+              {packages.entregado.map((paquete: Package) => {
                 return (
                   <div
                     className="flex justify-between py-4 h-110px w-full"
-                    key={index}
+                    key={paquete.id}
                   >
                     <Image
                       className="bg-[#E8EFFA] border-sm rounded-sm"

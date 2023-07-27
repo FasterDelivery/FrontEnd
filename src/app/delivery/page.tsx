@@ -1,29 +1,110 @@
 "use client";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Map from "./mapa";
 import Image from "next/image";
 import dropdown from "../Assets/dropdown.png";
 import { BackButton, Navbar } from "app/Components";
+import { useAppSelector } from "redux/hooks";
 import axios from "axios";
+import { Package } from "app/interfaces/packages";
+import { useRouter } from "next/navigation";
+import Swal from "sweetalert2";
 
 const App: React.FC = () => {
+  const router = useRouter();
+  const user = useAppSelector((state) => state.users);
+  const token = useAppSelector((state) => state.token);
+
+  const initialPackage: Package = {
+    fullAdress: "123 Main Street, Cityville, Provinceville, 12345",
+    coordinates: "lat: 40.7128, lng: -74.0060",
+    id: 1,
+    clientname: "John Doe",
+    image: "https://example.com/package-image.jpg",
+    quantity: 1,
+    weight: 2.5,
+    deliveryday: new Date(),
+    street: "Main Street",
+    number: 123,
+    city: "Cityville",
+    province: "Provinceville",
+    postalCode: "12345",
+    lat: 40.7128,
+    lng: -74.006,
+    status: "pending"
+  };
+
+  const [paquete, setPaquete] = useState<Package>(initialPackage);
+
   const destination: google.maps.LatLngLiteral = {
     lat: -22.977635749850354,
     lng: -46.98865870252204
   };
+  useEffect(() => {
+    const fetchPackages = async () => {
+      try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const idQuery = urlParams.get("package");
+        const id = idQuery?.split("?")[0]
+          ? parseInt(idQuery?.split("?")[0])
+          : 0;
+        const response = await axios.get(
+          `https://3.91.204.112/api/packages/${user.id}/packages`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          }
+        );
+        const packages = response.data.packages;
+        const filtered = packages.filter((each: Package) => each.id === id);
+        setPaquete(filtered[0]);
+      } catch (error) {
+        console.log(error);
+        return null;
+      }
+    };
+    fetchPackages();
+  }, []);
 
   const HandleFinalizar = async () => {
-    await axios.put("http://localhost:3001/api/packages/2/edit/package/42"),
-      {
-        status: "entregado"
-      },
-      {
-        headers: {
-          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImVtYWlsIjoidXNlckB1c2VyLmNvbSIsInBhc3N3b3JkIjoiJDJiJDA5JHRyRDlvZnh1L0dNSDA0cHdqN3ZZWWVUenEwTlVVOGp0a0xjZ0dQV2dEdVVqVVpRWkE5ZC9TIiwiaXNBZG1pbiI6ZmFsc2V9LCJpYXQiOjE2OTAzMDM0MDAsImV4cCI6MTY5MDMxMDYwMH0.B1SYONzXpM8zGAc-mzI2qrh6kGMUBF5UprMT5n5gnns`
+    const urlParams = new URLSearchParams(window.location.search);
+    const idQuery = urlParams.get("package");
+    const id = idQuery?.split("?")[0] ? parseInt(idQuery?.split("?")[0]) : 0;
+    console.log(token);
+    axios
+      .put(
+        `https://3.91.204.112/api/packages/${user.id}/edit/package/${id}`,
+        {
+          status: "entregado"
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
         }
-      };
-  };
+      )
+      .then((response) => {
+        Swal.fire({
+          title: "Entrega Finalizada",
+          text: `Entregaste el paquete a ${response.data.editedPackage.clientname}`,
+          icon: "success",
+          confirmButtonText: "Continuar a Repartos",
+          confirmButtonColor: "#217BCE"
+        });
+        router.push("/");
+      })
+      .catch((error) => {
+        console.log(error);
 
+        Swal.fire({
+          title: "Error",
+          text: "Ocurrió un error en el registro.",
+          icon: "error",
+          confirmButtonColor: "#217BCE"
+        });
+      });
+  };
   return (
     <>
       <Navbar />
@@ -54,7 +135,7 @@ const App: React.FC = () => {
                 Destino:
               </p>
               <p className="ml-2 text-gray-paragraphs text-base text-sm-90">
-                Amenabar 2356, CABA
+                {paquete.fullAdress}
               </p>
             </div>
             <div className="flex">
@@ -62,7 +143,7 @@ const App: React.FC = () => {
                 # del paquete:
               </p>
               <p className="ml-2 text-gray-paragraphs text-base text-sm-90">
-                712
+                {paquete.id}
               </p>
             </div>
             <div className="flex">
@@ -70,7 +151,7 @@ const App: React.FC = () => {
                 Recibe:
               </p>
               <p className="ml-2 text-gray-paragraphs text-base text-sm-90">
-                Raúl Rodriguez
+                {paquete.clientname}
               </p>
             </div>
           </section>
