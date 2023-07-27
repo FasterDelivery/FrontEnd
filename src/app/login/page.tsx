@@ -1,35 +1,58 @@
 "use client";
 import axios from "axios";
 import React, { FormEvent } from "react";
+import { useAppDispatch } from "../../redux/hooks";
+import { setUser } from "redux/features/users";
 import Image from "next/image";
 import logo from "../Assets/logo.png";
 import { Button } from "app/Components";
 import useInput from "../hooks/useInput";
-import Link from "next/link"
+import Link from "next/link";
 import { useRouter } from "next/navigation";
+import Swal from "sweetalert2";
+import { setToken } from "redux/features/token";
 
 export default function Login() {
-  const router = useRouter()
+  const dispatch = useAppDispatch();
+  const router = useRouter();
   const email = useInput();
   const password = useInput();
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
     axios
-      .post(`http://44.201.112.1/api/user/login`, {
+      .post(`https://3.91.204.112/api/user/login`, {
         email: email.value,
         password: password.value
       })
       .then((response) => {
         const token = response.data.token;
+        dispatch(setToken(token));
+        dispatch(setUser(response.data.user));
 
-        // Store the token in localStorage
-        localStorage.setItem("token", token);
+        if (response.data.user.isAdmin) {
+          const now = new Date();
+          const item = {
+            value: token,
+            expiry: now.getTime() + 60 * 1000 // Convierte a milisegundos
+          };
 
-        alert(`Bienvenido ${response.data.user.name}`);
-        router.push(`/home?user=${response.data.user.id}`);
+          localStorage.setItem("session", JSON.stringify(item));
+          return router.push("manageorders");
+        } else {
+          return router.push(
+            `/affidavit?id=${response.data.user.id}?token=${token}`
+          );
+        }
       })
-     .catch(() => alert("Error de registro"));
+      .catch(() => {
+        Swal.fire({
+          title: "Error",
+          text: `Datos incorrectos`,
+          icon: "error",
+          confirmButtonColor: "#217BCE"
+        });
+      });
   };
 
   return (
@@ -50,6 +73,7 @@ export default function Login() {
             placeholder="user@email.com"
             {...email}
             required
+            autoCapitalize="none"
           />
         </div>
         <div className="py-2 w-90 mx-auto">
@@ -65,10 +89,11 @@ export default function Login() {
         </div>
 
         <Button buttonText="INGRESAR" />
-
-        <button className="text-[#217BCE] my-2 font-sans" type="button">
-          Recuperar Contraseña
-        </button>
+        <Link href="recuperar">
+          <button className="text-[#217BCE] my-2 font-sans" type="button">
+            Recuperar Contraseña
+          </button>
+        </Link>
         <Link href="register">
           <button
             className="text-[#217BCE] my-2 font-sans font-bold"

@@ -1,26 +1,69 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Circular from "./Circular";
 import Image from "next/image";
 import dropdown from "../Assets/dropdown.png";
 import { BackButton, Navbar } from "app/Components";
+import axios from "axios";
 
-interface Item {
-  name: string;
-  state: string;
+interface I_User {
   percentage: number;
+  name: string;
+  lastname: string;
+  status: string;
+  id: number;
 }
 
 const Page = () => {
-  const [items] = useState<Item[]>([
-    { name: "Farid", state: "Viaje en curso", percentage: 60 },
-    { name: "Luciana", state: "Finalizó", percentage: 100 },
-    { name: "Santiago", state: "Inactivo", percentage: 65 }
-  ]);
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
+  const [stateDeliveryData, setStateDeliveryData] = useState([]);
+  const [usersActually, setUsersActually] = useState([]);
+  const [counterControll, setCounterControll] = useState(0);
+  const countPoints = Math.round(stateDeliveryData.length / 10);
+  const points = Array.from({ length: countPoints }, (_, i) => i + 1);
+
   const handleToggle = () => {
     setIsExpanded(!isExpanded);
   };
+
+  const updateUsers = () => {
+    if (counterControll > stateDeliveryData.length) {
+      setCounterControll(0);
+    } else {
+      setCounterControll(counterControll + 10);
+      const controllData = stateDeliveryData.slice(
+        counterControll,
+        counterControll + 10
+      );
+      setUsersActually(controllData);
+    }
+  };
+
+  useEffect(() => {
+    const getData = async () => {
+      const getDataFetch = await axios.get(
+        "https://3.91.204.112/api/user/deliveries"
+      );
+
+      getDataFetch ? setStateDeliveryData(getDataFetch.data.allUsers) : false;
+    };
+
+    getData();
+  }, []);
+
+  useEffect(() => {
+    const controllerCountUsers = () => {
+      if (stateDeliveryData.length > 0) {
+        const controllData = stateDeliveryData.slice(
+          counterControll,
+          counterControll + 10
+        );
+        setUsersActually(controllData);
+      }
+    };
+
+    controllerCountUsers();
+  }, [stateDeliveryData]);
 
   return (
     <>
@@ -47,20 +90,25 @@ const Page = () => {
               <Image src={dropdown} alt="dropdown" />
             </button>
           </section>
-          {items.map((User, index) => (
-            <Circular
-              percentage={User.percentage}
-              name={User.name}
-              state={User.state}
-              key={index}
-            />
-          ))}
+          {stateDeliveryData
+            ? usersActually.map((User: I_User, index) => (
+                <Circular
+                  percentage={User.percentage}
+                  name={User.name}
+                  surname={User.lastname}
+                  status={User.status}
+                  id={User.id}
+                  key={index}
+                />
+              ))
+            : false}
           <div className="flex w-90 mx-auto justify-center py-4 ">
-            {[1, 2, 3].map((_, index) => (
-              <p
-                key={index}
-                className="flex my-0 mr-2 h-2 w-2 rounded-lg bg-gray-paragraphs"
-              ></p>
+            {points.map((punto, key) => (
+              <button onClick={() => updateUsers()} key={key}>
+                <li>
+                  <a href={`#punto${punto}`}></a>
+                </li>
+              </button>
             ))}
           </div>
         </div>

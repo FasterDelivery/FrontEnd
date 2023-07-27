@@ -4,7 +4,6 @@ import { BackButton, Navbar } from "app/Components";
 import useInput from "../hooks/useInput";
 import useControllCountPackages from "../hooks/useControllCountPackages";
 import axios from "axios";
-import { headers } from "next/dist/client/components/headers";
 import Swal from "sweetalert2";
 
 const Page = () => {
@@ -224,3 +223,4 @@ const Page = () => {
 };
 
 export default Page;
+

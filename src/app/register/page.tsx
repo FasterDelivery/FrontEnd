@@ -5,6 +5,7 @@ import Image from "next/image";
 import logo from "../Assets/logo.png";
 import useInput from "../hooks/useInput";
 import { useRouter } from "next/navigation";
+import Swal from "sweetalert2";
 
 export default function SignUp() {
   const router = useRouter();
@@ -16,33 +17,60 @@ export default function SignUp() {
   const address = useInput();
   const phone = useInput();
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>): void => {
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    password.validatePassword();
-    confirmPassword.validateConfirmPassword(password.value);
-    email.validateEmail();
-    phone.validatePhone();
-    console.log(router);
-    password.passwordErrors[0] &&
-      email.emailErrors[0] &&
-      confirmPassword.confirmPasswordErrors[0];
-    phone.phoneErrors[0];
-    axios
-      .post(`http://44.201.112.1/api/user/register`, {
-        name: name.value,
-        lastname: lastName.value,
-        password: password.value,
-        email: email.value,
-        phone: parseInt(phone.value),
-        address: address.value,
-        isAdmin: false
-      })
-      .then((res) => {
-        console.log(res.data);
-        alert(`Registro exitoso`);
-        router.push("/login");
-      })
-      .catch(() => alert("Error de registro"));
+    document.getElementById("firstName")?.blur();
+    document.getElementById("lastName")?.blur();
+    document.getElementById("email")?.blur();
+    document.getElementById("password")?.blur();
+    document.getElementById("confirmPassword")?.blur();
+    document.getElementById("phone")?.blur();
+    document.getElementById("address")?.blur();
+
+    if (
+      password.passwordErrors.length > 0 ||
+      confirmPassword.confirmPasswordErrors.length > 0 ||
+      email.emailErrors.length > 0 ||
+      phone.phoneErrors.length > 0
+    ) {
+      Swal.fire({
+        title: "Error",
+        text: "Error de registro. Revisá los datos.",
+        icon: "error",
+        confirmButtonColor: "#217BCE"
+      });
+    } else {
+      axios
+        .post("https://3.91.204.112/api/user/register", {
+          name: name.value,
+          lastname: lastName.value,
+          password: password.value,
+          email: email.value,
+          phone: parseInt(phone.value),
+          address: address.value,
+          isAdmin: false
+        })
+        .then((response) => {
+          Swal.fire({
+            title: "Registro exitoso",
+            text: `Bienvenido a Fastdelivery ${response.data.newUser.name}`,
+            icon: "success",
+            confirmButtonText: "Continuar a Login",
+            confirmButtonColor: "#217BCE"
+          });
+          router.push("/login");
+        })
+        .catch((error) => {
+          console.log(error);
+
+          Swal.fire({
+            title: "Error",
+            text: "Ocurrió un error en el registro.",
+            icon: "error",
+            confirmButtonColor: "#217BCE"
+          });
+        });
+    }
   };
 
   return (
@@ -85,6 +113,9 @@ export default function SignUp() {
             placeholder="email@example.com"
             {...email}
             required
+            onBlur={() => {
+              email.validateEmail();
+            }}
           />
           {email.emailErrors ? (
             <span className="text-red-500 text-sm">{email.emailErrors[0]}</span>
@@ -101,6 +132,7 @@ export default function SignUp() {
             placeholder="Contraseña"
             {...password}
             required
+            onBlur={() => password.validatePassword()}
           />
           {password.passwordErrors ? (
             <span className="text-red-500 text-sm">
@@ -119,6 +151,9 @@ export default function SignUp() {
             placeholder="Confirmar Contraseña"
             {...confirmPassword}
             required
+            onBlur={() =>
+              confirmPassword.validateConfirmPassword(password.value)
+            }
           />
           {confirmPassword.confirmPasswordErrors ? (
             <span className="text-red-500 text-sm">
@@ -137,6 +172,7 @@ export default function SignUp() {
             placeholder="Teléfono"
             {...phone}
             required
+            onBlur={() => phone.validatePhone()}
           />
           {phone.phoneErrors ? (
             <span className="text-red-500 text-sm">{phone.phoneErrors[0]}</span>
@@ -162,7 +198,7 @@ export default function SignUp() {
           REGISTRARSE
         </button>
       </form>
-      <a className="text-[#217BCE] my-2 font-sans font-bold" href="">
+      <a className="text-[#217BCE] my-2 font-sans font-bold" href="/login">
         Iniciar Sesión
       </a>
     </div>

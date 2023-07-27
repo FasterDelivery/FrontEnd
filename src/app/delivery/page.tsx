@@ -1,9 +1,110 @@
-import React from "react";
+"use client";
+import React, { useState, useEffect } from "react";
+import Map from "./mapa";
 import Image from "next/image";
 import dropdown from "../Assets/dropdown.png";
 import { BackButton, Navbar } from "app/Components";
+import { useAppSelector } from "redux/hooks";
+import axios from "axios";
+import { Package } from "app/interfaces/packages";
+import { useRouter } from "next/navigation";
+import Swal from "sweetalert2";
 
-const pages = () => {
+const App: React.FC = () => {
+  const router = useRouter();
+  const user = useAppSelector((state) => state.users);
+  const token = useAppSelector((state) => state.token);
+
+  const initialPackage: Package = {
+    fullAdress: "123 Main Street, Cityville, Provinceville, 12345",
+    coordinates: "lat: 40.7128, lng: -74.0060",
+    id: 1,
+    clientname: "John Doe",
+    image: "https://example.com/package-image.jpg",
+    quantity: 1,
+    weight: 2.5,
+    deliveryday: new Date(),
+    street: "Main Street",
+    number: 123,
+    city: "Cityville",
+    province: "Provinceville",
+    postalCode: "12345",
+    lat: 40.7128,
+    lng: -74.006,
+    status: "pending"
+  };
+
+  const [paquete, setPaquete] = useState<Package>(initialPackage);
+
+  const destination: google.maps.LatLngLiteral = {
+    lat: -22.977635749850354,
+    lng: -46.98865870252204
+  };
+  useEffect(() => {
+    const fetchPackages = async () => {
+      try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const idQuery = urlParams.get("package");
+        const id = idQuery?.split("?")[0]
+          ? parseInt(idQuery?.split("?")[0])
+          : 0;
+        const response = await axios.get(
+          `https://3.91.204.112/api/packages/${user.id}/packages`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          }
+        );
+        const packages = response.data.packages;
+        const filtered = packages.filter((each: Package) => each.id === id);
+        setPaquete(filtered[0]);
+      } catch (error) {
+        console.log(error);
+        return null;
+      }
+    };
+    fetchPackages();
+  }, []);
+
+  const HandleFinalizar = async () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const idQuery = urlParams.get("package");
+    const id = idQuery?.split("?")[0] ? parseInt(idQuery?.split("?")[0]) : 0;
+    console.log(token);
+    axios
+      .put(
+        `https://3.91.204.112/api/packages/${user.id}/edit/package/${id}`,
+        {
+          status: "entregado"
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      )
+      .then((response) => {
+        Swal.fire({
+          title: "Entrega Finalizada",
+          text: `Entregaste el paquete a ${response.data.editedPackage.clientname}`,
+          icon: "success",
+          confirmButtonText: "Continuar a Repartos",
+          confirmButtonColor: "#217BCE"
+        });
+        router.push("/");
+      })
+      .catch((error) => {
+        console.log(error);
+
+        Swal.fire({
+          title: "Error",
+          text: "Ocurrió un error en el registro.",
+          icon: "error",
+          confirmButtonColor: "#217BCE"
+        });
+      });
+  };
   return (
     <>
       <Navbar />
@@ -26,13 +127,7 @@ const pages = () => {
             </button>
           </section>
           <section className="">
-            <iframe
-              title="ubicacion"
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d785.459350600613!2d-57.55511987076555!3d-38.05087484266043!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9584de0a949d16d9%3A0x2bf3db8497eb780f!2sFigueroa%20Alcorta%201499%2C%20B7603BUQ%20Mar%20del%20Plata%2C%20Provincia%20de%20Buenos%20Aires!5e0!3m2!1ses!2sar!4v1630346064185!5m2!1ses!2sar"
-              width="100%"
-              height="450"
-              loading="lazy"
-            ></iframe>
+            <Map destination={destination} />
           </section>
           <section className="flex flex-col py-4">
             <div className="flex">
@@ -40,7 +135,7 @@ const pages = () => {
                 Destino:
               </p>
               <p className="ml-2 text-gray-paragraphs text-base text-sm-90">
-                Amenabar 2356, CABA
+                {paquete.fullAdress}
               </p>
             </div>
             <div className="flex">
@@ -48,7 +143,7 @@ const pages = () => {
                 # del paquete:
               </p>
               <p className="ml-2 text-gray-paragraphs text-base text-sm-90">
-                712
+                {paquete.id}
               </p>
             </div>
             <div className="flex">
@@ -56,7 +151,7 @@ const pages = () => {
                 Recibe:
               </p>
               <p className="ml-2 text-gray-paragraphs text-base text-sm-90">
-                Raúl Rodriguez
+                {paquete.clientname}
               </p>
             </div>
           </section>
@@ -64,6 +159,7 @@ const pages = () => {
             <button
               type="button"
               className="font-roboto font-medium text-base leading-6 tracking-wider rounded shadow text-white bg-dark-blue-button hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-1.5 mr-2 mb-6 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+              onClick={HandleFinalizar}
             >
               FINALIZAR
             </button>
@@ -74,4 +170,4 @@ const pages = () => {
   );
 };
 
-export default pages;
+export default App;

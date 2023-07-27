@@ -1,17 +1,29 @@
 "use client";
+import axios from "axios";
 import React, { FormEvent } from "react";
 import Image from "next/image";
 import logo from "../Assets/logo.png";
 import { Button } from "app/Components";
 import useInput from "../hooks/useInput";
-import { useRouter } from "next/navigation";
+import Swal from "sweetalert2";
 
 const Recuperar = () => {
-  const router = useRouter();
   const email = useInput();
   const handleSubmit = (event: FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
-    router.push("/home");
+    axios
+      .post("https://3.91.204.112/api/user/recover", { email: email.value })
+      .then((res) => {
+        if (res.status === 200) {
+          Swal.fire({
+            title: "Aviso",
+            text: "Correo de recuperación enviado",
+            icon: "info",
+            confirmButtonColor: "#217BCE"
+          });
+        }
+      })
+      .catch(() => alert(`Error`));
   };
   return (
     <div className="flex flex-col justify-center m-auto items-center">
