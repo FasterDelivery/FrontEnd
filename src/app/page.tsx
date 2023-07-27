@@ -24,6 +24,8 @@ export default function HomePage() {
     useState<DropdownState>(false);
   const [pendingDropdownOpen, setPendingDropdownOpen] =
     useState<DropdownState>(false);
+  const [onCourseDropdownOpen, setOnCourseDropdownOpen] =
+    useState<DropdownState>(false);
   const fetchUser = async (token: string) => {
     try {
       const response = await axios.get("https://3.91.204.112/api/user/me", {
@@ -36,7 +38,8 @@ export default function HomePage() {
       return response.data;
     } catch (error) {
       console.log(error);
-      return null;
+      localStorage.removeItem("session");
+      return router.push("/login");
     }
   };
 
@@ -97,6 +100,67 @@ export default function HomePage() {
         </Link>
         <div className="shadow-lg rounded-md w-full my-4 flex flex-col justify-center p-4">
           <div className="flex justify-between mx-4">
+            <p className="font-bold text-lg font-sans">Repartos En Curso</p>
+            <Image
+              className={`self-start transition-transform transform ${
+                onCourseDropdownOpen ? "rotate-180" : ""
+              }`}
+              src={dropdown}
+              alt="dropdown"
+              width={13}
+              onClick={() => setOnCourseDropdownOpen(!onCourseDropdownOpen)}
+            />
+          </div>
+          <p className="ml-4 font-sans text-sm">
+            {packages["en curso"].length === 0
+              ? "No tenés historial de repartos"
+              : `Tenés ${packages["en curso"].length} paquetes por entregar hoy`}
+          </p>
+          {onCourseDropdownOpen && (
+            <div className="divide-y">
+              {packages["en curso"].map((paquete: Package, index: number) => {
+                return (
+                  <div
+                    className="flex justify-between py-4 h-110px w-full"
+                    key={index}
+                  >
+                    <Image
+                      className="bg-[#E8EFFA] border-sm rounded-sm"
+                      src={paquete.image === "imagen" ? paquete.image : imagen}
+                      alt="imagen paquete"
+                      width={80}
+                      height={80}
+                    />
+                    <div className="">
+                      <div className="flex flex-col justify-between h-full">
+                        <div className="flex justify-between">
+                          <p className="font-sans text-sm mr-8">
+                            {`${paquete.street} ${paquete.number} ${paquete.city}`}
+                          </p>
+                          <Image
+                            className="h-5"
+                            src={trash}
+                            alt="trash"
+                            width={16}
+                            height={16}
+                          />
+                        </div>
+                        <p className="font-sans text-sm self-end">
+                          {paquete.clientname}
+                        </p>
+                        <p className="font-sans text-sm font-bold self-end">
+                          {paquete.status}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+        <div className="shadow-lg rounded-md w-full my-4 flex flex-col justify-center p-4">
+          <div className="flex justify-between mx-4">
             <p className="font-bold text-lg font-sans">Repartos Pendientes</p>
             <Image
               className={`self-start transition-transform transform ${
@@ -130,18 +194,10 @@ export default function HomePage() {
                     />
                     <div className="">
                       <div className="flex flex-col justify-between h-full">
-                        <div className="flex justify-between">
-                          <p className="font-sans text-sm mr-8">
-                            {`${paquete.street} ${paquete.number} ${paquete.city}`}
-                          </p>
-                          <Image
-                            className="h-5"
-                            src={trash}
-                            alt="trash"
-                            width={16}
-                            height={16}
-                          />
-                        </div>
+                        <p className="font-sans text-sm self-end">
+                          {`${paquete.street} ${paquete.number} ${paquete.city}`}
+                        </p>
+
                         <p className="font-sans text-sm self-end">
                           {paquete.clientname}
                         </p>
