@@ -31,7 +31,6 @@ export default function HomePage() {
   const [distances, setDistances] = useState<number[]>([]);
   const [onCourse, setOnCourse] = useState<Package[]>([]);
 
-
   const fetchUser = async (token: string) => {
     try {
       const response = await axios.get("https://3.91.204.112/api/user/me", {
