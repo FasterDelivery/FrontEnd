@@ -6,26 +6,28 @@ import Image from "next/image";
 import imagen from "../Assets/package-icon-vector.jpg";
 import Swal from "sweetalert2";
 import { useRouter } from "next/navigation";
-import { useAppSelector } from "../../redux/hooks";
-
-const currentDate = new Date().toISOString().slice(0, 10);
 
 const GetPackages = () => {
+  const currentDate = new Date().toISOString().slice(0, 10);
   const router = useRouter();
   const [packagesDay, setPackagesDay] = useState<any>([]);
   const [packagesTaken, setPackagesTaken] = useState<any>([]);
-  const token = useAppSelector((state) => state.token);
+  const isClient = typeof window !== "undefined";
+  let token = "";
+  let userId = "";
+  if (isClient) {
+    const dataLocalStorage = JSON.parse(
+      localStorage.getItem("session") || "{}"
+    );
+    token = dataLocalStorage.value;
+    userId = dataLocalStorage.user;
+  }
 
   const handleTomarPaquete = (paquete: any) => {
     const updatedPackagesTaken = [...packagesTaken];
     updatedPackagesTaken.push(paquete);
     setPackagesTaken(updatedPackagesTaken);
   };
-
-  const prueba = useAppSelector((state) => state.token);
-  console.log(prueba);
-  const user2 = useAppSelector((state) => state.users);
-  console.log(user2);
 
   const handleCancelarPaquete = (paquete: any) => {
     const updatedPackagesTaken = packagesTaken.filter(
@@ -35,9 +37,11 @@ const GetPackages = () => {
   };
 
   const fetchDataPackagesDay = async () => {
+    console.log(currentDate);
+
     try {
       const response = await axios.get(
-        `https://3.91.204.112/api/packages/packagesDay/${currentDate}`,
+        `https://3.91.204.112/api/packages/packagesDay/2023-07-26`,
         {
           headers: {
             Authorization: `Bearer ${token}`
@@ -47,14 +51,10 @@ const GetPackages = () => {
       const allPackagesPendingDay = response.data.AllPackagesDay;
       if (!allPackagesPendingDay[0]) {
         return Swal.fire({
-          title: "Hoy no hay paquetes",
-          text: `Hoy no hay paquetes para entregar`,
+          title: "Hoy no hay paquetes para entregar",
           icon: "info",
           confirmButtonText: "Continuar",
-          confirmButtonColor: "#217BCE",
-          customClass: {
-            popup: "sm:w-80"
-          }
+          confirmButtonColor: "#217BCE"
         });
       }
       setPackagesDay(allPackagesPendingDay);
@@ -81,10 +81,7 @@ const GetPackages = () => {
         text: `No se pueden tomar más de 10 (diez) pedidos por día`,
         icon: "warning",
         confirmButtonText: "Continuar",
-        confirmButtonColor: "#217BCE",
-        customClass: {
-          popup: "sm:w-1/2"
-        }
+        confirmButtonColor: "#217BCE"
       });
     } else if (packagesTaken.length === 0) {
       return Swal.fire({
@@ -92,10 +89,7 @@ const GetPackages = () => {
         text: `Debe seleccionar al menos un paquete para iniciar la jornada`,
         icon: "warning",
         confirmButtonText: "Continuar",
-        confirmButtonColor: "#217BCE",
-        customClass: {
-          popup: "sm:w-1/2"
-        }
+        confirmButtonColor: "#217BCE"
       });
     }
     try {
@@ -105,7 +99,7 @@ const GetPackages = () => {
             `https://3.91.204.112/api/packages/edit/package/${paquete.id}`,
             {
               status: "en curso",
-              userId: 25
+              userId: userId
             },
             {
               headers: {
@@ -113,7 +107,7 @@ const GetPackages = () => {
               }
             }
           );
-          router.push("/delivery");
+          router.push("/");
           return response.data.editedPackage;
         })
       );
