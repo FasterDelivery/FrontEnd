@@ -31,6 +31,7 @@ export default function HomePage() {
   const [distances, setDistances] = useState<number[]>([]);
   const [onCourse, setOnCourse] = useState<Package[]>([]);
 
+
   const fetchUser = async (token: string) => {
     try {
       const response = await axios.get("https://3.91.204.112/api/user/me", {
@@ -42,7 +43,7 @@ export default function HomePage() {
       if (response.data.isAdmin) return router.push("/manageorders");
       return response.data;
     } catch (error) {
-      console.log(error);
+      return null;
       localStorage.removeItem("session");
       return router.push("/login");
     }

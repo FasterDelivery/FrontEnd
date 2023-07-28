@@ -47,13 +47,12 @@ export default function DeclaracionJurada() {
     });
     const item = {
       value: token,
-      expiry: now.getTime() + 60 * 1000000000000 // Convierte a milisegundos
+      expiry: now.getTime() + 60 * 10000000,
+      user: id // Convierte a milisegundos
     };
     localStorage.setItem("session", JSON.stringify(item));
     return router.push("/");
   };
-
-  console.log(declaraciones);
 
   return (
     <>
