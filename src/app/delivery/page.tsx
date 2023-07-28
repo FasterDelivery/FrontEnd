@@ -5,13 +5,17 @@ import Image from "next/image";
 import dropdown from "../Assets/dropdown.png";
 import { BackButton, Navbar } from "app/Components";
 import axios from "axios";
-import { useAppSelector } from "../../redux/hooks";
+import { useAppSelector, useAppDispatch } from "../../redux/hooks";
+import { setUser } from "redux/features/users";
+import { setToken } from "redux/features/token";
 import { Package } from "app/interfaces/packages";
 import { useRouter } from "next/navigation";
+import { getGeolocation } from "../utils";
 import Swal from "sweetalert2";
 
 const App: React.FC = () => {
   const router = useRouter();
+  const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.users);
   const token = useAppSelector((state) => state.token);
 
@@ -35,44 +39,82 @@ const App: React.FC = () => {
   };
 
   const [paquete, setPaquete] = useState<Package>(initialPackage);
-
-  const destination: google.maps.LatLngLiteral = {
+  const [location, setLocation] = useState<google.maps.LatLngLiteral>({
     lat: -22.977635749850354,
     lng: -46.98865870252204
+  });
+  const [origin, setOrigin] = useState({
+    lat: -22.977635749850354,
+    lng: -46.98865870252204
+  });
+
+  const fetchUser = async (token: string) => {
+    try {
+      const response = await axios.get("https://3.91.204.112/api/user/me", {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      dispatch(setUser(response.data));
+      return response.data;
+    } catch (error) {
+      localStorage.removeItem("session");
+      return router.push("/login");
+    }
+  };
+
+  const fetchPackages = async () => {
+    try {
+      const urlParams = new URLSearchParams(window.location.search);
+      const idQuery = urlParams.get("package");
+      const id = idQuery?.split("?")[0] ? parseInt(idQuery?.split("?")[0]) : 0;
+      const response = await axios.get(
+        `https://3.91.204.112/api/packages/${user.id}/packages`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
+      const packages = response.data.packages;
+      const filtered = packages.filter((each: Package) => each.id === id);
+      const destination: google.maps.LatLngLiteral = {
+        lat: filtered[0].lat,
+        lng: filtered[0].lng
+      };
+      setLocation(destination);
+      setPaquete(filtered[0]);
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
+  };
+
+  const fetchOrigin = async () => {
+    const response = await getGeolocation();
+    setOrigin({ lat: response.latitude, lng: response.longitude });
   };
 
   useEffect(() => {
-    const fetchPackages = async () => {
-      try {
-        const urlParams = new URLSearchParams(window.location.search);
-        const idQuery = urlParams.get("package");
-        const id = idQuery?.split("?")[0]
-          ? parseInt(idQuery?.split("?")[0])
-          : 0;
-        const response = await axios.get(
-          `https://3.91.204.112/api/packages/${user.id}/packages`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`
-            }
-          }
-        );
-        const packages = response.data.packages;
-        const filtered = packages.filter((each: Package) => each.id === id);
-        setPaquete(filtered[0]);
-      } catch (error) {
-        console.log(error);
-        return null;
-      }
-    };
+    const json = JSON.parse(localStorage.getItem("session") || "{}");
+
+    if (!localStorage.getItem("session") || !json.value) {
+      router.push("/login");
+      return;
+    }
+
+    if (json.value !== "" && user.id === 0) {
+      dispatch(setToken(json.value));
+      fetchUser(json.value);
+    }
     fetchPackages();
-  }, []);
+    fetchOrigin();
+  }, [user]);
 
   const HandleFinalizar = async () => {
     const urlParams = new URLSearchParams(window.location.search);
     const idQuery = urlParams.get("package");
     const id = idQuery?.split("?")[0] ? parseInt(idQuery?.split("?")[0]) : 0;
-    console.log(token);
     axios
       .put(
         `https://3.91.204.112/api/packages/${user.id}/edit/package/${id}`,
@@ -106,6 +148,8 @@ const App: React.FC = () => {
         });
       });
   };
+
+  console.log(origin);
   return (
     <>
       <Navbar />
@@ -128,7 +172,7 @@ const App: React.FC = () => {
             </button>
           </section>
           <section className="">
-            <Map destination={destination} />
+            <Map destination={location} />
           </section>
           <section className="flex flex-col py-4">
             <div className="flex">
@@ -156,7 +200,14 @@ const App: React.FC = () => {
               </p>
             </div>
           </section>
-          <section className="flex justify-end">
+          <section className="flex justify-between">
+            <a
+              type="button"
+              className="font-roboto font-medium text-base leading-6 tracking-wider rounded shadow text-white bg-dark-blue-button hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-1.5 mr-2 mb-6 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+              href={`https://www.google.com/maps/dir/?api=1&origin=${origin.lat},${origin.lng}&destination=${location.lat},${location.lng}`}
+            >
+              INICIAR ENTREGA
+            </a>
             <button
               type="button"
               className="font-roboto font-medium text-base leading-6 tracking-wider rounded shadow text-white bg-dark-blue-button hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-1.5 mr-2 mb-6 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"

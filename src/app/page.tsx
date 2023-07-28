@@ -42,7 +42,6 @@ export default function HomePage() {
       if (response.data.isAdmin) return router.push("/manageorders");
       return response.data;
     } catch (error) {
-      return null;
       localStorage.removeItem("session");
       return router.push("/login");
     }
@@ -58,8 +57,20 @@ export default function HomePage() {
           }
         }
       );
-      dispatch(setPackages(response.data.packages));
-      return response.data.packages;
+      const packagesById = response.data.packages;
+
+      const res = await axios.get(
+        `https://3.91.204.112/api/packages/packagesDay/2023-07-26`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
+      const pendingToday = res.data.AllPackagesDay;
+      const allPackages = packagesById.concat(pendingToday);
+      dispatch(setPackages(allPackages));
+      return allPackages;
     } catch (error) {
       console.log(error);
       return null;
