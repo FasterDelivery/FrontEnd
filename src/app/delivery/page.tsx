@@ -39,6 +39,7 @@ const App: React.FC = () => {
   };
 
   const [paquete, setPaquete] = useState<Package>(initialPackage);
+  const [isLoading, setIsLoading] = useState(true);
   const [location, setLocation] = useState<google.maps.LatLngLiteral>({
     lat: -22.977635749850354,
     lng: -46.98865870252204
@@ -84,6 +85,7 @@ const App: React.FC = () => {
       };
       setLocation(destination);
       setPaquete(filtered[0]);
+      setIsLoading(false);
     } catch (error) {
       console.log(error);
       return null;
@@ -149,7 +151,8 @@ const App: React.FC = () => {
       });
   };
 
-  console.log(origin);
+  if (isLoading) return <></>;
+
   return (
     <>
       <Navbar />
