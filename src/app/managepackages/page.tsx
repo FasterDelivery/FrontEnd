@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import trash from "../Assets/trash.png";
 import polygon from "../Assets/polygon.png";
@@ -7,11 +7,60 @@ import dropdown from "../Assets/dropdown.png";
 import { BackButton, Navbar } from "../Components";
 import Link from "next/link";
 import "./styles.css";
+import axios from "axios";
+import { Package } from "../interfaces/packages";
+import imagen from "../Assets/package-icon-vector.jpg";
 
 export default function ManagePackages() {
+  const [token, setToken] = useState<string>("");
   const [stateDropdown, setStateDropdown] = useState(
     "dropdown-Controller-Container active"
   );
+  const [packages, setPackages] = useState<Package[]>([]);
+  const [loadedPackages, setLoadedPackages] = useState<number>(10);
+  const [loadingMore, setLoadingMore] = useState<boolean>(false);
+
+  useEffect(() => {
+    const session = localStorage.getItem("session") || "";
+    const value = JSON.parse(session);
+    const tokenn = value.value;
+    if (tokenn !== token) {
+      setToken(tokenn);
+    }
+  }, [token]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get("https://3.91.204.112/api/packages/", {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+        setPackages(response.data.allPackages);
+        setLoadingMore(false);
+      } catch (error) {
+        console.error("Error al obtener los datos:", error);
+
+        setPackages([]);
+        setLoadingMore(false);
+      }
+    };
+
+    fetchData();
+  }, [token]);
+
+  const handleLoadMore = () => {
+    setLoadingMore(true);
+    setLoadedPackages((prevLoaded) => prevLoaded + 10);
+  };
+
+  const packagesToShow = packages.slice(0, loadedPackages);
+
+  // useEffect(() => {
+  //   console.log("estos son los paquetes en el array", packages);
+  // }, [packages]);
+
   const dropdownController = () => {
     if (stateDropdown === "dropdown-Controller-Container active") {
       setStateDropdown("dropdown-Controller-Container");
@@ -21,15 +70,18 @@ export default function ManagePackages() {
   };
 
   return (
-    <div className="shadow-lg mx-auto w-full h-[640px]">
-      <Navbar />
-      <BackButton />
+    <>
+      <div className="mx-auto w-90">
+        {" "}
+        <Navbar /> <BackButton />
+      </div>
+
       <div className="w-90 flex flex-col justify-start mx-auto items-center">
         <div
           className={`${stateDropdown} w-full shadow-lg rounded-md w-321 my-4 flex flex-col justify-center p-8`}
         >
           <div className="flex justify-between mx-4">
-            <p className="font-bold text-lg font-sans"> Paquetes </p>
+            <p className="font-bold text-lg font-sans"> Todos los paquetes </p>
             <button onClick={dropdownController}>
               <Image
                 src={
@@ -44,57 +96,29 @@ export default function ManagePackages() {
 
           <p className="ml-4 font-sans text-sm">
             {" "}
-            Hay 523 paquetes con el criterio de filtrado <br />
+            Hay {packages.length} paquetes con el criterio de filtrado
             seleccionado
           </p>
 
           <div className="divide-y">
-            <div className="flex justify-between py-4 h-110px w-full">
-              <div className="w-[80px] h-[80px] bg-[#E8EFFA] border-sm rounded-sm"></div>
-              <div className="">
-                <div>
-                  <div className="flex justify-between items-center">
-                    <p className="font-sans text-sm mr-auto whitespace-normal break-words">
-                      {" "}
-                      Amenabar 2356, CABA
-                    </p>
-                    <div className="ml-2">
-                      <Image src={trash} alt="trash" width={16} height={16} />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="flex justify-between py-4 h-110px w-full">
-              <div className="w-[80px] h-[80px] bg-[#E8EFFA] border-sm rounded-sm"></div>
-              <div className="">
-                <div>
-                  <div className="flex flex-col justify-between h-full">
-                    <div className="flex justify-between max-w-[100%]">
-                      <div className="flex justify-end">
-                        <p className="font-sans text-sm mr-auto break-words">
-                          {" "}
-                          Av. Carabobo y Rivadavia, CABA
-                        </p>
-                      </div>
-                      <div className="ml-2">
-                        <Image src={trash} alt="trash" width={16} height={16} />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="flex justify-between py-4 h-110px w-full">
-              <div className="w-[80px] h-[80px] bg-[#E8EFFA] border-sm rounded-sm"></div>
-              <div className="">
-                <div>
-                  <div className="flex flex-col justify-between h-full">
-                    <div className="flex justify-between">
-                      <p className="font-sans text-sm mr-auto">
-                        Mendoza 1810, CABA{" "}
+            {packagesToShow.map((packageItem: Package) => (
+              <div
+                className="flex justify-between py-4 h-110px w-full"
+                key={packageItem.id}
+              >
+                <Image
+                  className="w-[80px] h-[80px] bg-[#E8EFFA] border-sm rounded-sm"
+                  src={imagen}
+                  alt="imagen paquete"
+                  width={80}
+                  height={80}
+                />
+                <div className="flex justify-between">
+                  <div>
+                    <div className="flex justify-between items-center">
+                      <p className="font-sans text-sm mr-auto whitespace-normal break-words">
+                        {packageItem.fullAdress} <br /> {packageItem.clientname}{" "}
+                        <br /> {packageItem.status}
                       </p>
                       <div className="ml-2">
                         <Image src={trash} alt="trash" width={16} height={16} />
@@ -103,7 +127,16 @@ export default function ManagePackages() {
                   </div>
                 </div>
               </div>
-            </div>
+            ))}
+            {loadingMore}
+            {!loadingMore && loadedPackages < packages.length && (
+              <button
+                onClick={handleLoadMore}
+                className="flex justify-between mx -4 mt-3 font-bold text-lg font-sans"
+              >
+                Cargar más
+              </button>
+            )}
           </div>
         </div>
         <Link href="addpackages">
@@ -116,6 +149,6 @@ export default function ManagePackages() {
           </button>
         </Link>
       </div>
-    </div>
+    </>
   );
 }
