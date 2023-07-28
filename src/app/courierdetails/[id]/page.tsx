@@ -13,7 +13,9 @@ interface I_User {
   name: string;
   surname: string;
   status: string;
-  address: string;
+  fullAdress: string;
+  clientname: string;
+  image: string;
 }
 
 interface State {
@@ -32,36 +34,69 @@ const Page = ({ params }: { params: { id: string } }) => {
   );
   const [statePackagesData, setStatePackagesData] = useState([]);
   const [packagePending, setPackagesPending] = useState([]);
-  const packagesFilter = () => {
+  const [packagesDone, setPackagesDone] = useState([]);
+  const [token, setToken] = useState<string>(""),
+    session = localStorage.getItem("session") || "";
+
+  let json;
+
+  const packagesFilterPending = () => {
     const packages: any = [];
     statePackagesData.map((Package: I_User) => {
+      console.log(
+        Package.status === "pendiente" || Package.status === "en curso"
+      );
       if (Package.status === "pendiente" || Package.status === "en curso")
         packages.push(Package);
     });
     setPackagesPending(packages);
+    console.log(setStateDeliveryData);
+    
+  };
+
+  const packagesFilter = () => {
+    const packages: any = [];
+    statePackagesData.map((Package: I_User) => {
+      if (Package.status === "entregado") packages.push(Package);
+    });
+    setPackagesDone(packages);
   };
 
   useEffect(() => {
-    const getData = async () => {
-      const getDataFetch = await axios.get(
-        `https://3.91.204.112/api/user/deliveries/${params.id}`
-      );
-      getDataFetch ? setStateDeliveryData(getDataFetch.data.user) : false;
-    };
-    getData();
-  }, []);
-
-  useEffect(() => {
-    const getDataPackages = async () => {
+    const getData = async (prop: string) => {
+      // const getDataFetch = await axios.get(
+      //   `https://3.91.204.112/api/user/details/${params.id}`,
+      //   {
+      //     headers: {
+      //       Authorization: `Bearer ${prop}`
+      //     }
+      //   }
+      // );
       const getDataFetchPackages = await axios.get(
-        `https://3.91.204.112/api/packages/${params.id}/packages`
+        `https://3.91.204.112/api/packages/${params.id}/packages`,
+        {
+          headers: {
+            Authorization: `Bearer ${prop}`
+          }
+        }
       );
+      // getDataFetch ? setStateDeliveryData(getDataFetch.data.user) : false;
       getDataFetchPackages
         ? setStatePackagesData(getDataFetchPackages.data.packages)
         : false;
     };
-    getDataPackages();
-  }, []);
+    json = JSON.parse(session);
+
+    try {
+      if (json && json.value) {
+        getData(json.value);
+        setToken(json.value);
+      }
+    } catch (error) {
+      // Handle the error gracefully (if needed)
+      console.error("Error parsing JSON:", error);
+    }
+  }, [token]);
 
   return (
     <div className="mx-auto">
@@ -100,7 +135,7 @@ const Page = ({ params }: { params: { id: string } }) => {
               style={{ cursor: "pointer" }}
               className="flex justify-between mx-4"
               onClick={() => {
-                packagesFilter();
+                packagesFilterPending();
                 setDropdownOpenPending(!dropdownOpenPending);
               }}
             >
@@ -119,23 +154,32 @@ const Page = ({ params }: { params: { id: string } }) => {
                       key={key}
                       className="flex justify-between py-4 h-110px w-full"
                     >
-                      <div className="w-[80px] h-[80px] bg-[#E8EFFA] border-sm rounded-sm"></div>
-                      <div className="">
-                        <div className="flex flex-col justify-between h-full">
-                          <div className="flex justify-between">
-                            <p className="font-sans text-sm mr-8">
-                              {pack.address}
-                            </p>
-                            <Image
-                              src={trash}
-                              alt="trash"
-                              width={16}
-                              className="h-5"
-                            />
-                          </div>
+                      <div className="w-[80px] h-[80px] bg-[#E8EFFA] border-sm rounded-sm">
+                        <img
+                          style={{ height: "inherit" }}
+                          src={pack.image}
+                          alt="img-package"
+                        />
+                      </div>
+                      <div className="flex justify-between w-51vw md:w-60vw items-center">
+                        <div className="flex justify-between">
+                          <p className="font-sans text-sm mr-8 hidden md:block">
+                            {pack.clientname}
+                          </p>
+                          <p className="font-sans text-sm mr-8">
+                            {pack.fullAdress}
+                          </p>
+                        </div>
+                        <div className="flex flex-col justify-around items-center w-30vw md:w-10vw lg:w-6vw h-full">
                           <p className="font-sans text-sm font-bold self-end">
                             {pack.status}
                           </p>
+                          <Image
+                            src={trash}
+                            alt="trash"
+                            width={16}
+                            className="h-5"
+                          />
                         </div>
                       </div>
                     </div>
@@ -144,7 +188,10 @@ const Page = ({ params }: { params: { id: string } }) => {
               : false}
           </div>
           <div
-            onClick={() => setDropdownOpen(!dropdownOpen)}
+            onClick={() => {
+              packagesFilter();
+              setDropdownOpen(!dropdownOpen);
+            }}
             className="shadow-lg rounded-[4px] w-full my-4 flex flex-col justify-center p-4"
           >
             <div className="flex justify-between mx-4">
@@ -161,30 +208,39 @@ const Page = ({ params }: { params: { id: string } }) => {
               />
             </div>
             <p className="ml-4 font-sans text-sm"> Ya repartiste 58 paquetes</p>
-            {dropdownOpen && statePackagesData
-              ? statePackagesData.map((pack: I_User, key) => {
+            {dropdownOpen && packagesDone
+              ? packagesDone.map((pack: I_User, key) => {
                   return (
                     <div
                       key={key}
                       className="flex justify-between py-4 h-110px w-full"
                     >
-                      <div className="w-[80px] h-[80px] bg-[#E8EFFA] border-sm rounded-sm"></div>
-                      <div className="">
-                        <div className="flex flex-col justify-between h-full">
-                          <div className="flex justify-between">
-                            <p className="font-sans text-sm mr-8">
-                              {pack.address}
-                            </p>
-                            <Image
-                              src={trash}
-                              alt="trash"
-                              width={16}
-                              className="h-5"
-                            />
-                          </div>
+                      <div className="w-[80px] h-[80px] bg-[#E8EFFA] border-sm rounded-sm">
+                        <img
+                          style={{ height: "inherit" }}
+                          src={pack.image}
+                          alt="img-package"
+                        />
+                      </div>
+                      <div className="flex justify-between w-51vw md:w-60vw items-center">
+                        <div className="flex justify-between">
+                          <p className="font-sans text-sm mr-8 hidden md:block">
+                            {pack.clientname}
+                          </p>
+                          <p className="font-sans text-sm mr-8">
+                            {pack.fullAdress}
+                          </p>
+                        </div>
+                        <div className="flex flex-col justify-around items-center w-30vw md:w-10vw lg:w-6vw h-full">
                           <p className="font-sans text-sm font-bold self-end">
                             {pack.status}
                           </p>
+                          <Image
+                            src={trash}
+                            alt="trash"
+                            width={16}
+                            className="h-5"
+                          />
                         </div>
                       </div>
                     </div>

@@ -5,17 +5,14 @@ import Image from "next/image";
 import avatar from "../Assets/Ellipse 10.png";
 import dropdown from "../Assets/dropdown.png";
 import avatar2 from "../Assets/Ellipse 6.png";
-// import avatar3 from "../Assets/Ellipse 8.png";
 import { Navbar } from "app/Components";
 import { useState } from "react";
-// import Link from "next/link";
 import BackButton from "app/Components";
-// import CircularProgressBar from "./CircularProgressBar";
 import "./page.css";
 import axios from "axios";
 import Link from "next/link";
 import Swal from "sweetalert2";
-import { useSelector } from "react-redux";
+import packageImage from "../Assets/package-icon-vector.jpg";
 
 interface Day {
   id: number;
@@ -31,44 +28,63 @@ const days: Day[] = [
   { id: 21, name: "Vie" }
 ];
 
+const initialState = {
+  allPackages: [],
+  packagesActives: [],
+  deliveryPersons: [],
+  usersActives: [],
+  packagesPercentage: 0,
+  usersPercentage: 0
+};
+
 const Index = () => {
   const [isExpanded, setIsExpanded] = useState<boolean>(false),
+    [stateController, setStateController] = useState(initialState),
+    [token, setToken] = useState<string>(""),
+    session = localStorage.getItem("session") || "",
     dateActually = new Date(),
-    [stateController, setStateController] = useState({
-      allPackages: [],
-      packagesActives: [],
-      deliveryPersons: [],
-      usersActives: [],
-      packagesPercentage: 0,
-      usersPercentage: 0
-    }),
     handleToggle = () => {
       setIsExpanded(!isExpanded);
     };
+
+  let json: any;
 
   const calcularPorcentaje = (cantidad: number, total: number) => {
     return Math.round((cantidad / total) * 100);
   };
 
   useEffect(() => {
-    const getDataDeliveryPers = async () => {
-      const request1 = axios.get("https://3.91.204.112/api/packages");
-      const request2 = axios.get("https://3.91.204.112/api/user/deliveries");
+    const getDataDeliveryPers = async (prop: string) => {
+      const request1 = axios.get("https://3.91.204.112/api/packages", {
+        headers: {
+          Authorization: `Bearer ${prop}`
+        }
+      });
+      const request2 = axios.get("https://3.91.204.112/api/user/deliveries", {
+        headers: {
+          Authorization: `Bearer ${prop}`
+        }
+      });
 
       axios
         .all([request1, request2])
         .then(
           axios.spread((response1, response2) => {
             // Maneja las respuestas individuales aquí
+
             const packages = response1.data.allPackages,
               users = response2.data.allUsers;
 
             const packagesActives = packages.filter(
-              (packages: { status: string }) => packages.status === "entregado"
+              (packages: { status: string }) => {
+                console.log(packages.status);
+                return packages.status === "entregado";
+              }
             );
 
             const usersActives = users.filter(
-              (users: { status: string }) => users.status === "active"
+              (usersFilter: { status: string }) =>
+                usersFilter.status === "active"
             );
 
             setStateController({
@@ -100,8 +116,19 @@ const Index = () => {
           });
         });
     };
-    getDataDeliveryPers();
-  }, []);
+
+    json = JSON.parse(session);
+
+    try {
+      if (json && json.value) {
+        getDataDeliveryPers(json.value);
+        setToken(json.value);
+      }
+    } catch (error) {
+      // Handle the error gracefully (if needed)
+      console.error("Error parsing JSON:", error);
+    }
+  }, [token]);
 
   return (
     <div className="shadow-lg mx-auto w-full">
@@ -124,8 +151,8 @@ const Index = () => {
               key={day.id}
               className={
                 day.name === "Lun"
-                  ? "bg-yellow-500 rounded-45 m-2 p-4 h-20vh w-6vw flex items-center flex-col justify-center"
-                  : "bg-blue-500 rounded-45 m-2 p-4 h-20vh w-6vw flex items-center flex-col justify-center"
+                  ? "bg-yellow-500 rounded-45 m-2 p-4 h-20vh w-12vw md:w-8vw lg:w-6vw flex items-center flex-col justify-center"
+                  : "bg-blue-500 rounded-45 m-2 p-4 h-20vh w-12vw md:w-8vw lg:w-6vw flex items-center flex-col justify-center"
               }
             >
               <p
@@ -148,18 +175,18 @@ const Index = () => {
         className="rounded-md w-full my-4 flex flex-col justify-center items-center p-4"
       >
         <h1
-          className="cursor-pointer w-90 flex justify-between font-bold"
+          className="cursor-pointer w-90 flex justify-between items-center font-bold"
           onClick={handleToggle}
         >
           {`${dateActually.toString().slice(0, 15)} - Detalles`}
-          <Image src={dropdown} alt="dropdown" width={13} height={9} />
+          <Image className="h-4 w-4" src={dropdown} alt="dropdown" />
         </h1>
         {isExpanded && (
           <>
             <>
               <div
                 id="container"
-                className="flex w-90 py-4 mx-auto items-center sm:justify-between"
+                className="flex w-90 mx-auto pb-10 pt-10 mt-4 items-center sm:justify-between"
               >
                 <section
                   className="circular-progress"
@@ -186,7 +213,7 @@ const Index = () => {
                       className="my-0 text-gray-paragraphs"
                       style={{ color: "black" }}
                     >
-                      {`${stateController.allPackages.length}/${stateController.packagesActives.length} activos`}
+                      {`${stateController.deliveryPersons.length}/${stateController.usersActives.length} activos`}
                     </p>
                   </div>
                 </section>
@@ -196,7 +223,7 @@ const Index = () => {
               </div>
               <Link
                 href={"deliverypersons"}
-                className="flex items-center justify-center bg-dark-blue-button rounded mt-4 w-25vw h-5vh text-white font-bold"
+                className="flex items-center justify-center bg-dark-blue-button rounded mt-4 w-45vw h-5vh text-white font-bold"
               >
                 <h3>REPARTIDORES</h3>
               </Link>
@@ -204,7 +231,7 @@ const Index = () => {
             <>
               <div
                 id="container"
-                className="flex w-90 py-4 pt-20 mx-auto items-center"
+                className="flex w-90 pb-10 pt-10 mt-4 mx-auto items-center sm:justify-between"
               >
                 <section
                   className="circular-progress"
@@ -222,7 +249,7 @@ const Index = () => {
                 </section>
                 <section
                   id="container-state"
-                  className="flex flex-col ml-21 pl-0.5 w-45"
+                  className="flex flex-col ml-8 w-45"
                 >
                   <p className="my-0 mb-2 font-bold">Paquetes</p>
                   <div className="flex items-center">
@@ -235,10 +262,17 @@ const Index = () => {
                     </p>
                   </div>
                 </section>
+                <section className="image-package-delivery ml-2">
+                  <Image
+                    className="h-12vh w-20vw sm:w-6vw lg:w-4vw"
+                    src={packageImage}
+                    alt={"package-picture"}
+                  />
+                </section>
               </div>
               <Link
                 href={"/managepackages"}
-                className="flex items-center justify-center bg-dark-blue-button rounded mt-4 w-25vw h-5vh text-white font-bold"
+                className="flex items-center justify-center bg-dark-blue-button rounded mt-4 w-45vw h-5vh text-white font-bold"
               >
                 <h3>VER PAQUETES</h3>
               </Link>

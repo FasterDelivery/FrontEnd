@@ -7,7 +7,6 @@ import { BackButton, Navbar } from "app/Components";
 import axios from "axios";
 
 interface I_User {
-  percentage: number;
   name: string;
   lastname: string;
   status: string;
@@ -21,6 +20,9 @@ const Page = () => {
   const [counterControll, setCounterControll] = useState(0);
   const countPoints = Math.round(stateDeliveryData.length / 10);
   const points = Array.from({ length: countPoints }, (_, i) => i + 1);
+  const [token, setToken] = useState<string>("");
+  const session = localStorage.getItem("session") || "";
+  let json;
 
   const handleToggle = () => {
     setIsExpanded(!isExpanded);
@@ -40,16 +42,31 @@ const Page = () => {
   };
 
   useEffect(() => {
-    const getData = async () => {
+    const getData = async (prop: string) => {
       const getDataFetch = await axios.get(
-        "https://3.91.204.112/api/user/deliveries"
+        "https://3.91.204.112/api/user/deliveries",
+        {
+          headers: {
+            Authorization: `Bearer ${prop}`
+          }
+        }
       );
 
       getDataFetch ? setStateDeliveryData(getDataFetch.data.allUsers) : false;
     };
 
-    getData();
-  }, []);
+    json = JSON.parse(session);
+
+    try {
+      if (json && json.value) {
+        getData(json.value);
+        setToken(json.value);
+      }
+    } catch (error) {
+      // Handle the error gracefully (if needed)
+      console.error("Error parsing JSON:", error);
+    }
+  }, [token, counterControll]);
 
   useEffect(() => {
     const controllerCountUsers = () => {
@@ -93,7 +110,6 @@ const Page = () => {
           {stateDeliveryData
             ? usersActually.map((User: I_User, index) => (
                 <Circular
-                  percentage={User.percentage}
                   name={User.name}
                   surname={User.lastname}
                   status={User.status}
