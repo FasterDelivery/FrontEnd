@@ -12,6 +12,8 @@ import Link from "next/link";
 import { Package } from "./interfaces/packages";
 import { useRouter } from "next/navigation";
 import imagen from "../app/Assets/package-icon-vector.jpg";
+import { setToken } from "redux/features/token";
+import { getGeolocation, haversine } from "./utils";
 
 type DropdownState = boolean;
 
@@ -24,6 +26,11 @@ export default function HomePage() {
     useState<DropdownState>(false);
   const [pendingDropdownOpen, setPendingDropdownOpen] =
     useState<DropdownState>(false);
+  const [onCourseDropdownOpen, setOnCourseDropdownOpen] =
+    useState<DropdownState>(false);
+  const [distances, setDistances] = useState<number[]>([]);
+  const [onCourse, setOnCourse] = useState<Package[]>([]);
+
 
   const fetchUser = async (token: string) => {
     try {
@@ -37,6 +44,8 @@ export default function HomePage() {
       return response.data;
     } catch (error) {
       return null;
+      localStorage.removeItem("session");
+      return router.push("/login");
     }
   };
 
@@ -58,6 +67,24 @@ export default function HomePage() {
     }
   };
 
+  const getDistances = async () => {
+    const response = await getGeolocation();
+    const lat = response.latitude;
+    const lng = response.longitude;
+
+    console.log(packages["en curso"]);
+
+    const dist = packages["en curso"].map((each) => {
+      const result = haversine(lat, lng, each.lat, each.lng);
+      return Number(result.toFixed(1));
+    });
+    setDistances(dist);
+  };
+
+  const handleDetail = (packageId: number) => () => {
+    router.push(`/delivery?package=${packageId}`);
+  };
+
   useEffect(() => {
     const json = JSON.parse(localStorage.getItem("session") || "{}");
 
@@ -67,9 +94,23 @@ export default function HomePage() {
     }
 
     if (json.value !== "" && user.id === 0) {
+      dispatch(setToken(json.value));
       fetchUser(json.value);
     }
+    getDistances();
   }, [packages]);
+
+  useEffect(() => {
+    const packagesWithDistances = packages["en curso"].map((each, index) => {
+      const distance = distances[index];
+      return {
+        ...each,
+        distance: distance
+      };
+    });
+    packagesWithDistances.sort((a, b) => a.distance - b.distance);
+    setOnCourse(packagesWithDistances);
+  }, [distances]);
 
   useEffect(() => {
     // Check if user is defined and now is greater than the expiry time
@@ -95,6 +136,68 @@ export default function HomePage() {
         </Link>
         <div className="shadow-lg rounded-md w-full my-4 flex flex-col justify-center p-4">
           <div className="flex justify-between mx-4">
+            <p className="font-bold text-lg font-sans">Repartos En Curso</p>
+            <Image
+              className={`self-start transition-transform transform ${
+                onCourseDropdownOpen ? "rotate-180" : ""
+              }`}
+              src={dropdown}
+              alt="dropdown"
+              width={13}
+              onClick={() => setOnCourseDropdownOpen(!onCourseDropdownOpen)}
+            />
+          </div>
+          <p className="ml-4 font-sans text-sm">
+            {onCourse.length === 0
+              ? "No tenés historial de repartos"
+              : `Tenés ${onCourse.length} paquetes por entregar hoy`}
+          </p>
+          {onCourseDropdownOpen && (
+            <div className="divide-y">
+              {onCourse.map((paquete: any) => {
+                return (
+                  <div
+                    className="flex justify-between py-4 h-110px w-full"
+                    key={paquete.id}
+                    onClick={handleDetail(paquete.id)}
+                  >
+                    <Image
+                      className="bg-[#E8EFFA] border-sm rounded-sm"
+                      src={paquete.image === "imagen" ? paquete.image : imagen}
+                      alt="imagen paquete"
+                      width={80}
+                      height={80}
+                    />
+                    <div className="">
+                      <div className="flex flex-col justify-between h-full">
+                        {/* <div className="flex justify-between"> */}
+                        <p className="font-sans text-sm">
+                          {`${paquete.street} ${paquete.number} ${paquete.city}`}
+                        </p>
+                        {/* <Image
+                            className="h-5"
+                            src={trash}
+                            alt="trash"
+                            width={16}
+                            height={16}
+                          /> */}
+                        {/* </div> */}
+                        <p className="font-sans text-sm self-end">
+                          {paquete.clientname}
+                        </p>
+                        <p className="font-sans text-sm font-bold self-end">
+                          {`${paquete.distance} km`}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+        <div className="shadow-lg rounded-md w-full my-4 flex flex-col justify-center p-4">
+          <div className="flex justify-between mx-4">
             <p className="font-bold text-lg font-sans">Repartos Pendientes</p>
             <Image
               className={`self-start transition-transform transform ${
@@ -113,11 +216,11 @@ export default function HomePage() {
           </p>
           {pendingDropdownOpen && (
             <div className="divide-y">
-              {packages.pendiente.map((paquete: Package, index: number) => {
+              {packages.pendiente.map((paquete: Package) => {
                 return (
                   <div
                     className="flex justify-between py-4 h-110px w-full"
-                    key={index}
+                    key={paquete.id}
                   >
                     <Image
                       className="bg-[#E8EFFA] border-sm rounded-sm"
@@ -128,18 +231,13 @@ export default function HomePage() {
                     />
                     <div className="">
                       <div className="flex flex-col justify-between h-full">
-                        <div className="flex justify-between">
-                          <p className="font-sans text-sm mr-8">
-                            {paquete.address}
-                          </p>
-                          <Image
-                            className="h-5"
-                            src={trash}
-                            alt="trash"
-                            width={16}
-                            height={16}
-                          />
-                        </div>
+                        <p className="font-sans text-sm self-end">
+                          {`${paquete.street} ${paquete.number} ${paquete.city}`}
+                        </p>
+
+                        <p className="font-sans text-sm self-end">
+                          {paquete.clientname}
+                        </p>
                         <p className="font-sans text-sm font-bold self-end">
                           {paquete.status}
                         </p>
@@ -171,11 +269,11 @@ export default function HomePage() {
           </p>
           {delliveredDropdownOpen && (
             <div className="divide-y">
-              {packages.entregado.map((paquete: Package, index: number) => {
+              {packages.entregado.map((paquete: Package) => {
                 return (
                   <div
                     className="flex justify-between py-4 h-110px w-full"
-                    key={index}
+                    key={paquete.id}
                   >
                     <Image
                       className="bg-[#E8EFFA] border-sm rounded-sm"
@@ -188,7 +286,7 @@ export default function HomePage() {
                       <div className="flex flex-col justify-between h-full">
                         <div className="flex justify-between">
                           <p className="font-sans text-sm mr-8">
-                            {paquete.address}
+                            {`${paquete.street} ${paquete.number} ${paquete.city}`}
                           </p>
                           <Image
                             className="h-5"
@@ -198,6 +296,9 @@ export default function HomePage() {
                             height={16}
                           />
                         </div>
+                        <p className="font-sans text-sm self-end">
+                          {paquete.clientname}
+                        </p>
                         <p className="font-sans text-sm font-bold self-end">
                           {paquete.status}
                         </p>
