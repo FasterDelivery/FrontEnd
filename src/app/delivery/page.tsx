@@ -10,7 +10,6 @@ import { Package } from "app/interfaces/packages";
 import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
 
-
 const App: React.FC = () => {
   const router = useRouter();
   const user = useAppSelector((state) => state.users);
@@ -42,7 +41,7 @@ const App: React.FC = () => {
     lng: -46.98865870252204
   };
 
-    useEffect(() => {
+  useEffect(() => {
     const fetchPackages = async () => {
       try {
         const urlParams = new URLSearchParams(window.location.search);
