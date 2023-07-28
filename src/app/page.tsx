@@ -3,7 +3,7 @@ import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { useAppSelector, useAppDispatch } from "../redux/hooks";
 import { setUser } from "redux/features/users";
-import { setPackages } from "redux/features/packages";
+import { setPackages, deletePackage } from "redux/features/packages";
 import Image from "next/image";
 import { Navbar, Button } from "../app/Components";
 import dropdown from "./Assets/dropdown.png";
@@ -21,6 +21,7 @@ export default function HomePage() {
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.users);
   const packages = useAppSelector((state) => state.packages);
+  const token = useAppSelector((state) => state.token);
   const router = useRouter();
   const [delliveredDropdownOpen, setDeliveredDropdownOpen] =
     useState<DropdownState>(false);
@@ -58,9 +59,10 @@ export default function HomePage() {
         }
       );
       const packagesById = response.data.packages;
+      const currentDate = new Date().toISOString().slice(0, 10);
 
       const res = await axios.get(
-        `https://3.91.204.112/api/packages/packagesDay/2023-07-26`,
+        `https://3.91.204.112/api/packages/packagesDay/${currentDate}`,
         {
           headers: {
             Authorization: `Bearer ${token}`
@@ -93,6 +95,18 @@ export default function HomePage() {
 
   const handleDetail = (packageId: number) => () => {
     router.push(`/delivery?package=${packageId}`);
+  };
+
+  const handleDelete = (packageId: number) => async () => {
+    await axios.delete(
+      `https://3.91.204.112/api/packages/delete/${packageId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+    );
+    dispatch(deletePackage(packageId));
   };
 
   useEffect(() => {
@@ -304,6 +318,7 @@ export default function HomePage() {
                             alt="trash"
                             width={16}
                             height={16}
+                            onClick={handleDelete(paquete.id)}
                           />
                         </div>
                         <p className="font-sans text-sm self-end">
