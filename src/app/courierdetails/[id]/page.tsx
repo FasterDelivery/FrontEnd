@@ -51,7 +51,6 @@ const Page = ({ params }: { params: { id: string } }) => {
     });
     setPackagesPending(packages);
     console.log(setStateDeliveryData);
-    
   };
 
   const packagesFilter = () => {
