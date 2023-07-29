@@ -21,8 +21,6 @@ const Page = () => {
   const countPoints = Math.round(stateDeliveryData.length / 10);
   const points = Array.from({ length: countPoints }, (_, i) => i + 1);
   const [token, setToken] = useState<string>("");
-  const session = localStorage.getItem("session") || "";
-  let json;
 
   const handleToggle = () => {
     setIsExpanded(!isExpanded);
@@ -55,7 +53,7 @@ const Page = () => {
       getDataFetch ? setStateDeliveryData(getDataFetch.data.allUsers) : false;
     };
 
-    json = JSON.parse(session);
+    const json = JSON.parse(localStorage.getItem("session") || "{}");
 
     try {
       if (json && json.value) {

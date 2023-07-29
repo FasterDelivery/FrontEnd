@@ -35,10 +35,7 @@ const Page = ({ params }: { params: { id: string } }) => {
   const [statePackagesData, setStatePackagesData] = useState([]);
   const [packagePending, setPackagesPending] = useState([]);
   const [packagesDone, setPackagesDone] = useState([]);
-  const [token, setToken] = useState<string>(""),
-    session = localStorage.getItem("session") || "";
-
-  let json;
+  const [token, setToken] = useState<string>("");
 
   const packagesFilterPending = () => {
     const packages: any = [];
@@ -84,7 +81,8 @@ const Page = ({ params }: { params: { id: string } }) => {
         ? setStatePackagesData(getDataFetchPackages.data.packages)
         : false;
     };
-    json = JSON.parse(session);
+
+    const json = JSON.parse(localStorage.getItem("session") || "{}");
 
     try {
       if (json && json.value) {
@@ -138,7 +136,7 @@ const Page = ({ params }: { params: { id: string } }) => {
                 setDropdownOpenPending(!dropdownOpenPending);
               }}
             >
-              <p className="font-bold text-lg font-sans">Repartos Pendientes</p>
+              <p className="font-bold text-lg font-sans">Repartos en Curso</p>
               <Image
                 src={dropdown}
                 alt="dropdown"
@@ -146,6 +144,10 @@ const Page = ({ params }: { params: { id: string } }) => {
                 className="self-start"
               />
             </div>
+            <p className="ml-4 font-sans text-sm">
+              {" "}
+              {`Estas repartiendo ${packagePending.length} paquetes`}{" "}
+            </p>
             {dropdownOpenPending && packagePending
               ? packagePending.map((pack: I_User, key) => {
                   return (
@@ -197,6 +199,7 @@ const Page = ({ params }: { params: { id: string } }) => {
               <p className="font-bold text-lg font-sans">
                 Historial de Repartos
               </p>
+
               <Image
                 className={`self-start transition-transform transform ${
                   dropdownOpen ? "rotate-180" : ""
@@ -206,7 +209,10 @@ const Page = ({ params }: { params: { id: string } }) => {
                 width={13}
               />
             </div>
-            <p className="ml-4 font-sans text-sm"> Ya repartiste 58 paquetes</p>
+            <p className="ml-4 font-sans text-sm">
+              {" "}
+              {`Ya repartiste ${packagesDone.length} paquetes`}{" "}
+            </p>
             {dropdownOpen && packagesDone
               ? packagesDone.map((pack: I_User, key) => {
                   return (
