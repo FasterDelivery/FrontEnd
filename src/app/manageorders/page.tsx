@@ -41,7 +41,7 @@ const Index = () => {
   const [isExpanded, setIsExpanded] = useState<boolean>(false),
     [stateController, setStateController] = useState(initialState),
     [token, setToken] = useState<string>(""),
-    session = localStorage.getItem("session") || "",
+    
     dateActually = new Date(),
     handleToggle = () => {
       setIsExpanded(!isExpanded);
@@ -117,7 +117,7 @@ const Index = () => {
         });
     };
 
-    json = JSON.parse(session);
+    const json = JSON.parse(localStorage.getItem("session") || "{}");
 
     try {
       if (json && json.value) {

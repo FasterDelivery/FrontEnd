@@ -41,7 +41,7 @@ const GetPackages = () => {
 
     try {
       const response = await axios.get(
-        `https://3.91.204.112/api/packages/packagesDay/2023-07-26`,
+        `https://3.91.204.112/api/packages/packagesDay/${currentDate}`,
         {
           headers: {
             Authorization: `Bearer ${token}`
