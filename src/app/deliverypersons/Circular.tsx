@@ -1,31 +1,81 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./circular.css";
 import Image from "next/image";
 import profile from "../Assets/profile.png";
 import Link from "next/link";
+import axios from "axios";
 
 interface Props {
-  percentage: number;
   name: string;
   surname: string;
   status: string;
   id: number;
 }
 
-const Circular: React.FC<Props> = ({
-  percentage,
-  name,
-  surname,
-  status,
-  id
-}) => {
+const initialState = {
+  allPackages: [],
+  packagesActives: [],
+  packagesPercentage: 0
+};
+
+const Circular: React.FC<Props> = ({ name, surname, status, id }) => {
   const obj: { [key: string]: string } = {
     inactive: "#FF6B6B",
     Finalizó: "#96DB76",
     "Viaje en curso": "#217BCE"
   };
+  let json;
+
+  const [token, setToken] = useState<string>(""),
+    session = localStorage.getItem("session") || "";
+  const [packages, setPackages] = useState(initialState);
 
   const color = obj[status] || "";
+
+  const calcularPorcentaje = (cantidad: number, total: number) => {
+    return Math.round((cantidad / total) * 100);
+  };
+
+  useEffect(() => {
+    const getAllPackageFunction = async (prop: string) => {
+      const getPackages = await axios.get(
+        `https://3.91.204.112/api/packages/${id}/packages`,
+        {
+          headers: {
+            Authorization: `Bearer ${prop}`
+          }
+        }
+      );
+
+      const packagesActives = await getPackages.data.packages.filter(
+        (packages: { status: string }) => {
+          return packages.status === "entregado";
+        }
+      );
+
+      return setPackages({
+        ...packages,
+        allPackages: getPackages.data.packages,
+        packagesActives,
+        packagesPercentage: calcularPorcentaje(
+          packagesActives.length,
+          getPackages.data.packages.length
+        )
+      });
+    };
+
+    json = JSON.parse(session);
+
+    try {
+      if (json && json.value) {
+        getAllPackageFunction(json.value);
+        setToken(json.value);
+      }
+    } catch (error) {
+      // Handle the error gracefully (if needed)
+      console.error("Error parsing JSON:", error);
+    }
+  }, [token]);
 
   return (
     <>
@@ -38,11 +88,11 @@ const Circular: React.FC<Props> = ({
             className="circular-progress"
             style={{
               background: `conic-gradient(${
-                percentage === 100 ? "#96DB76" : "#FCBC11"
-              } ${percentage * 3.6}deg, #ededed 0deg)`
+                packages.packagesPercentage === 100 ? "#96DB76" : "#FCBC11"
+              } ${packages.packagesPercentage * 3.6}deg, #ededed 0deg)`
             }}
           >
-            <span className="absolute font-bold">{`${percentage}%`}</span>
+            <span className="absolute font-bold">{`${packages.packagesPercentage}%`}</span>
           </section>
           <section id="container-state" className="flex flex-col ml-8 w-45">
             <p className="my-0 mb-2 font-bold">{name}</p>
