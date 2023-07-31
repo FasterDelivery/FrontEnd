@@ -21,6 +21,7 @@ const Page = ({ params }: { params: { id: string } }) => {
   const user = useAppSelector((state) => state.users);
   const packages = useAppSelector((state) => state.packages);
   const [isChecked, setIsChecked] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [dropdownOpenOnCourse, setDropdownOpenOncourse] =
     useState<DropdownState>(false);
   const [dropdownOpenDelivered, setDropdownOpenDelivered] =
@@ -28,7 +29,6 @@ const Page = ({ params }: { params: { id: string } }) => {
   const [dropdownOpenPending, setDropdownOpenPending] =
     useState<DropdownState>(false);
   const [token, setToken] = useState<string>("");
-  const [status, setStatus] = useState<boolean>(false);
 
   const fetchUser = async (token: string) => {
     try {
@@ -41,11 +41,7 @@ const Page = ({ params }: { params: { id: string } }) => {
         }
       );
       dispatch(setUser(response.data.deliveryDetails));
-      response.data.status === "active" ? setStatus(true) : setStatus(false);
-      response.data.status === "active"
-        ? setIsChecked(true)
-        : setIsChecked(false);
-      return response.data;
+      return response.data.deliveryDetails;
     } catch (error) {
       console.log(error);
       // localStorage.removeItem("session");
@@ -107,6 +103,7 @@ const Page = ({ params }: { params: { id: string } }) => {
     event: React.MouseEvent<HTMLImageElement, MouseEvent>
   ) => {
     event.preventDefault();
+    event.stopPropagation();
     const id = event.currentTarget.id;
     await axios.delete(
       `https://3.91.204.112/api/packages/delete/package/${id}`,
@@ -120,20 +117,31 @@ const Page = ({ params }: { params: { id: string } }) => {
   };
 
   useEffect(() => {
-    const json = JSON.parse(localStorage.getItem("session") || "{}");
+    const getAll = async () => {
+      const json = JSON.parse(localStorage.getItem("session") || "{}");
 
-    try {
-      if (json && json.value) {
-        fetchUser(json.value);
-        fetchPackages(json.value);
-        setToken(json.value);
+      try {
+        if (json && json.value) {
+          const userData = await fetchUser(json.value);
+          await fetchPackages(json.value);
+          setToken(json.value);
+          console.log(userData.status);
+          setIsChecked(userData.status === "active");
+          setIsLoading(false);
+        }
+      } catch (error) {
+        console.error("Error parsing JSON:", error);
+        localStorage.removeItem("session");
+        return router.push("/login");
       }
-    } catch (error) {
-      console.error("Error parsing JSON:", error);
-      localStorage.removeItem("session");
-      return router.push("/login");
-    }
-  }, [status]);
+    };
+    getAll();
+  }, []);
+  // console.log(isChecked);
+  // console.log("isLoading:", isLoading);
+  // console.log("user:", user);
+
+  if (isLoading) return <></>;
 
   return (
     <div className="mx-auto">
@@ -186,7 +194,9 @@ const Page = ({ params }: { params: { id: string } }) => {
                 src={dropdown}
                 alt="dropdown"
                 width={13}
-                className="self-start"
+                className={`self-start transition-transform transform ${
+                  dropdownOpenOnCourse ? "rotate-180" : ""
+                }`}
               />
             </div>
             <p className="ml-4 font-sans text-sm">
@@ -248,7 +258,9 @@ const Page = ({ params }: { params: { id: string } }) => {
                 src={dropdown}
                 alt="dropdown"
                 width={13}
-                className="self-start"
+                className={`self-start transition-transform transform ${
+                  dropdownOpenPending ? "rotate-180" : ""
+                }`}
               />
             </div>
             <p className="ml-4 font-sans text-sm">
@@ -309,12 +321,12 @@ const Page = ({ params }: { params: { id: string } }) => {
               </p>
 
               <Image
-                className={`self-start transition-transform transform ${
-                  dropdownOpenDelivered ? "rotate-180" : ""
-                }`}
                 src={dropdown}
                 alt="dropdown"
                 width={13}
+                className={`self-start transition-transform transform ${
+                  dropdownOpenDelivered ? "rotate-180" : ""
+                }`}
               />
             </div>
             <p className="ml-4 font-sans text-sm">
