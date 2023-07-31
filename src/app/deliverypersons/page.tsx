@@ -27,35 +27,42 @@ const Page = () => {
   };
 
   const updateUsers = () => {
+    console.log("click");
+
     if (counterControll > stateDeliveryData.length) {
       setCounterControll(0);
-    } else {
-      setCounterControll(counterControll + 10);
       const controllData = stateDeliveryData.slice(
         counterControll,
-        counterControll + 10
+        counterControll + 9
       );
       setUsersActually(controllData);
+    } else {
+      const controllData = stateDeliveryData.slice(
+        counterControll,
+        counterControll + 9
+      );
+      setUsersActually(controllData);
+      return setCounterControll(counterControll + 10);
     }
   };
 
   useEffect(() => {
-    const getData = async (prop: string) => {
-      const getDataFetch = await axios.get(
-        "https://3.91.204.112/api/user/deliveries",
-        {
-          headers: {
-            Authorization: `Bearer ${prop}`
-          }
-        }
-      );
-
-      getDataFetch ? setStateDeliveryData(getDataFetch.data.allUsers) : false;
-    };
-
-    const json = JSON.parse(localStorage.getItem("session") || "{}");
-
     try {
+      const getData = async (prop: string) => {
+        const getDataFetch = await axios.get(
+          "https://3.91.204.112/api/user/deliveries",
+          {
+            headers: {
+              Authorization: `Bearer ${prop}`
+            }
+          }
+        );
+
+        getDataFetch
+          ? setStateDeliveryData(getDataFetch.data.allUsers)
+          : new Error("Error: No se pudieron obtener los usuarios");
+      };
+      const json = JSON.parse(localStorage.getItem("session") || "{}");
       if (json && json.value) {
         getData(json.value);
         setToken(json.value);
@@ -64,7 +71,7 @@ const Page = () => {
       // Handle the error gracefully (if needed)
       console.error("Error parsing JSON:", error);
     }
-  }, [token, counterControll]);
+  }, [token]);
 
   useEffect(() => {
     const controllerCountUsers = () => {
@@ -105,17 +112,21 @@ const Page = () => {
               <Image src={dropdown} alt="dropdown" />
             </button>
           </section>
-          {stateDeliveryData
-            ? usersActually.map((User: I_User, index) => (
-                <Circular
-                  name={User.name}
-                  surname={User.lastname}
-                  status={User.status}
-                  id={User.id}
-                  key={index}
-                />
-              ))
-            : false}
+          {usersActually ? (
+            usersActually.map((User: I_User, index) => (
+              <Circular
+                name={User.name}
+                surname={User.lastname}
+                status={User.status}
+                id={User.id}
+                key={index}
+                User={User}
+                counter={counterControll}
+              />
+            ))
+          ) : (
+            <h1>No se encontraron usuarios</h1>
+          )}
           <div className="flex w-90 mx-auto justify-center py-4 ">
             {points.map((punto, key) => (
               <button onClick={() => updateUsers()} key={key}>
