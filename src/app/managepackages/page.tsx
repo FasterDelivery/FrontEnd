@@ -96,8 +96,7 @@ export default function ManagePackages() {
 
           <p className="ml-4 font-sans text-sm">
             {" "}
-            Hay {packages.length} paquetes con el criterio de filtrado
-            seleccionado
+            Hay {packages.length} paquetes
           </p>
 
           <div className="divide-y">
