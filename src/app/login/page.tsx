@@ -33,10 +33,12 @@ export default function Login() {
           const now = new Date();
           const item = {
             value: token,
+
             expiry: now.getTime() + 60 * 1000,
             user: response.data.user.id // Convierte a milisegundos
           };
           dispatch(setToken(token));
+
           localStorage.setItem("session", JSON.stringify(item));
           return router.push("manageorders");
         } else {
