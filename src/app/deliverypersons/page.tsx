@@ -62,9 +62,7 @@ const Page = () => {
           ? setStateDeliveryData(getDataFetch.data.allUsers)
           : new Error("Error: No se pudieron obtener los usuarios");
       };
-      
-    const json = JSON.parse(localStorage.getItem("session") || "{}");
-
+      const json = JSON.parse(localStorage.getItem("session") || "{}");
       if (json && json.value) {
         getData(json.value);
         setToken(json.value);
