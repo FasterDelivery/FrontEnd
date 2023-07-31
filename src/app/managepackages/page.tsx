@@ -22,8 +22,8 @@ export default function ManagePackages() {
 
   useEffect(() => {
     const session = localStorage.getItem("session") || "";
-    const value = JSON.parse(session);
-    const tokenn = value.value;
+    const valor = session ? JSON.parse(session)?.value : "";
+    const tokenn = valor;
     if (tokenn !== token) {
       setToken(tokenn);
     }
@@ -56,10 +56,6 @@ export default function ManagePackages() {
   };
 
   const packagesToShow = packages.slice(0, loadedPackages);
-
-  // useEffect(() => {
-  //   console.log("estos son los paquetes en el array", packages);
-  // }, [packages]);
 
   const dropdownController = () => {
     if (stateDropdown === "dropdown-Controller-Container active") {
