@@ -1,0 +1,79 @@
+name: Node.js CI
+
+on:
+  push:
+    branches: ["develop"]
+  pull_request:
+    branches: ["develop"]
+    types: ["opened", "synchronize"]
+
+jobs:
+  check_redundant:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Ignore redundants push & pull
+        uses: styfle/cancel-workflow-action@0.9.1
+        with:
+          access_token: ${{github.token}}
+
+  lint:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "16"
+      - name: Install-Dependencies
+        run: npm install
+      - name: Run Eslint
+        run: npm run lint
+
+  build:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "16"
+      - name: Install-Dependencies
+        run: npm install
+      - name: tsc
+        run: npm run tsc
+      - name: build
+        run: npm run build
+      - run: mkdir -p path/to/artifact
+      - run: echo hello > path/to/artifact/world.txt
+      - uses: actions/upload-artifact@v3
+        with:
+          name: my-artifact
+          path: path/to/artifact/world.txt
+
+  test:
+    needs: [check_redundant, lint, build]
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "16"
+      - name: Install-Dependencies
+        run: npm install
+      - uses: actions/download-artifact@v3
+        with:
+          name: my-artifact
+      - name: Display structure of downloaded files
+        run: ls -R
+      - name: Run build
+        run: npm run build
+      - name: Cypress run
+        uses: cypress-io/github-action@v5
+        with: 
+          command: npm run start_test_e2e
+          start: npm run start
+          wait-on: http://localhost:3000
