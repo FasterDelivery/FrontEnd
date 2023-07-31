@@ -31,6 +31,12 @@ export function Navbar() {
           style={{ width: "51px", height: "32px" }}
         />
       </div>
+      <div className="flex-1 text-center">
+        <h1 className="text-xl font-bold">
+          <span className="text-yellow-500">FAST </span>
+          <span>DELIVERY</span>
+        </h1>
+      </div>
       <div onClick={handleLogout}>
         <svg
           xmlns="http://www.w3.org/2000/svg"

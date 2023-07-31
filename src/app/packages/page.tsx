@@ -6,16 +6,22 @@ import Image from "next/image";
 import imagen from "../Assets/package-icon-vector.jpg";
 import Swal from "sweetalert2";
 import { useRouter } from "next/navigation";
-import { useAppSelector } from "../../redux/hooks";
 
 const GetPackages = () => {
+  const currentDate = new Date().toISOString().slice(0, 10);
   const router = useRouter();
   const [packagesDay, setPackagesDay] = useState<any>([]);
   const [packagesTaken, setPackagesTaken] = useState<any>([]);
-  const user = useAppSelector((state) => state.users);
-  const token = useAppSelector((state) => state.token);
-
-  const currentDate = new Date().toISOString().slice(0, 10);
+  const isClient = typeof window !== "undefined";
+  let token = "";
+  let userId = "";
+  if (isClient) {
+    const dataLocalStorage = JSON.parse(
+      localStorage.getItem("session") || "{}"
+    );
+    token = dataLocalStorage.value;
+    userId = dataLocalStorage.user;
+  }
 
   const handleTomarPaquete = (paquete: any) => {
     const updatedPackagesTaken = [...packagesTaken];
@@ -25,32 +31,40 @@ const GetPackages = () => {
 
   const handleCancelarPaquete = (paquete: any) => {
     const updatedPackagesTaken = packagesTaken.filter(
-      (item: any) => item !== paquete
+      (item: any) => item.id !== paquete.id
     );
     setPackagesTaken(updatedPackagesTaken);
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(
-          "https://3.91.204.112/api/packages/packages",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`
-            }
+  const fetchDataPackagesDay = async () => {
+    console.log(currentDate);
+
+    try {
+      const response = await axios.get(
+        `https://3.91.204.112/api/packages/packagesDay/${currentDate}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
           }
-        );
-        const allPackagesPending = response.data.allPackages;
-        const allPackagesPendingDay = allPackagesPending.filter(
-          (item: any) => item.deliveryday.slice(0, 10) === currentDate
-        );
-        setPackagesDay(allPackagesPendingDay);
-      } catch (error) {
-        console.error("Error fetching data:", error);
+        }
+      );
+      const allPackagesPendingDay = response.data.AllPackagesDay;
+      if (!allPackagesPendingDay[0]) {
+        return Swal.fire({
+          title: "Hoy no hay paquetes para entregar",
+          icon: "info",
+          confirmButtonText: "Continuar",
+          confirmButtonColor: "#217BCE"
+        });
       }
-    };
-    fetchData();
+      setPackagesDay(allPackagesPendingDay);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchDataPackagesDay();
   }, []);
 
   const isPackageTaken = (paquete: any) => {
@@ -67,10 +81,7 @@ const GetPackages = () => {
         text: `No se pueden tomar más de 10 (diez) pedidos por día`,
         icon: "warning",
         confirmButtonText: "Continuar",
-        confirmButtonColor: "#217BCE",
-        customClass: {
-          popup: "sm:w-1/2"
-        }
+        confirmButtonColor: "#217BCE"
       });
     } else if (packagesTaken.length === 0) {
       return Swal.fire({
@@ -78,10 +89,7 @@ const GetPackages = () => {
         text: `Debe seleccionar al menos un paquete para iniciar la jornada`,
         icon: "warning",
         confirmButtonText: "Continuar",
-        confirmButtonColor: "#217BCE",
-        customClass: {
-          popup: "sm:w-1/2"
-        }
+        confirmButtonColor: "#217BCE"
       });
     }
     try {
@@ -91,7 +99,7 @@ const GetPackages = () => {
             `https://3.91.204.112/api/packages/edit/package/${paquete.id}`,
             {
               status: "en curso",
-              userId: user.id
+              userId: userId
             },
             {
               headers: {
@@ -99,11 +107,10 @@ const GetPackages = () => {
               }
             }
           );
-          router.push("/delivery");
+          router.push("/");
           return response.data.editedPackage;
         })
       );
-
       console.log("Paquetes actualizados con éxito:", updatedPackages);
     } catch (error) {
       console.error("Error al actualizar los paquetes:", error);

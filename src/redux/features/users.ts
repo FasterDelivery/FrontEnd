@@ -14,7 +14,8 @@ const initialState: User = {
   email: "",
   address: "",
   phone: "",
-  isAdmin: false
+  isAdmin: false,
+  status: "active"
 };
 
 const usersReducer = createReducer(initialState, (builder) => {

@@ -14,6 +14,10 @@ function useInput(): InputHook {
   const [emailErrors, setEmailErrors] = useState<string[]>([]);
   const [phoneErrors, setPhoneErrors] = useState<string[]>([]);
 
+  const clear = () => {
+    setValue("");
+  };
+
   const validatePassword = (): void => {
     const errors: string[] = [];
     if (value.length < 8) {
@@ -63,7 +67,8 @@ function useInput(): InputHook {
     passwordErrors,
     confirmPasswordErrors,
     emailErrors,
-    phoneErrors
+    phoneErrors,
+    clear
   };
 }
 

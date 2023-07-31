@@ -29,15 +29,15 @@ export default function Login() {
         const token = response.data.token;
         dispatch(setToken(token));
         dispatch(setUser(response.data.user));
-
         if (response.data.user.isAdmin) {
           const now = new Date();
           const item = {
             value: token,
-            expiry: now.getTime() + 60 * 1000000000 // Convierte a milisegundos
+
+            expiry: now.getTime() + 60 * 1000,
+            user: response.data.user.id // Convierte a milisegundos
           };
           dispatch(setToken(token));
-          console.log("token desde login", token);
 
           localStorage.setItem("session", JSON.stringify(item));
           return router.push("manageorders");

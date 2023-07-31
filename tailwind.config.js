@@ -15,12 +15,30 @@ module.exports = {
       width: {
         90: "90%",
         45: "45%",
+        "4vw": "4vw",
         "6vw": "6vw",
-        "25vw":"25vw"
+        "8vw": "8vw",
+        "10vw": "10vw",
+        "12vw": "12vw",
+        "20vw": "20vw",
+        "25vw": "25vw",
+        "30vw": "30vw",
+        "45vw": "45vw",
+        "51vw": "51vw",
+        "60vw": "60vw"
+      },
+      height: {
+        'max-content': 'max-content',
+        '5vh': '5vh',
+        '12vh': '12vh',
+        '20vh': '20vh'
+      },
+      margin: {
+        '21': '21%',
       },
       borderRadius: {
         DEFAULT: "4px", // Aplica a todos los elementos
-        45:"45px"
+        45: "45px"
       },
       fontSize: {
         "sm-90": "0.9rem" // Añade la nueva clase de tamaño de fuente
@@ -37,14 +55,6 @@ module.exports = {
         "100%": "#96DB76",
         "black-opaque-50%": "#00000080",
         inactive: "#FF6B6B"
-      },
-      height: {
-        'max-content': 'max-content',
-        '5vh':'5vh',
-        '20vh': '20vh'
-      },
-      margin: {
-        '21': '21%',
       },
     }
   },
