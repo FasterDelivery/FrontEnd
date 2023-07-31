@@ -96,7 +96,7 @@ export default function ManagePackages() {
 
           <p className="ml-4 font-sans text-sm">
             {" "}
-            Hay {packages.length} paquetes
+            Hay {packages.length} paquetes cargados
           </p>
 
           <div className="divide-y">
