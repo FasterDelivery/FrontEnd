@@ -15,8 +15,13 @@ const ControllCountPackages = () => {
     }, 300);
   };
 
+  const onSubmit = () => {
+    return setStateCountPackages(1);
+  };
+
   return {
     onClick,
+    onSubmit,
     state: stateCountPackages
   };
 };

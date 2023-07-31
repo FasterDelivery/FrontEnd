@@ -11,4 +11,5 @@ export interface InputHook {
   confirmPasswordErrors: string[];
   emailErrors: string[];
   phoneErrors: string[];
+  clear: () => void;
 }

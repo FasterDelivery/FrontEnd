@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, ChangeEvent } from "react";
 import Image from "next/image";
 import { BackButton, Navbar } from "app/Components";
 import dropdown from "../../Assets/dropdown.png";
@@ -7,95 +7,133 @@ import trash from "../../Assets/trash.png";
 import profile from "../../Assets/Ellipse 9.png";
 import "../styles.css";
 import axios from "axios";
+import { useRouter } from "next/navigation";
+import { Package } from "../../interfaces/packages";
+import { useAppSelector, useAppDispatch } from "redux/hooks";
+import { setUser } from "redux/features/users";
+import { setPackages, deletePackage } from "redux/features/packages";
 
 type DropdownState = boolean;
-interface I_User {
-  name: string;
-  surname: string;
-  status: string;
-  fullAdress: string;
-  clientname: string;
-  image: string;
-}
-
-interface State {
-  stateDeliveryData: {
-    name: string;
-    status: string;
-  };
-}
 
 const Page = ({ params }: { params: { id: string } }) => {
-  const [dropdownOpen, setDropdownOpen] = useState<DropdownState>(false);
+  const router = useRouter();
+  const dispatch = useAppDispatch();
+  const user = useAppSelector((state) => state.users);
+  const packages = useAppSelector((state) => state.packages);
+  const [isChecked, setIsChecked] = useState(false);
+  const [dropdownOpenOnCourse, setDropdownOpenOncourse] =
+    useState<DropdownState>(false);
+  const [dropdownOpenDelivered, setDropdownOpenDelivered] =
+    useState<DropdownState>(false);
   const [dropdownOpenPending, setDropdownOpenPending] =
     useState<DropdownState>(false);
-  const [stateDeliveryData, setStateDeliveryData] = useState<State | null>(
-    null
-  );
-  const [statePackagesData, setStatePackagesData] = useState([]);
-  const [packagePending, setPackagesPending] = useState([]);
-  const [packagesDone, setPackagesDone] = useState([]);
-  const [token, setToken] = useState<string>(""),
-    session = localStorage.getItem("session") || "";
+  const [token, setToken] = useState<string>("");
+  const [status, setStatus] = useState<boolean>(false);
 
-  let json;
-
-  const packagesFilterPending = () => {
-    const packages: any = [];
-    statePackagesData.map((Package: I_User) => {
-      console.log(
-        Package.status === "pendiente" || Package.status === "en curso"
-      );
-      if (Package.status === "pendiente" || Package.status === "en curso")
-        packages.push(Package);
-    });
-    setPackagesPending(packages);
-    console.log(setStateDeliveryData);
-  };
-
-  const packagesFilter = () => {
-    const packages: any = [];
-    statePackagesData.map((Package: I_User) => {
-      if (Package.status === "entregado") packages.push(Package);
-    });
-    setPackagesDone(packages);
-  };
-
-  useEffect(() => {
-    const getData = async (prop: string) => {
-      // const getDataFetch = await axios.get(
-      //   `https://3.91.204.112/api/user/details/${params.id}`,
-      //   {
-      //     headers: {
-      //       Authorization: `Bearer ${prop}`
-      //     }
-      //   }
-      // );
-      const getDataFetchPackages = await axios.get(
-        `https://3.91.204.112/api/packages/${params.id}/packages`,
+  const fetchUser = async (token: string) => {
+    try {
+      const response = await axios.get(
+        `https://3.91.204.112/api/user/details/${params.id}`,
         {
           headers: {
-            Authorization: `Bearer ${prop}`
+            Authorization: `Bearer ${token}`
           }
         }
       );
-      // getDataFetch ? setStateDeliveryData(getDataFetch.data.user) : false;
-      getDataFetchPackages
-        ? setStatePackagesData(getDataFetchPackages.data.packages)
-        : false;
-    };
-    json = JSON.parse(session);
+      dispatch(setUser(response.data.deliveryDetails));
+      response.data.status === "active" ? setStatus(true) : setStatus(false);
+      response.data.status === "active"
+        ? setIsChecked(true)
+        : setIsChecked(false);
+      return response.data;
+    } catch (error) {
+      console.log(error);
+      // localStorage.removeItem("session");
+      // return router.push("/login");
+    }
+  };
+
+  const fetchPackages = async (token: string) => {
+    try {
+      const response = await axios.get(
+        `https://3.91.204.112/api/packages/${params.id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
+      const packagesById = response.data.packages;
+      const currentDate = new Date().toISOString().slice(0, 10);
+
+      const res = await axios.get(
+        `https://3.91.204.112/api/packages/packagesDay/${currentDate}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
+      const pendingToday = res.data.AllPackagesDay;
+      const allPackages = packagesById.concat(pendingToday);
+      dispatch(setPackages(allPackages));
+      return allPackages;
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
+  };
+
+  const handleCheckboxChange = async (event: ChangeEvent<HTMLInputElement>) => {
+    setIsChecked(event.target.checked);
+    const change = user.status === "active" ? "inactive" : "active";
+    try {
+      const response = await axios.put(
+        `https://3.91.204.112/api/user/edit/${params.id}`,
+        { status: change },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
+      dispatch(setUser(response.data.editedUser));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleDelete = async (
+    event: React.MouseEvent<HTMLImageElement, MouseEvent>
+  ) => {
+    event.preventDefault();
+    const id = event.currentTarget.id;
+    await axios.delete(
+      `https://3.91.204.112/api/packages/delete/package/${id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+    );
+    dispatch(deletePackage(Number(id)));
+  };
+
+  useEffect(() => {
+    const json = JSON.parse(localStorage.getItem("session") || "{}");
 
     try {
       if (json && json.value) {
-        getData(json.value);
+        fetchUser(json.value);
+        fetchPackages(json.value);
         setToken(json.value);
       }
     } catch (error) {
-      // Handle the error gracefully (if needed)
       console.error("Error parsing JSON:", error);
+      localStorage.removeItem("session");
+      return router.push("/login");
     }
-  }, [token]);
+  }, [status]);
 
   return (
     <div className="mx-auto">
@@ -116,16 +154,22 @@ const Page = ({ params }: { params: { id: string } }) => {
                 className="self-start"
               />
               <div className="ml-4 flex-col justify-center items-center">
-                <p className="font-bold text-lg font-sans">
-                  {stateDeliveryData?.stateDeliveryData?.name}
-                </p>
-                <p className="text-blue-500">
-                  {stateDeliveryData?.stateDeliveryData?.status}
-                </p>
+                <p className="font-bold text-lg font-sans">{user.name}</p>
+
+                {user.status === "active" ? (
+                  <p className="text-blue-500">{user.status}</p>
+                ) : (
+                  <p className="text-orange-500">{user.status}</p>
+                )}
               </div>
             </div>
             <label className="relative inline-flex items-center cursor-pointer">
-              <input type="checkbox" value="" className="sr-only peer" />
+              <input
+                type="checkbox"
+                className="sr-only peer"
+                checked={isChecked}
+                onChange={handleCheckboxChange}
+              />
               <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
             </label>
           </div>
@@ -134,7 +178,68 @@ const Page = ({ params }: { params: { id: string } }) => {
               style={{ cursor: "pointer" }}
               className="flex justify-between mx-4"
               onClick={() => {
-                packagesFilterPending();
+                setDropdownOpenOncourse(!dropdownOpenOnCourse);
+              }}
+            >
+              <p className="font-bold text-lg font-sans">Repartos En Curso</p>
+              <Image
+                src={dropdown}
+                alt="dropdown"
+                width={13}
+                className="self-start"
+              />
+            </div>
+            <p className="ml-4 font-sans text-sm">
+              {" "}
+              {`Estas repartiendo ${packages["en curso"].length} paquetes`}{" "}
+            </p>
+            {dropdownOpenOnCourse && packages["en curso"].length > 0
+              ? packages["en curso"].map((paquete: Package) => {
+                  return (
+                    <div
+                      key={paquete.id}
+                      className="flex justify-between py-4 h-110px w-full"
+                    >
+                      <div className="w-[80px] h-[80px] bg-[#E8EFFA] border-sm rounded-sm">
+                        <img
+                          style={{ height: "inherit" }}
+                          src={paquete.image}
+                          alt="img-package"
+                        />
+                      </div>
+                      <div className="flex justify-between w-51vw md:w-60vw items-center">
+                        <div className="flex justify-between">
+                          <p className="font-sans text-sm mr-8 hidden md:block">
+                            {paquete.clientname}
+                          </p>
+                          <p className="font-sans text-sm mr-8">
+                            {paquete.fullAdress}
+                          </p>
+                        </div>
+                        <div className="flex flex-col justify-around items-center w-30vw md:w-10vw lg:w-6vw h-full">
+                          <p className="font-sans text-sm font-bold self-end">
+                            {paquete.status}
+                          </p>
+                          <Image
+                            src={trash}
+                            alt="trash"
+                            width={16}
+                            className="h-5"
+                            id={String(paquete.id)}
+                            onClick={handleDelete}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })
+              : false}
+          </div>
+          <div className="shadow-lg rounded-[11px] w-full my-4 flex flex-col justify-center p-4">
+            <div
+              style={{ cursor: "pointer" }}
+              className="flex justify-between mx-4"
+              onClick={() => {
                 setDropdownOpenPending(!dropdownOpenPending);
               }}
             >
@@ -146,38 +251,44 @@ const Page = ({ params }: { params: { id: string } }) => {
                 className="self-start"
               />
             </div>
-            {dropdownOpenPending && packagePending
-              ? packagePending.map((pack: I_User, key) => {
+            <p className="ml-4 font-sans text-sm">
+              {" "}
+              {`Estas repartiendo ${packages.pendiente.length} paquetes`}{" "}
+            </p>
+            {dropdownOpenPending && packages.pendiente.length > 0
+              ? packages.pendiente.map((paquete: Package) => {
                   return (
                     <div
-                      key={key}
+                      key={paquete.id}
                       className="flex justify-between py-4 h-110px w-full"
                     >
                       <div className="w-[80px] h-[80px] bg-[#E8EFFA] border-sm rounded-sm">
                         <img
                           style={{ height: "inherit" }}
-                          src={pack.image}
+                          src={paquete.image}
                           alt="img-package"
                         />
                       </div>
                       <div className="flex justify-between w-51vw md:w-60vw items-center">
                         <div className="flex justify-between">
                           <p className="font-sans text-sm mr-8 hidden md:block">
-                            {pack.clientname}
+                            {paquete.clientname}
                           </p>
                           <p className="font-sans text-sm mr-8">
-                            {pack.fullAdress}
+                            {paquete.fullAdress}
                           </p>
                         </div>
                         <div className="flex flex-col justify-around items-center w-30vw md:w-10vw lg:w-6vw h-full">
                           <p className="font-sans text-sm font-bold self-end">
-                            {pack.status}
+                            {paquete.status}
                           </p>
                           <Image
                             src={trash}
                             alt="trash"
                             width={16}
                             className="h-5"
+                            id={String(paquete.id)}
+                            onClick={handleDelete}
                           />
                         </div>
                       </div>
@@ -188,8 +299,7 @@ const Page = ({ params }: { params: { id: string } }) => {
           </div>
           <div
             onClick={() => {
-              packagesFilter();
-              setDropdownOpen(!dropdownOpen);
+              setDropdownOpenDelivered(!dropdownOpenDelivered);
             }}
             className="shadow-lg rounded-[4px] w-full my-4 flex flex-col justify-center p-4"
           >
@@ -197,48 +307,54 @@ const Page = ({ params }: { params: { id: string } }) => {
               <p className="font-bold text-lg font-sans">
                 Historial de Repartos
               </p>
+
               <Image
                 className={`self-start transition-transform transform ${
-                  dropdownOpen ? "rotate-180" : ""
+                  dropdownOpenDelivered ? "rotate-180" : ""
                 }`}
                 src={dropdown}
                 alt="dropdown"
                 width={13}
               />
             </div>
-            <p className="ml-4 font-sans text-sm"> Ya repartiste 58 paquetes</p>
-            {dropdownOpen && packagesDone
-              ? packagesDone.map((pack: I_User, key) => {
+            <p className="ml-4 font-sans text-sm">
+              {" "}
+              {`Ya repartiste ${packages.entregado.length} paquetes`}{" "}
+            </p>
+            {dropdownOpenDelivered && packages.entregado.length > 0
+              ? packages.entregado.map((paquete: Package) => {
                   return (
                     <div
-                      key={key}
+                      key={paquete.id}
                       className="flex justify-between py-4 h-110px w-full"
                     >
                       <div className="w-[80px] h-[80px] bg-[#E8EFFA] border-sm rounded-sm">
                         <img
                           style={{ height: "inherit" }}
-                          src={pack.image}
+                          src={paquete.image}
                           alt="img-package"
                         />
                       </div>
                       <div className="flex justify-between w-51vw md:w-60vw items-center">
                         <div className="flex justify-between">
                           <p className="font-sans text-sm mr-8 hidden md:block">
-                            {pack.clientname}
+                            {paquete.clientname}
                           </p>
                           <p className="font-sans text-sm mr-8">
-                            {pack.fullAdress}
+                            {paquete.fullAdress}
                           </p>
                         </div>
                         <div className="flex flex-col justify-around items-center w-30vw md:w-10vw lg:w-6vw h-full">
                           <p className="font-sans text-sm font-bold self-end">
-                            {pack.status}
+                            {paquete.status}
                           </p>
                           <Image
                             src={trash}
                             alt="trash"
                             width={16}
                             className="h-5"
+                            id={String(paquete.id)}
+                            onClick={handleDelete}
                           />
                         </div>
                       </div>
