@@ -14,6 +14,7 @@ import { useRouter } from "next/navigation";
 import imagen from "../app/Assets/package-icon-vector.jpg";
 import { setToken } from "redux/features/token";
 import { getGeolocation, haversine } from "./utils";
+import Swal from "sweetalert2";
 
 type DropdownState = boolean;
 
@@ -145,9 +146,19 @@ export default function HomePage() {
 
       if (now > expiry) {
         router.push(`affidavit?id=${user.id}&token=${session.value}`);
-      } else {
-        fetchPackages(user.id, session.value);
       }
+      if (user.status === "inactive") {
+        Swal.fire({
+          title: "Lo Sentimos",
+          text: `Tu usuario ha sido deshabilitado`,
+          icon: "warning",
+          confirmButtonText: "Continuar",
+          confirmButtonColor: "#217BCE"
+        });
+        localStorage.removeItem("session");
+        router.push("/login");
+      }
+      fetchPackages(user.id, session.value);
     }
   }, [user]);
 
